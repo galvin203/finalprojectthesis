@@ -4,7 +4,7 @@ Code for my bachelor's thesis work and a related side project.
 
 | Folder | What it is | Status |
 | --- | --- | --- |
-| [`ateria/`](ateria/) | **Ateria**: a weekly meal planner with a priced shopping list for S-market, K-market and Lidl (Finland). Works in English, Suomi, Svenska and Tiếng Việt. | Working (version 2) |
+| [`ateria/`](ateria/) | **Ateria**: a weekly meal planner with a priced shopping list for S-market, K-market and Lidl (Finland). Works in English, Finnish, Swedish and Vietnamese. | Working (version 2) |
 | *(planned)* | **NutriWise**: the thesis web app (Viet Nam). It will get its own folder so the two projects stay separate. | Not in this repository yet |
 
 ## Try Ateria in 30 seconds
@@ -15,12 +15,11 @@ Code for my bachelor's thesis work and a related side project.
 
 More detail, including tests and how to add real prices, is in [`ateria/README.md`](ateria/README.md).
 
-## Tóm tắt bằng tiếng Việt
+## Key facts
 
-- **Ateria** là app lên thực đơn 7 ngày theo mục tiêu calo và đạm của từng người (giảm cân, giữ cân, tăng cân), kèm danh sách đi chợ có giá cho S-market, K-market và Lidl.
-- Có **66 công thức** Bắc Âu, châu Âu, châu Á; mỗi món ghi lượng cụ thể (thìa, dl, quả, tép) cho 1–8 khẩu phần và gia vị theo từng lúc cho vào nồi.
-- Giao diện có **4 ngôn ngữ**: English, Suomi, Svenska, Tiếng Việt; hình minh họa thay cho chữ ở các bước chính.
-- App chỉ **lưu dữ liệu khi bạn đồng ý**, có sao lưu/khôi phục, và có nút **Help** (trợ lý trả lời cách dùng app).
-- **Giá và số liệu dinh dưỡng trong app hiện là số mẫu**, không phải giá thật. Hãy nhập giá thật ở tab Prices.
-- App không phải lời khuyên y tế và chỉ dành cho người trưởng thành (18–99 tuổi).
-- Để chạy: mở `ateria/index.html` bằng trình duyệt.
+- Builds a 7-day meal plan from your calorie and protein targets (lose, maintain or gain weight) and a shopping list priced for S-market, K-market and Lidl.
+- 66 original recipes (Nordic, European, Asian and everyday dishes) with amounts in spoons, dl and pieces for 1 to 8 portions, and seasoning listed by the moment it goes in.
+- Four languages and pictures for every ingredient, so the main steps can be followed without reading much.
+- Your details are saved on your device only if you agree. You can back them up, restore them or delete them. A Help button answers "how do I...?" questions.
+- **Prices and nutrition values are placeholders** until you enter real prices on the Prices screen.
+- Not medical advice. For adults only (18-99).

@@ -5,7 +5,7 @@ Weekly meal plans with calorie and protein targets, a recipe for every meal, and
 Ateria is inspired by apps like Mealbird, but every recipe, text, drawing and line of code here is original. It is a **separate project from the NutriWise thesis** (Viet Nam).
 
 * No dependencies: plain HTML, CSS and JavaScript.
-* Four languages: English, Suomi, Svenska, Tiếng Việt.
+* Four languages: English, Finnish, Swedish and Vietnamese.
 * Adults only (18–99). **Not medical advice.**
 
 ## Quick start
