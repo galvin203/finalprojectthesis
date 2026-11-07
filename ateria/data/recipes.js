@@ -39,13 +39,13 @@
      'Stir in {chia} chia seeds and the seasoning, then let the porridge rest for 2 minutes.',
      'Top with {blueberries} blueberries (still frozen is fine, they cool the porridge).']);
   R('b_skyr_bowl', 'nordic', 'breakfast', 5,
-    [['skyr', 250], ['banana', 120], ['oats', 30], ['almonds', 15]],
+    [['skyr', 175], ['banana', 115], ['oats', 37], ['almonds', 19]],
     [['cinnamon', 0.25, 'serve']], 0,
     'Skyr banana bowl',
     'Skyr is mild and tangy. A dusting of cinnamon on the banana adds warmth with no sugar.',
     ['Spoon {skyr} skyr into a bowl.', 'Slice {banana} on top.', 'Add {oats} rolled oats and {almonds} chopped almonds, then dust with {s:cinnamon} cinnamon.']);
   R('b_egg_rye', 'nordic', 'breakfast', 10,
-    [['egg', 165], ['rye_bread', 70], ['tomato', 80], ['oil', 5]],
+    [['egg', 170], ['rye_bread', 60], ['tomato', 135], ['oil', 4.5]],
     [['chives', 3, 'serve'], ['pepper', 0.125, 'end'], ['salt', 0.125, 'end']], 0,
     'Scrambled eggs on rye',
     'Low heat and slow stirring give soft, creamy eggs. Salt at the end, because early salt makes them watery. Chives add a mild onion note.',
@@ -53,26 +53,26 @@
      'Pour in the eggs and stir slowly for 2 to 3 minutes until just set but still soft. Season with salt and pepper.',
      'Toast {rye_bread} rye bread. Serve the eggs on the bread with {tomato}, sliced, and the chives.']);
   R('b_cottage_rye', 'nordic', 'breakfast', 5,
-    [['rye_bread', 70], ['cottage', 100], ['cucumber', 60], ['tomato', 60]],
+    [['rye_bread', 60], ['cottage', 130], ['cucumber', 60], ['tomato', 60]],
     [['dill', 3, 'serve'], ['pepper', 0.125, 'serve']], 0,
     'Cottage cheese rye sandwich',
     'Dill and a little pepper lift the mild cottage cheese. No salt is needed because cottage cheese is already salted.',
     ['Spread {cottage} cottage cheese on {rye_bread} rye bread.', 'Top with {cucumber} and {tomato}, thinly sliced.', 'Finish with {s:dill} chopped dill and {s:pepper} black pepper.']);
   R('b_pb_oats', 'world', 'breakfast', 5,
-    [['oats', 55], ['oat_drink', 150], ['banana', 120], ['peanut_butter', 20], ['chia', 8]],
+    [['oats', 75], ['oat_drink', 165], ['banana', 75], ['peanut_butter', 11], ['chia', 9]],
     [['cinnamon', 0.25, 'cook']], 0,
     'Peanut butter banana overnight oats',
     'Cinnamon goes well with peanut butter and banana. If the oats are too thick in the morning, stir in a splash more oat drink.',
     ['Mix {oats} rolled oats, {oat_drink} oat drink, {chia} chia seeds and {s:cinnamon} cinnamon in a jar and chill overnight.',
      'In the morning, top with {banana}, sliced, and {peanut_butter} peanut butter.']);
   R('b_yoghurt_apple', 'nordic', 'breakfast', 5,
-    [['yoghurt', 250], ['apple', 150], ['sunflower', 15], ['oats', 30]],
+    [['yoghurt', 175], ['apple', 115], ['sunflower', 22], ['oats', 35]],
     [['cinnamon', 0.25, 'serve']], 0,
     'Yoghurt, apple and seeds',
     'Cinnamon and apple are a classic pair, so a ripe apple needs no sweetener.',
     ['Dice {apple}.', 'Stir it into {yoghurt} yoghurt with {oats} rolled oats and {sunflower} sunflower seeds.', 'Sprinkle with {s:cinnamon} cinnamon.']);
   R('b_tofu_wrap', 'world', 'breakfast', 15,
-    [['tofu', 150], ['tortilla', 60], ['spinach', 40], ['tomato', 60], ['oil', 5]],
+    [['tofu', 130], ['tortilla', 65], ['spinach', 50], ['tomato', 100], ['oil', 5.5]],
     [['turmeric', 0.25, 'start'], ['cumin', 0.25, 'start'], ['salt', 0.125, 'end'], ['pepper', 0.125, 'end']], 0,
     'Tofu scramble wrap',
     'Turmeric gives the colour of scrambled egg and cumin the savoury depth. Fry the spices with the tofu so they lose their raw taste, and salt only at the end.',
@@ -80,7 +80,7 @@
      'Add {spinach} spinach and stir until wilted. Season with salt and pepper.',
      'Fill {tortilla} with the scramble and {tomato}, sliced, then roll up.']);
   R('b_avocado_toast', 'world', 'breakfast', 5,
-    [['rye_bread', 70], ['avocado', 75], ['tomato', 80], ['sunflower', 10]],
+    [['rye_bread', 65], ['avocado', 80], ['tomato', 80], ['sunflower', 11]],
     [['lemon', 0.125, 'serve'], ['salt', 0.125, 'serve'], ['chili', 0.125, 'serve']], 0,
     'Avocado rye toast',
     'Lemon juice keeps avocado green and balances its richness. Chilli flakes are optional: a pinch is plenty.',
@@ -94,7 +94,7 @@
     ['Blend {oats} rolled oats, {banana}, {egg} and {milk} milk with {s:cinnamon} cinnamon, cardamom and a pinch of salt into a thick batter. Rest for 5 minutes.',
      'Heat {oil} oil in a pan on medium heat. Fry small pancakes, 2 minutes per side.']);
   R('b_pannukakku', 'nordic', 'breakfast', 40,
-    [['flour', 40], ['milk', 150], ['egg', 55], ['honey', 8], ['oil', 5], ['blueberries', 80]],
+    [['flour', 32], ['milk', 80], ['egg', 60], ['honey', 8.5], ['oil', 11], ['blueberries', 85]],
     [['cardamom', 0.25, 'cook'], ['salt', 0.125, 'cook']], 0,
     'Oven pancake with blueberries (pannukakku)',
     'Cardamom is the classic Finnish baking spice. With honey and berries the pancake needs no extra sugar, and resting the batter makes it fluffier.',
@@ -102,13 +102,13 @@
      'Whisk {egg} with {milk} milk, {honey} honey, {s:cardamom} cardamom and a pinch of salt. Whisk in {flour} flour until smooth and rest for 10 minutes.',
      'Pour the batter into the hot dish and bake for 20 to 25 minutes until puffed and golden. Serve with {blueberries} blueberries.']);
   R('b_smoked_salmon_rye', 'nordic', 'breakfast', 5,
-    [['rye_bread', 70], ['smoked_salmon', 50], ['cottage', 60], ['cucumber', 50]],
+    [['rye_bread', 60], ['smoked_salmon', 60], ['cottage', 60], ['cucumber', 90]],
     [['dill', 3, 'serve'], ['lemon', 0.125, 'serve'], ['pepper', 0.125, 'serve']], 0,
     'Smoked salmon rye toast',
     'Smoked salmon is already salty, so add no extra salt. Dill, lemon and pepper cut through its richness.',
     ['Spread {cottage} cottage cheese on {rye_bread} rye bread.', 'Top with {smoked_salmon} smoked salmon and {cucumber}, thinly sliced.', 'Finish with {s:dill} chopped dill, a squeeze of lemon and black pepper.']);
   R('b_hash_egg', 'nordic', 'breakfast', 25,
-    [['potato', 220], ['egg', 110], ['onion', 50], ['oil', 10]],
+    [['potato', 235], ['egg', 130], ['onion', 36], ['oil', 6]],
     [['paprika', 0.25, 'start'], ['salt', 0.125, 'end'], ['pepper', 0.125, 'end'], ['parsley', 3, 'serve']], 0,
     'Potato hash with fried egg',
     'Paprika adds colour and sweetness. Cook it with the onion so it does not taste raw, and salt after frying so the potatoes brown properly.',
@@ -116,7 +116,7 @@
      'Fry {onion}, diced, in {oil} oil for 3 minutes, add the potatoes and {s:paprika} paprika, and fry for 8 to 10 minutes until golden.',
      'Push the potatoes aside, fry {egg} for 3 minutes with the lid on, and season with salt and pepper. Sprinkle with {s:parsley} parsley.']);
   R('b_shakshuka', 'world', 'breakfast', 25,
-    [['egg', 110], ['canned_tomato', 150], ['bell_pepper', 60], ['onion', 40], ['garlic', 5], ['oil', 6], ['wholemeal_bread', 50]],
+    [['egg', 100], ['canned_tomato', 230], ['bell_pepper', 45], ['onion', 35], ['garlic', 6], ['oil', 4.5], ['wholemeal_bread', 60]],
     [['cumin', 0.5, 'start'], ['paprika', 0.5, 'start'], ['chili', 0.125, 'start'], ['salt', 0.125, 'cook'], ['parsley', 3, 'serve']], 0,
     'Shakshuka (eggs in spiced tomato)',
     'Cumin and paprika are the heart of shakshuka: fry them in the oil with the vegetables for half a minute to wake up the flavour. Chilli is optional, so add it a pinch at a time.',
@@ -125,7 +125,7 @@
      'Make hollows in the sauce, crack in {egg}, cover and cook for 5 to 6 minutes until the whites are set.',
      'Scatter with {s:parsley} parsley and serve with {wholemeal_bread} wholegrain bread.']);
   R('b_chicken_congee', 'asian', 'breakfast', 40,
-    [['rice', 50], ['chicken', 70], ['ginger', 5], ['fish_sauce', 6], ['egg', 55]],
+    [['rice', 39], ['chicken', 100], ['ginger', 3.5], ['fish_sauce', 4.5], ['egg', 60]],
     [['pepper', 0.25, 'serve'], ['spring_onion', 6, 'serve'], ['coriander_leaf', 3, 'serve']], 600,
     'Chicken rice porridge (cháo gà)',
     'Ginger and fish sauce are the base of Vietnamese cháo. The fish sauce is salty, so add no other salt, and finish with plenty of fresh herbs and pepper.',
@@ -143,7 +143,7 @@
      'Fill {wholemeal_bread} wholegrain bread with the egg, the pickled carrot and {cucumber}, sliced. Add coriander leaves and chilli to taste.']);
 
   R('b_chia_coconut', 'world', 'breakfast', 5,
-    [['chia', 30], ['coconut_milk', 120], ['blueberries', 100], ['banana', 80]],
+    [['chia', 27], ['coconut_milk', 120], ['blueberries', 80], ['banana', 110]],
     [['cinnamon', 0.5, 'end']], 100,
     'Coconut chia pudding',
     'Chia swells into a pudding in 15 minutes. A little cinnamon makes the fruit taste sweeter, so no sugar is needed. Vegan, gluten-free and free of nuts and soy.',
@@ -194,7 +194,7 @@
      'Combine with {chickpeas} chickpeas, {cucumber} and {tomato}, diced, and {salad_mix} salad.',
      'Crumble {feta} feta on top and dress with {oil} oil, the lemon juice, oregano and pepper. Add {s:mint} chopped mint.']);
   R('l_salmon_potato', 'nordic', 'lunch', 30,
-    [['salmon', 130], ['potato', 250], ['broccoli', 100], ['oil', 6]],
+    [['salmon', 150], ['potato', 185], ['broccoli', 125], ['oil', 6]],
     [['salt', 0.125, 'cook'], ['pepper', 0.125, 'cook'], ['dill', 6, 'serve'], ['lemon', 0.25, 'serve']], 0,
     'Salmon with potatoes',
     'Dill and lemon are the classic Nordic partners for salmon. Season the fish just before frying and add lemon at the table, so it stays fresh and bright.',
@@ -234,7 +234,7 @@
     ['Spread {hummus} hummus over {tortilla}.', 'Add {carrot}, grated, {cucumber}, in thin strips, {spinach} spinach and {kidney_beans} beans.',
      'Sprinkle with paprika and a squeeze of lemon, and add chilli if you like. Roll up tightly.']);
   R('l_lohikeitto', 'nordic', 'lunch', 30,
-    [['salmon', 120], ['potato', 200], ['carrot', 50], ['onion', 40], ['milk', 150], ['oil', 5]],
+    [['salmon', 115], ['potato', 215], ['carrot', 55], ['onion', 40], ['milk', 170], ['oil', 3.5]],
     [['allspice', 0.25, 'cook'], ['bay', 0.5, 'cook'], ['pepper', 0.125, 'cook'], ['salt', 0.25, 'end'], ['dill', 6, 'serve']], 300,
     'Finnish salmon soup (lohikeitto)',
     'Allspice and bay are the traditional Finnish soup spices. Add the fish at the end and keep the soup below the boil so the salmon stays tender. Dill goes in last for its fresh flavour.',
@@ -242,7 +242,7 @@
      'Cut {salmon} salmon into cubes and add it with {milk} milk. Heat gently for 4 to 5 minutes without boiling, until the fish is just cooked.',
      'Season with salt, remove the bay leaf and stir in {s:dill} chopped dill before serving.']);
   R('l_pea_soup', 'nordic', 'lunch', 55,
-    [['split_peas', 70], ['carrot', 60], ['onion', 50], ['potato', 80], ['oil', 6]],
+    [['split_peas', 70], ['carrot', 70], ['onion', 90], ['potato', 55], ['oil', 5]],
     [['thyme', 0.5, 'cook'], ['bay', 0.5, 'cook'], ['pepper', 0.125, 'cook'], ['salt', 0.25, 'end']], 600,
     'Yellow pea soup (ärtsoppa)',
     'Thyme and bay are the herbs of Swedish pea soup. Salt at the end, once the peas are soft, so you can judge the seasoning of the finished soup.',
@@ -250,7 +250,7 @@
      'Add the peas, {carrot} carrot and {potato} potato, both diced, {water} water, the thyme, pepper and bay leaf. Bring to the boil and skim off the foam.',
      'Simmer for 40 minutes until the peas fall apart, adding water as needed. Remove the bay leaf and season with salt.']);
   R('l_herring_potato', 'nordic', 'lunch', 25,
-    [['herring', 100], ['potato', 250], ['egg', 55], ['onion', 20], ['yoghurt', 40]],
+    [['herring', 90], ['potato', 210], ['egg', 80], ['onion', 28], ['yoghurt', 55]],
     [['dill', 6, 'serve'], ['chives', 3, 'serve'], ['pepper', 0.125, 'serve']], 0,
     'Pickled herring with potatoes and egg',
     'Pickled herring is already salty and sweet-sour, so season it freshly: plenty of dill and chives, a little pepper, and no salt at all.',
@@ -258,14 +258,14 @@
      'Slice {onion} very thinly, halve the egg, and arrange them with {herring} herring on the plate.',
      'Stir {s:dill} dill, chives and pepper into {yoghurt} yoghurt as a sauce, and serve with the warm potatoes.']);
   R('l_shrimp_smorrebrod', 'nordic', 'lunch', 15,
-    [['rye_bread', 70], ['shrimp', 80], ['egg', 55], ['cucumber', 50], ['yoghurt', 30]],
+    [['rye_bread', 60], ['shrimp', 70], ['egg', 70], ['cucumber', 50], ['yoghurt', 50]],
     [['dill', 6, 'serve'], ['lemon', 0.25, 'end'], ['pepper', 0.125, 'end']], 0,
     'Shrimp and egg open sandwich (smørrebrød)',
     'Shrimp are naturally sweet, so lemon and dill are all they need. The shrimp and bread are already salted, so no salt.',
     ['Boil {egg} for 9 minutes, cool and slice.', 'Stir the lemon juice, {s:dill} chopped dill and pepper into {yoghurt} yoghurt.',
      'Top {rye_bread} rye bread with {cucumber}, thinly sliced, the egg, {shrimp} shrimp (thawed) and the dill yoghurt.']);
   R('l_minestrone', 'european', 'lunch', 40,
-    [['kidney_beans', 100], ['pasta', 40], ['carrot', 50], ['zucchini', 80], ['onion', 40], ['garlic', 5], ['canned_tomato', 100], ['oil', 8]],
+    [['kidney_beans', 115], ['pasta', 34], ['carrot', 34], ['zucchini', 90], ['onion', 50], ['garlic', 5.5], ['canned_tomato', 190], ['oil', 7]],
     [['oregano', 0.5, 'cook'], ['bay', 0.5, 'cook'], ['salt', 0.25, 'end'], ['pepper', 0.125, 'end'], ['basil', 6, 'serve']], 500,
     'Minestrone soup',
     'Oregano and bay simmer in the broth, and fresh basil goes on top at the end so its scent is not cooked away. Season with salt only after tasting.',
@@ -273,7 +273,7 @@
      'Add {canned_tomato} chopped tomatoes, {kidney_beans} beans, {water} water, the oregano and the bay leaf. Simmer 15 minutes.',
      'Add {pasta} pasta and cook for the time on the packet (about 10 minutes). Remove the bay leaf, season with salt and pepper and top with {s:basil} torn basil.']);
   R('l_spanish_tortilla', 'european', 'lunch', 35,
-    [['potato', 200], ['egg', 165], ['onion', 60], ['oil', 12]],
+    [['potato', 260], ['egg', 140], ['onion', 65], ['oil', 10]],
     [['salt', 0.25, 'cook'], ['pepper', 0.125, 'cook'], ['parsley', 3, 'serve']], 0,
     'Spanish potato omelette (tortilla española)',
     'The secret is patience: slow cooking in oil softens the potato and sweetens the onion. Season the egg, not the hot potatoes, so the salt spreads evenly.',
@@ -281,7 +281,7 @@
      'Beat {egg} with the salt and pepper, stir in the warm potatoes and onion, and let stand for 5 minutes.',
      'Cook in the pan over medium-low heat for 5 minutes, flip using a plate and cook 3 more minutes. Sprinkle with {s:parsley} parsley.']);
   R('l_pho_chicken', 'asian', 'lunch', 40,
-    [['chicken', 100], ['rice_noodles', 60], ['onion', 40], ['ginger', 8], ['spinach', 40], ['fish_sauce', 8]],
+    [['chicken', 135], ['rice_noodles', 50], ['onion', 40], ['ginger', 7], ['spinach', 60], ['fish_sauce', 3.5]],
     [['star_anise', 1, 'start'], ['cinnamon', 0.25, 'start'], ['coriander', 0.25, 'start'], ['pepper', 0.25, 'end'], ['coriander_leaf', 6, 'serve'], ['spring_onion', 6, 'serve'], ['lemon', 0.25, 'serve'], ['chili', 0.125, 'serve']], 600,
     'Chicken noodle soup (phở gà style)',
     'The flavour comes from browned onion and ginger plus star anise and cinnamon, toasted dry first. Fish sauce supplies the salt, so add it a little at a time and taste. Lemon (or lime), chilli and herbs are added at the table.',
@@ -290,7 +290,7 @@
      'Meanwhile soak {rice_noodles} rice noodles in hot water as the packet says. Strain the broth and season with {fish_sauce} fish sauce and pepper.',
      'Divide noodles, {spinach} spinach and chicken into bowls, ladle over the hot broth and top with the herbs, lemon and chilli.']);
   R('l_noodle_salad_tofu', 'asian', 'lunch', 25,
-    [['rice_noodles', 60], ['tofu', 100], ['carrot', 50], ['cucumber', 80], ['salad_mix', 40], ['garlic', 5], ['soy_sauce', 12], ['oil', 6]],
+    [['rice_noodles', 45], ['tofu', 130], ['carrot', 50], ['cucumber', 65], ['salad_mix', 39], ['garlic', 5], ['soy_sauce', 6.5], ['oil', 8]],
     [['lemon', 0.5, 'end'], ['chili', 0.125, 'end'], ['mint', 6, 'serve'], ['coriander_leaf', 6, 'serve']], 0,
     'Vietnamese-style noodle salad with tofu',
     'A Vietnamese-style dressing balances salty (soy sauce), sour (lemon), garlic and a little heat. Mix it first and taste a spoonful: more lemon if flat, more chilli for heat. Fresh herbs are the main seasoning.',
@@ -299,7 +299,7 @@
      'Stir {soy_sauce} soy sauce, the lemon juice, {garlic} garlic, finely grated, and the chilli into a dressing.',
      'Toss the noodles with {carrot} carrot and {cucumber}, both in strips, {salad_mix} salad and the dressing. Top with the tofu, mint and coriander leaves.']);
   R('l_red_dal', 'asian', 'lunch', 35,
-    [['lentils', 70], ['rice', 60], ['onion', 50], ['canned_tomato', 100], ['ginger', 6], ['garlic', 5], ['oil', 8]],
+    [['lentils', 65], ['rice', 65], ['onion', 50], ['canned_tomato', 145], ['ginger', 6], ['garlic', 5], ['oil', 5]],
     [['cumin', 1, 'start'], ['coriander', 0.5, 'start'], ['chili', 0.125, 'start'], ['turmeric', 0.5, 'cook'], ['salt', 0.25, 'end'], ['lemon', 0.25, 'end'], ['coriander_leaf', 6, 'serve']], 400,
     'Red lentil dal with rice',
     'Fry the spices in oil first so their aroma blooms, then add the lentils; this is the idea behind the Indian tadka. Turmeric goes in with the liquid. Salt and lemon come last, to taste.',
@@ -319,7 +319,7 @@
      'Add {garlic} garlic, {ginger} ginger and the chilli and stir for 30 seconds, then add {bell_pepper}, {zucchini} zucchini and {mushrooms} mushrooms, all sliced, and stir-fry for 6 minutes.',
      'Stir in {soy_sauce} soy sauce, add pepper, and serve over the rice with spring onion.']);
   R('d_baked_cod', 'nordic', 'dinner', 40,
-    [['cod', 180], ['potato', 250], ['carrot', 100], ['oil', 8]],
+    [['cod', 195], ['potato', 255], ['carrot', 95], ['oil', 6.5]],
     [['salt', 0.25, 'cook'], ['pepper', 0.125, 'cook'], ['dill', 6, 'serve'], ['lemon', 0.25, 'serve']], 0,
     'Baked cod with potatoes',
     'Salt and pepper go on before roasting, and the cod needs only a light touch. Dill and a squeeze of lemon at the table lift mild white fish.',
@@ -327,7 +327,7 @@
      'Pat {cod} cod dry (thaw it first if frozen). Push the vegetables aside, lay the cod on the tray, brush it with a little oil from the tray and roast 12 minutes more.',
      'Serve with {s:dill} chopped dill and lemon.']);
   R('d_bolognese', 'european', 'dinner', 40,
-    [['pasta', 85], ['beef_mince', 110], ['canned_tomato', 200], ['onion', 60], ['carrot', 50], ['garlic', 4], ['oil', 6]],
+    [['pasta', 95], ['beef_mince', 100], ['canned_tomato', 165], ['onion', 50], ['carrot', 38], ['garlic', 5], ['oil', 5]],
     [['oregano', 0.5, 'cook'], ['bay', 0.5, 'cook'], ['salt', 0.25, 'end'], ['pepper', 0.125, 'end'], ['basil', 3, 'serve']], 0,
     'Spaghetti bolognese',
     'Oregano and bay simmer in the sauce to infuse; basil goes on at the end, because long heat dulls its fresh taste. Add salt only after the sauce has reduced.',
@@ -352,7 +352,7 @@
      'Add {frozen_veg} vegetables and {canned_tomato} chopped tomatoes and simmer for 12 minutes.',
      'Season with salt and the lemon juice. Serve over {rice} rice (cooked as the packet says) with coriander leaves.']);
   R('d_lentil_bolognese', 'european', 'dinner', 40,
-    [['pasta', 85], ['lentils', 60], ['canned_tomato', 200], ['onion', 60], ['carrot', 60], ['mushrooms', 80], ['garlic', 4], ['oil', 6]],
+    [['pasta', 95], ['lentils', 45], ['canned_tomato', 215], ['onion', 45], ['carrot', 34], ['mushrooms', 70], ['garlic', 4.5], ['oil', 9]],
     [['oregano', 0.5, 'cook'], ['thyme', 0.25, 'cook'], ['bay', 0.5, 'cook'], ['salt', 0.25, 'end'], ['pepper', 0.125, 'end'], ['basil', 3, 'serve']], 250,
     'Lentil bolognese',
     'Lentils soak up flavour, so let the herbs simmer with them. Add a little salt at the end, and taste first.',
@@ -360,7 +360,7 @@
      'Add {lentils} red lentils, {canned_tomato} chopped tomatoes, {water} water, the oregano, thyme and bay leaf. Simmer for 20 minutes until thick.',
      'Cook {pasta} pasta as the packet says. Remove the bay leaf, season the sauce with salt and pepper and serve over the pasta with {s:basil} basil.']);
   R('d_veg_omelette', 'european', 'dinner', 20,
-    [['egg', 165], ['mushrooms', 100], ['spinach', 50], ['cheese', 30], ['rye_bread', 60], ['oil', 6]],
+    [['egg', 150], ['mushrooms', 100], ['spinach', 80], ['cheese', 20], ['rye_bread', 80], ['oil', 5.5]],
     [['thyme', 0.25, 'start'], ['pepper', 0.125, 'cook'], ['chives', 3, 'serve']], 0,
     'Mushroom spinach omelette',
     'Brown the mushrooms well before adding anything else: browned mushrooms taste meaty. The cheese and rye are already salty, so taste before adding salt.',
@@ -368,7 +368,7 @@
      'Beat {egg} with the pepper and pour over the vegetables. Scatter with {cheese} grated cheese, cook on medium-low heat until set, and fold.',
      'Serve with {rye_bread} rye bread and {s:chives} chopped chives.']);
   R('d_beef_skillet', 'nordic', 'dinner', 35,
-    [['beef_mince', 120], ['potato', 250], ['cabbage', 150], ['onion', 60], ['oil', 6]],
+    [['beef_mince', 120], ['potato', 240], ['cabbage', 180], ['onion', 50], ['oil', 6]],
     [['allspice', 0.25, 'cook'], ['pepper', 0.125, 'cook'], ['salt', 0.25, 'end'], ['parsley', 3, 'serve']], 0,
     'Beef, potato and cabbage skillet',
     'Allspice is the Nordic meat spice (think meatballs). A quarter teaspoon is plenty, because it is strong. Salt at the end, after the cabbage has cooked down.',
@@ -383,7 +383,7 @@
     ['Heat the oven to 200 °C. Toss {sweet_potato} diced sweet potato, {onion}, in wedges, and {chickpeas} chickpeas (drained and dried) with {oil} oil, the cumin, paprika, coriander, chilli and salt.',
      'Roast for 25 minutes, turning once.', 'Fold in {spinach} spinach to wilt, add the lemon juice, and top with {walnuts} chopped walnuts and coriander leaves.']);
   R('d_meatballs', 'nordic', 'dinner', 45,
-    [['beef_mince', 110], ['potato', 220], ['carrot', 60], ['milk', 30], ['oats', 15], ['onion', 25], ['oil', 8]],
+    [['beef_mince', 105], ['potato', 210], ['carrot', 60], ['milk', 38], ['oats', 19], ['onion', 19], ['oil', 7.5]],
     [['allspice', 0.25, 'start'], ['pepper', 0.25, 'start'], ['nutmeg', 0.125, 'start'], ['salt', 0.25, 'start'], ['parsley', 3, 'serve']], 0,
     'Nordic meatballs with potatoes',
     'Allspice and a little nutmeg make Nordic meatballs taste Nordic. Knead the mixture until sticky for tender balls, and fry one test ball first to check the salt.',
@@ -391,7 +391,7 @@
      'Shape into small balls, about 3 cm across, and fry in {oil} oil on medium heat for 8 to 10 minutes, turning, until cooked through (no pink inside).',
      'Boil {potato} potatoes for 15 to 20 minutes, adding {carrot} carrot, in sticks, for the last 6 minutes. Serve together, sprinkled with {s:parsley} parsley.']);
   R('d_fish_stew', 'nordic', 'dinner', 35,
-    [['cod', 150], ['potato', 150], ['carrot', 60], ['onion', 40], ['milk', 150], ['oil', 6]],
+    [['cod', 130], ['potato', 130], ['carrot', 75], ['onion', 45], ['milk', 170], ['oil', 8]],
     [['bay', 0.5, 'cook'], ['pepper', 0.125, 'cook'], ['salt', 0.25, 'end'], ['dill', 6, 'serve'], ['lemon', 0.25, 'serve']], 250,
     'Creamy cod and potato stew',
     'Keep the stew just below the boil once the milk and fish go in, so the milk stays smooth and the cod does not break up. Dill and lemon go in last.',
@@ -399,7 +399,7 @@
      'Add {milk} milk and {cod} cod, cut into chunks (thaw it first if frozen). Heat gently for 5 minutes without boiling.',
      'Remove the bay leaf, season with salt and lemon, and stir in {s:dill} chopped dill.']);
   R('d_herb_chicken_roots', 'european', 'dinner', 45,
-    [['chicken', 150], ['potato', 200], ['carrot', 120], ['onion', 50], ['garlic', 5], ['oil', 10]],
+    [['chicken', 180], ['potato', 160], ['carrot', 95], ['onion', 60], ['garlic', 6], ['oil', 9.5]],
     [['rosemary', 0.25, 'cook'], ['thyme', 0.5, 'cook'], ['paprika', 0.25, 'cook'], ['salt', 0.25, 'cook'], ['pepper', 0.25, 'cook'], ['parsley', 3, 'serve'], ['lemon', 0.25, 'serve']], 0,
     'Herb-roasted chicken with root vegetables',
     'Dried rosemary and thyme are strong, so they are used in small amounts and mixed into the oil, which spreads the flavour evenly and stops them burning. Season the chicken just before roasting.',
@@ -417,7 +417,7 @@
      'Add {canned_tomato} chopped tomatoes, {kidney_beans} beans, the thyme and the bay leaf. Simmer for 15 minutes, uncovered, until thick.',
      'Remove the bay leaf, season with salt and pepper, tear over {s:basil} basil and serve with the rice.']);
   R('d_garlic_broccoli_pasta', 'european', 'dinner', 25,
-    [['pasta', 90], ['broccoli', 150], ['cheese', 20], ['garlic', 10], ['oil', 12]],
+    [['pasta', 110], ['broccoli', 145], ['cheese', 12], ['garlic', 6], ['oil', 7.5]],
     [['chili', 0.25, 'start'], ['pepper', 0.25, 'end'], ['lemon', 0.25, 'end'], ['parsley', 6, 'serve']], 0,
     'Garlic broccoli pasta',
     'Cook the garlic slowly and stop when it is pale gold: brown garlic turns bitter. The chilli goes in with it to flavour the oil. The cheese adds salt, so taste before adding more.',
@@ -425,7 +425,7 @@
      'Warm {oil} oil gently, add {garlic} garlic, thinly sliced, and the chilli, and cook for 1 minute on low heat until pale golden.',
      'Toss the pasta and broccoli in the garlic oil with a splash of cooking water, the lemon juice, pepper and {cheese} grated cheese. Sprinkle with {s:parsley} parsley.']);
   R('d_cod_tomato_bake', 'european', 'dinner', 40,
-    [['cod', 180], ['rice', 60], ['canned_tomato', 150], ['onion', 50], ['bell_pepper', 60], ['garlic', 5], ['oil', 8]],
+    [['cod', 135], ['rice', 65], ['canned_tomato', 190], ['onion', 33], ['bell_pepper', 85], ['garlic', 3.5], ['oil', 9]],
     [['paprika', 0.5, 'start'], ['chili', 0.125, 'start'], ['oregano', 0.5, 'cook'], ['salt', 0.25, 'cook'], ['parsley', 6, 'serve'], ['lemon', 0.25, 'serve']], 0,
     'Cod baked in spiced tomato sauce',
     'Smoky-sweet paprika and oregano are the heart of this Iberian-style bake. Add the paprika off the highest heat, because it burns easily and turns bitter. Salt goes in the sauce, not on the fish.',
@@ -441,7 +441,7 @@
      'Meanwhile soften {onion} and {carrot} carrot, diced, in {oil} oil for 5 minutes. Add {garlic} garlic and the paprika, then {lentils} red lentils, {canned_tomato} chopped tomatoes, {water} water, the thyme and the bay leaf. Simmer for 20 minutes.',
      'Remove the bay leaf, stir in {frozen_veg} vegetables, season with the rest of the salt and pepper, and spoon into a dish. Top with the mash and bake at 200 °C for 15 minutes until golden.']);
   R('d_coconut_chicken_curry', 'asian', 'dinner', 35,
-    [['chicken', 130], ['coconut_milk', 60], ['rice', 60], ['bell_pepper', 80], ['broccoli', 80], ['onion', 40], ['garlic', 5], ['ginger', 6], ['soy_sauce', 6], ['oil', 6]],
+    [['chicken', 135], ['coconut_milk', 40], ['rice', 60], ['bell_pepper', 120], ['broccoli', 150], ['onion', 40], ['garlic', 4], ['ginger', 5.5], ['soy_sauce', 5.5], ['oil', 5.5]],
     [['curry', 1, 'start'], ['turmeric', 0.25, 'start'], ['coriander', 0.25, 'start'], ['chili', 0.125, 'start'], ['salt', 0.125, 'end'], ['lemon', 0.25, 'end'], ['coriander_leaf', 6, 'serve']], 150,
     'Coconut chicken curry',
     'Fry the curry spices in oil before the coconut milk goes in: this unlocks their aroma. Start with the smaller chilli amount, because the heat grows as the curry stands. Soy sauce and a pinch of salt balance the sweetness of the coconut.',
@@ -450,7 +450,7 @@
      'Add {chicken} chicken in strips and stir to coat, then add {bell_pepper} and {broccoli} broccoli, in pieces, {coconut_milk} coconut milk, {soy_sauce} soy sauce and {water} water. Simmer for 12 minutes until the chicken is cooked through.',
      'Finish with the salt and lemon juice, and serve over the rice with coriander leaves.']);
   R('d_peanut_noodles_tofu', 'asian', 'dinner', 30,
-    [['rice_noodles', 70], ['tofu', 130], ['peanut_butter', 16], ['soy_sauce', 12], ['cabbage', 100], ['carrot', 50], ['garlic', 5], ['ginger', 4], ['oil', 6]],
+    [['rice_noodles', 60], ['tofu', 145], ['peanut_butter', 18], ['soy_sauce', 8], ['cabbage', 130], ['carrot', 65], ['garlic', 5.5], ['ginger', 4], ['oil', 5.5]],
     [['chili', 0.25, 'start'], ['lemon', 0.5, 'end'], ['spring_onion', 6, 'serve'], ['coriander_leaf', 6, 'serve']], 40,
     'Peanut noodles with tofu',
     'The sauce is salty (soy sauce), nutty (peanut butter), sour (lemon) and hot (chilli). Taste it before tossing and adjust one thing at a time. No extra salt is needed.',
@@ -459,7 +459,7 @@
      'Whisk {peanut_butter} peanut butter, {soy_sauce} soy sauce, the lemon juice and {water} warm water into a sauce.',
      'Toss the noodles and vegetables with the sauce and top with {s:spring_onion} spring onion and coriander leaves.']);
   R('d_teriyaki_salmon', 'asian', 'dinner', 30,
-    [['salmon', 140], ['rice', 60], ['broccoli', 120], ['soy_sauce', 15], ['honey', 8], ['ginger', 5], ['garlic', 5], ['sesame_oil', 3]],
+    [['salmon', 150], ['rice', 60], ['broccoli', 100], ['soy_sauce', 10], ['honey', 5], ['ginger', 3], ['garlic', 3], ['sesame_oil', 4]],
     [['spring_onion', 6, 'serve'], ['chili', 0.125, 'serve']], 0,
     'Teriyaki-style salmon with rice',
     'Teriyaki is balance: salty soy sauce and sweet honey, lifted by ginger and garlic. Honey burns quickly, so lower the heat when the glaze thickens. Sesame oil is a finishing oil: add it at the end, off the heat.',
@@ -478,7 +478,7 @@
 
   // ====================== SNACKS ======================
   R('s_skyr_berries', 'nordic', 'snack', 3,
-    [['skyr', 200], ['blueberries', 80]],
+    [['skyr', 160], ['blueberries', 125]],
     [['cardamom', 0.125, 'serve']], 0,
     'Skyr with blueberries',
     'A tiny pinch of cardamom makes plain skyr feel like dessert. Cardamom is strong, so more is not better.',
@@ -496,13 +496,13 @@
     'No cooking and almost no seasoning: a pinch of cinnamon is enough.',
     ['Eat {banana} with {almonds} almonds and {s:cinnamon} cinnamon.']);
   R('s_hummus_veg', 'world', 'snack', 5,
-    [['hummus', 60], ['carrot', 100], ['cucumber', 80]],
+    [['hummus', 70], ['carrot', 55], ['cucumber', 45]],
     [['paprika', 0.125, 'serve'], ['lemon', 0.125, 'serve']], 0,
     'Hummus and vegetable sticks',
     'Hummus is already seasoned. A pinch of paprika and a squeeze of lemon on top make it taste freshly made.',
     ['Cut {carrot} carrot and {cucumber} into sticks.', 'Dip them in {hummus} hummus and finish with {s:paprika} paprika and a squeeze of lemon.']);
   R('s_cottage_rye', 'nordic', 'snack', 3,
-    [['rye_bread', 35], ['cottage', 100], ['tomato', 50]],
+    [['rye_bread', 32], ['cottage', 110], ['tomato', 45]],
     [['pepper', 0.125, 'serve'], ['chives', 3, 'serve']], 0,
     'Cottage cheese on rye',
     'Chives and pepper are all this needs. Cottage cheese is already salted, so skip the salt.',
@@ -514,25 +514,25 @@
     'A small pinch of salt on the egg and tomato is plenty; chives add freshness.',
     ['Boil {egg} for 9 minutes, cool and halve.', 'Serve with {tomato}, sliced, a pinch of salt, pepper and {s:chives} chives.']);
   R('s_yoghurt_walnut', 'european', 'snack', 3,
-    [['yoghurt', 200], ['walnuts', 20], ['honey', 8]],
+    [['yoghurt', 180], ['walnuts', 22], ['honey', 7]],
     [['cinnamon', 0.125, 'serve']], 0,
     'Yoghurt with walnuts and honey',
     'This is a Greek-style pairing. Cinnamon makes the small amount of honey taste sweeter.',
     ['Stir {walnuts} chopped walnuts and {honey} honey into {yoghurt} yoghurt and dust with {s:cinnamon} cinnamon.']);
   R('s_tuna_rye', 'nordic', 'snack', 5,
-    [['rye_bread', 35], ['tuna', 60], ['cucumber', 40]],
+    [['rye_bread', 35], ['tuna', 60], ['cucumber', 50]],
     [['dill', 3, 'serve'], ['lemon', 0.125, 'serve'], ['pepper', 0.125, 'serve']], 0,
     'Tuna rye bite',
     'Canned tuna is already salty. Dill, lemon and pepper provide the lift.',
     ['Top {rye_bread} rye bread with {tuna} tuna and {cucumber}, sliced.', 'Finish with {s:dill} dill, a squeeze of lemon and pepper.']);
   R('s_cheese_rye', 'nordic', 'snack', 3,
-    [['rye_bread', 35], ['cheese', 30], ['cucumber', 40]],
+    [['rye_bread', 38], ['cheese', 27], ['cucumber', 38]],
     [['pepper', 0.125, 'serve'], ['dill', 3, 'serve']], 0,
     'Cheese and cucumber on rye',
     'The classic Nordic open sandwich. The cheese carries the salt, so only pepper and dill are added.',
     ['Top {rye_bread} rye bread with {cheese} cheese, in slices, and {cucumber}, thinly sliced.', 'Finish with {s:dill} dill and pepper.']);
   R('s_tzatziki_veg', 'european', 'snack', 10,
-    [['yoghurt', 100], ['cucumber', 60], ['garlic', 3], ['carrot', 100]],
+    [['yoghurt', 110], ['cucumber', 37], ['garlic', 3], ['carrot', 95]],
     [['dill', 3, 'serve'], ['lemon', 0.125, 'end'], ['salt', 0.125, 'end']], 0,
     'Tzatziki with carrot sticks',
     'Squeezing the water out of the cucumber keeps the dip thick. Raw garlic is strong: use the smaller amount, let the dip stand for 10 minutes and then taste.',
