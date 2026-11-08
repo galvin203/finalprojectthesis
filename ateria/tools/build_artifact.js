@@ -7,10 +7,9 @@ const root = path.resolve(__dirname, '..');
 const read = (p) => fs.readFileSync(path.join(root, p), 'utf8');
 
 const index = read('index.html');
-const fonts = (index.match(/<link rel="stylesheet" href="(https:\/\/fonts\.googleapis\.com[^"]+)">/) || [])[1];
 const body = index.slice(index.indexOf('<body>') + 6, index.indexOf('<script'));
 const scripts = [...index.matchAll(/<script src="([^"]+)"><\/script>/g)].map((m) => m[1]);
-if (!fonts || !body.trim() || scripts.length < 5) throw new Error('index.html did not have the expected structure');
+if (!body.trim() || scripts.length < 5) throw new Error('index.html did not have the expected structure');
 
 const safe = (js) => js.replace(/<\/script/gi, '<\\/script');
 // the single-file build cannot load img/ files, so every image under img/ (logos, dish photos) becomes a data: URI
@@ -21,12 +20,15 @@ const imageFiles = (dir, rel) => fs.readdirSync(path.join(root, dir), { withFile
 const inlineImages = (text) => imageFiles('img', 'img/').sort((a, b) => b.length - a.length).reduce((t, f) =>
   t.split(f).join('data:' + mime[path.extname(f).toLowerCase()] + ';base64,' + fs.readFileSync(path.join(root, f)).toString('base64')), text);
 
+// the fonts in fonts/ become data: URIs too, so the single file needs no network at all
+const inlineFonts = (css) => css.replace(/url\(\s*['"]?(fonts\/[^)'"\s]+\.woff)['"]?\s*\)/g, (m, f) =>
+  'url(data:font/woff;base64,' + fs.readFileSync(path.join(root, f)).toString('base64') + ')');
+
 const out = inlineImages([
   '<title>Ateria</title>',
   '<meta name="claude:viewport-fit-sides" content="cover">',
-  '<link rel="stylesheet" href="' + fonts + '">',
   '<style>',
-  read('styles.css'),
+  inlineFonts(read('styles.css')),
   '</style>',
   body.trim(),
   ...scripts.map((s) => '<script>\n' + safe(read(s)) + '\n</script>'),

@@ -523,10 +523,13 @@
   // ---------- welcome: the first screen for someone who has not made a profile yet ----------
   function dishCard(m) {
     const ph = dishPhoto(m.recipeId);
-    return '<li class="dishcard"><span class="art' + (ph ? ' photo' : '') + '">' + (ph ? dishImg(m.recipeId, 440, 'fill') : mealPics(m, 56)) + '</span>' +
+    return '<li class="dishcard"><span class="art' + (ph ? ' photo' : '') + '">' + (ph ? dishImg(m.recipeId, 440, 'fill') : mealPics(m, 64)) + '</span>' +
       '<span class="body"><span class="kind">' + A.icon(m.meal, 16) + esc(I.meal(m.meal)) + '</span><b class="nm">' + esc(I.recipe(m.recipeId).name) + '</b>' +
       '<span class="meta">' + esc(t('meal.min', { n: m.minutes })) + ' · ' + n0(m.nutrients.kcal) + ' ' + esc(t('kcal')) + ' · ' + esc(t('meal.protein', { n: n0(m.nutrients.protein) })) + '</span></span></li>';
   }
+  // drawings that float over the welcome banner (decorative only)
+  const HERO_FOOD = ['salmon', 'blueberries', 'rye_bread', 'egg', 'avocado', 'tomato', 'carrot'];
+  const HERO_TILT = [-8, 7, -5, 9, -9, 6, -6];
   function viewWelcome() {
     let dishes = '';
     if (!S.plan.error) {
@@ -544,6 +547,9 @@
     ];
     return '<div class="welcome">' +
       '<section class="hero"><h1>' + esc(t('welcome.title')) + '</h1><p class="lead">' + esc(t('welcome.lead')) + '</p>' +
+      '<div class="stickers" aria-hidden="true">' + HERO_FOOD.map(function (id, i) {
+        return '<span class="sticker" style="--i:' + i + ';--r:' + HERO_TILT[i] + 'deg">' + A.icon(id, 60, { badge: false }) + '</span>';
+      }).join('') + '</div>' +
       '<h2 class="pickh" id="wl-pick">' + esc(t('welcome.pick')) + '</h2>' +
       '<div class="goalpick" role="group" aria-labelledby="wl-pick">' + GOALS.map(function (k) {
         return '<button type="button" class="gcard" data-act="welcomegoal" data-goal="' + k + '">' + tile(k, 52, { badge: false }) + '<span>' + esc(t('goal.' + k)) + '</span></button>';

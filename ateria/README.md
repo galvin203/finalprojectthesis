@@ -15,7 +15,7 @@ Ateria is inspired by apps like Mealbird, but every recipe, text, ingredient dra
 open index.html                       # any browser; double-click works
 
 # 2. Run the tests (Node 18 or newer, Python 3 for the price tool)
-node --test tests/*.test.js           # 76 tests
+node --test tests/*.test.js           # 92 tests
 python3 -I tests/test_prices_tool.py  # 8 tests
 
 # 3. Optional: build one self-contained page (for publishing as a single file)
@@ -24,7 +24,7 @@ node tools/build_artifact.js          # writes dist/ateria-artifact.html
 
 ### Put it online (Vercel)
 
-Ateria is a static site, so it needs no build tools. In Vercel, import this repository and set **Root Directory** to `ateria`. `vercel.json` already tells Vercel to publish only `index.html`, `styles.css`, `js/`, `data/` and `img/`, so tests and tools are not served. Every push to `main` then redeploys the site.
+Ateria is a static site, so it needs no build tools. In Vercel, import this repository and set **Root Directory** to `ateria`. `vercel.json` already tells Vercel to publish only `index.html`, `styles.css`, `js/`, `data/`, `fonts/` and `img/`, so tests and tools are not served. Every push to `main` then redeploys the site.
 
 ## How to use the app
 
@@ -108,7 +108,7 @@ Before fetching anything automatically, read each shop's terms of use, use it fo
 
 ```
 index.html               app shell
-styles.css               light and dark themes
+styles.css               light and dark themes, type scale, welcome banner
 js/engine.js             targets, planner, shopping list, price import (no DOM)
 js/measure.js            grams -> spoons / dl / pieces, recipe text, seasoning summary
 js/store.js              saved details, consent, backup, cleaning of imported data
@@ -116,6 +116,7 @@ js/cloud.js              optional private copy in the person's Claude account
 js/help.js               helper: matching, panel, read aloud, optional Ask Claude
 js/i18n.js               language: text lookup, plurals, number and money formats
 js/app.js                interface
+fonts/                   Lora (headlines) and Inter (text), subset with Vietnamese, served from this site; see fonts/README.md
 img/                     logos of S-market, K-market and Lidl; img/food/ is for dish photos
 data/ingredients.js      65 ingredients (nutrition, pack size, allergens, swaps, measures)
 data/spices.js           25 seasonings
@@ -131,7 +132,7 @@ tests/                   JavaScript and Python tests
 
 ## Tests
 
-`node --test tests/*.test.js` runs 76 tests: the targets checked by hand, the planner on 600 random profiles and many diet and allergy combinations, all texts in four languages, amounts in every unit, storage and consent, and the helper. `python3 -I tests/test_prices_tool.py` runs 8 more for the price tool.
+`node --test tests/*.test.js` runs 92 tests: the targets checked by hand, the planner on 600 random profiles and many diet and allergy combinations, all texts in four languages, amounts in every unit, storage and consent, and the helper. `python3 -I tests/test_prices_tool.py` runs 8 more for the price tool.
 
 ## Known limits
 
@@ -140,3 +141,10 @@ tests/                   JavaScript and Python tests
 * Details are kept per browser. To move to another device, use a backup file (or the account copy on Claude).
 * The offline helper answers are fixed text written for this app. Answers from Claude are not reviewed and can be wrong.
 * No licence has been chosen yet.
+
+## Look and type
+
+* **Fonts.** Headlines, dish names and big numbers use Lora; everything else uses Inter. Both are in `fonts/` (WOFF subsets with Latin, Finnish, Swedish and Vietnamese letters), so the site makes no request to a font service. Licences are in `fonts/README.md`.
+* **Vietnamese.** Headlines are never letter-spaced tightly and get extra line height when the page language is `vi`, so stacked tone marks do not touch the line above.
+* **Colours.** Spruce green for structure, cloudberry gold for the one main button on the welcome screen, lingonberry red for hearts and warnings. Dark mode keeps the welcome banner and the daily-target card deep green.
+* **Motion.** The only animation that plays by itself is the food stickers on the welcome banner. It is switched off for people who ask for less motion.

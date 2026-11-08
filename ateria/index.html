@@ -4,13 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ateria</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400;500;600&display=swap">
+<meta name="theme-color" content="#eef2ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1512" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="fonts/ateria-serif.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="fonts/ateria-sans-400.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="app">
   <header class="brand">
-    <a class="wordmark" href="#welcome">Ateria</a>
+    <a class="wordmark" href="#welcome"><svg class="mark" viewBox="0 0 36 36" aria-hidden="true" focusable="false"><rect width="36" height="36" rx="11" fill="currentColor"/><path d="M18 6.5l5.4 7.2h-3l4.6 6.2h-4.1l4.5 6.1H10.6l4.5-6.1H11l4.6-6.2h-3z" fill="#fff"/><rect x="16.6" y="25.4" width="2.8" height="3.6" rx="1" fill="#f2b640"/></svg><span>Ateria</span></a>
     <span class="muted tagline" data-i18n="brand.tag">Weekly meal plans with a priced shopping list</span>
     <label class="langsel">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
