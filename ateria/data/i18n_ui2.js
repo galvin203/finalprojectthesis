@@ -1,5 +1,5 @@
 /*
- * Interface texts added in version 2 (kitchen measures, seasoning, favourites, saved data, weight log, helper), in
+ * Interface texts added in version 2 (kitchen measures, seasoning, favourites, saved data, weight log, food log, helper), in
  * English, Finnish, Swedish and Vietnamese. Same conventions as data/i18n_ui.js: {placeholders}, _one/_other plural forms.
  * Swedish and Vietnamese (and parts of the Finnish) were written for this project: have a native speaker check them.
  */
@@ -124,10 +124,10 @@
   // ---------- saved data ----------
   U('data.title', 'My data', 'Tietoni', 'Mina uppgifter', 'Dữ liệu của tôi');
   U('consent.q', 'Keep my details on this device?', 'Tallennetaanko tietoni tälle laitteelle?', 'Spara mina uppgifter på den här enheten?', 'Lưu thông tin của tôi trên thiết bị này?');
-  U('consent.body', 'Ateria can remember your details, favourites and ticked items on this device, so you do not have to enter them again. Nothing is sent anywhere. You can delete it at any time.',
-    'Ateria voi muistaa tietosi, suosikkisi ja merkityt ostokset tällä laitteella, jotta sinun ei tarvitse syöttää niitä uudelleen. Mitään ei lähetetä minnekään. Voit poistaa ne milloin tahansa.',
-    'Ateria kan komma ihåg dina uppgifter, favoriter och markerade varor på den här enheten, så att du slipper skriva in dem igen. Ingenting skickas någonstans. Du kan radera dem när som helst.',
-    'Ateria có thể ghi nhớ thông tin, món yêu thích và các mục đã đánh dấu trên thiết bị này, để bạn không phải nhập lại. Không có gì được gửi đi đâu cả. Bạn có thể xóa bất cứ lúc nào.');
+  U('consent.body', 'Ateria can remember your details, favourites, ticked items and food log on this device, so you do not have to enter them again. Nothing is sent anywhere. You can delete it at any time.',
+    'Ateria voi muistaa tietosi, suosikkisi, merkityt ostokset ja ruokapäiväkirjasi tällä laitteella, jotta sinun ei tarvitse syöttää niitä uudelleen. Mitään ei lähetetä minnekään. Voit poistaa ne milloin tahansa.',
+    'Ateria kan komma ihåg dina uppgifter, favoriter, markerade varor och din matlogg på den här enheten, så att du slipper skriva in dem igen. Ingenting skickas någonstans. Du kan radera dem när som helst.',
+    'Ateria có thể ghi nhớ thông tin, món yêu thích, các mục đã đánh dấu và nhật ký ăn uống trên thiết bị này, để bạn không phải nhập lại. Không có gì được gửi đi đâu cả. Bạn có thể xóa bất cứ lúc nào.');
   U('consent.migrated', 'Details saved by an earlier version of Ateria were found on this device. Keep them?',
     'Tältä laitteelta löytyi Aterian aiemman version tallentamia tietoja. Säilytetäänkö ne?',
     'Uppgifter som sparats av en tidigare version av Ateria hittades på den här enheten. Ska de sparas?',
@@ -240,4 +240,53 @@
   U('help.aiLimit', 'Too many questions. Please wait a minute.', 'Liian monta kysymystä. Odota hetki.', 'För många frågor. Vänta en stund.', 'Quá nhiều câu hỏi. Vui lòng chờ một chút.');
   U('help.aiLabel', 'Answer from Claude (AI)', 'Clauden vastaus (tekoäly)', 'Svar från Claude (AI)', 'Câu trả lời từ Claude (AI)');
   U('help.hint', 'Need help? Tap here.', 'Tarvitsetko apua? Napauta tästä.', 'Behöver du hjälp? Tryck här.', 'Cần giúp đỡ? Chạm vào đây.');
+
+  // ---------- food log ----------
+  U('nav.log', 'Log', 'Kirjaus', 'Logg', 'Nhật ký');
+  U('log.title', 'Food log', 'Ruokapäiväkirja', 'Matlogg', 'Nhật ký ăn uống');
+  U('log.intro', 'Write down what you eat and see how the day compares with your daily target.',
+    'Kirjaa, mitä syöt, ja katso, miten päivä vertautuu päivittäiseen tavoitteeseesi.',
+    'Skriv ner vad du äter och se hur dagen står sig mot ditt dagliga mål.',
+    'Ghi lại những gì bạn ăn và xem cả ngày so với mục tiêu mỗi ngày của bạn.');
+  U('log.days', 'Last seven days', 'Viimeiset seitsemän päivää', 'Senaste sju dagarna', 'Bảy ngày gần nhất');
+  U('log.today', 'Today', 'Tänään', 'Idag', 'Hôm nay');
+  U('log.date', 'Date', 'Päivämäärä', 'Datum', 'Ngày');
+  U('log.dayAria', '{date}, {n} kcal logged', '{date}, kirjattu {n} kcal', '{date}, {n} kcal loggat', '{date}, đã ghi {n} kcal');
+  U('log.left', '{n} kcal left for this day', '{n} kcal jäljellä tälle päivälle', '{n} kcal kvar för den här dagen', 'Còn {n} kcal cho ngày này');
+  U('log.over', '{n} kcal over the daily target', '{n} kcal yli päivän tavoitteen', '{n} kcal över dagsmålet', 'Vượt mục tiêu ngày {n} kcal');
+  U('log.none', 'Nothing logged for this day yet.', 'Tälle päivälle ei ole vielä kirjauksia.', 'Inget loggat för den här dagen ännu.', 'Chưa ghi gì cho ngày này.');
+  U('log.remove', 'Remove {name}', 'Poista {name}', 'Ta bort {name}', 'Xóa {name}');
+  U('log.fromPlan', 'From my plan', 'Omasta ruokalistasta', 'Från min matplan', 'Từ thực đơn của tôi');
+  U('log.planDay', 'Plan day', 'Ruokalistan päivä', 'Dag i planen', 'Ngày trong thực đơn');
+  U('log.portion', 'Portion', 'Annos', 'Portion', 'Khẩu phần');
+  U('log.noPlan', 'Make your plan first, then you can log its meals here.',
+    'Tee ensin ruokalista, niin voit kirjata sen ateriat tähän.',
+    'Gör först din plan, så kan du logga dess måltider här.',
+    'Hãy tạo thực đơn trước, rồi bạn có thể ghi các bữa trong đó vào đây.');
+  U('log.add', 'Add', 'Lisää', 'Lägg till', 'Thêm');
+  U('log.addFood', 'Add a food', 'Lisää ruoka-aine', 'Lägg till en matvara', 'Thêm một thực phẩm');
+  U('log.food', 'Food', 'Ruoka-aine', 'Matvara', 'Thực phẩm');
+  U('log.grams', 'Amount (g)', 'Määrä (g)', 'Mängd (g)', 'Số lượng (g)');
+  U('log.slot', 'Meal', 'Ateria', 'Måltid', 'Bữa ăn');
+  U('log.quick', 'Quick add', 'Pikakirjaus', 'Snabbtillägg', 'Thêm nhanh');
+  U('log.quickHelp', 'For food that is not on the list, such as a restaurant meal. Enter what you know. Only energy and protein are added to the totals.',
+    'Ruoalle, jota ei ole listalla, esimerkiksi ravintola-ateria. Anna tiedot, jotka tiedät. Summiin lasketaan vain energia ja proteiini.',
+    'För mat som inte finns i listan, till exempel en restaurangmåltid. Ange det du vet. Bara energi och protein räknas med i summorna.',
+    'Dành cho món không có trong danh sách, ví dụ bữa ăn ở nhà hàng. Hãy nhập những gì bạn biết. Chỉ năng lượng và chất đạm được cộng vào tổng.');
+  U('log.name', 'What did you eat?', 'Mitä söit?', 'Vad åt du?', 'Bạn đã ăn gì?');
+  U('log.kcal', 'Energy (kcal)', 'Energia (kcal)', 'Energi (kcal)', 'Năng lượng (kcal)');
+  U('log.protein', 'Protein (g, optional)', 'Proteiini (g, valinnainen)', 'Protein (g, valfritt)', 'Chất đạm (g, không bắt buộc)');
+  U('log.err', 'Could not add this. Check the food, the name and the numbers.',
+    'Lisäys ei onnistunut. Tarkista ruoka, nimi ja luvut.',
+    'Det gick inte att lägga till. Kontrollera maten, namnet och siffrorna.',
+    'Không thể thêm. Hãy kiểm tra thực phẩm, tên và các con số.');
+  U('log.full', 'This day already has 40 entries. Remove one first.',
+    'Tässä päivässä on jo 40 kirjausta. Poista ensin yksi.',
+    'Den här dagen har redan 40 poster. Ta bort en först.',
+    'Ngày này đã có 40 mục. Hãy xóa bớt một mục trước.');
+  U('log.added', 'Added to your log', 'Lisätty kirjauksiin', 'Tillagd i loggen', 'Đã thêm vào nhật ký');
+  U('log.note', 'Amounts and nutrition values are approximate, so treat the totals as a guide. This is not medical or dietetic advice. The log does not change your plan.',
+    'Määrät ja ravintoarvot ovat likimääräisiä, joten pidä summia suuntaa-antavina. Tämä ei ole lääketieteellistä eikä ravitsemusneuvontaa. Kirjaus ei muuta ruokalistaasi.',
+    'Mängder och näringsvärden är ungefärliga, så se summorna som en vägledning. Det här är inte medicinska råd eller kostråd. Loggen ändrar inte din plan.',
+    'Khối lượng và giá trị dinh dưỡng chỉ là ước lượng, nên hãy xem tổng số như một tham khảo. Đây không phải lời khuyên y tế hay dinh dưỡng. Nhật ký không làm thay đổi thực đơn của bạn.');
 })(typeof window !== 'undefined' ? window : globalThis);

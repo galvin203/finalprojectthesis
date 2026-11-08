@@ -15,7 +15,7 @@ Ateria is inspired by apps like Mealbird, but every recipe, text, ingredient dra
 open index.html                       # any browser; double-click works
 
 # 2. Run the tests (Node 18 or newer, Python 3 for the price tool)
-node --test tests/*.test.js           # 92 tests
+node --test tests/*.test.js           # 110 tests
 python3 -I tests/test_prices_tool.py  # 8 tests
 
 # 3. Optional: build one self-contained page (for publishing as a single file)
@@ -34,6 +34,7 @@ Ateria is a static site, so it needs no build tools. In Vercel, import this repo
 | **Food types** (step 2 of 3 after the welcome screen) | Swipe cards, one per kind of food (Nordic, European, Asian, everyday and world): right or the green tick button for food you like, left or the red cross button for food you do not. The arrow keys and an undo button work too, and the cards stay still for people who ask their device for less motion. What you tick fills the "food you would like more of" choice on the next step (a soft preference for the planner, not a filter). "Skip this step" leaves it as it is. |
 | **You** | Enter sex, age, height, weight, activity, goal (lose / maintain / gain weight / build muscle at the gym), diet, allergies, dislikes, meals per day, number of people and a weekly budget (a big number with a slider; 0 means no budget). Add more people, log your weight, see your favourite recipes, back up or delete your data. |
 | **Plan** | See 7 days of meals scaled to your targets. Open a meal to see the amounts for 1–8 portions, the seasoning list and the method. Swap a meal, press **New plan** for another week, tap the heart on recipes you like. |
+| **Log** | Write down what you ate on any of the last 120 days. Add a meal from your own plan (whole, half, one and a half or two portions), a food from the ingredient list by weight, or a quick entry (a name, calories and optional protein) for something that is not on the list. The day shows the energy left or passed against your daily target and your protein, carbohydrate and fat against theirs, and the last seven days at a glance. Each entry keeps the values it had when it was added. It is a diary only: it does not change the plan. Quick entries count energy and protein only. |
 | **Shop** | One list for the whole week with the price in each store, the cheapest store and the cheapest mixed basket. A separate "check your cupboard" list shows the seasonings you need (not priced). |
 | **Prices** | Type a real price for any ingredient and store, or import a CSV or JSON file. |
 | **Help** (button, bottom right) | Ask "how do I...?" in any of the four languages. It answers offline, can read the answer aloud and has buttons that open the right screen. |
@@ -48,7 +49,7 @@ Ateria is a static site, so it needs no build tools. In Vercel, import this repo
 ### Your details and privacy
 
 * **Nothing is saved until you say yes.** On first use the app asks "Keep my details on this device?". If you say no, nothing else is stored.
-* After "yes", details are kept in this browser only: up to 6 people, weight log, favourites, week choices and your prices.
+* After "yes", details are kept in this browser only: up to 6 people, weight log, food log, favourites, week choices and your prices.
 * In **You → My data** you can make a backup (text or file), load a backup, and delete everything (two steps). A backup contains personal details, so keep it safe.
 * If the page runs on Claude, an extra **Copy in my account** button saves the same backup to a private document, only when you press it.
 * Storage can be blocked (private window): the app tells you and keeps working from memory.
@@ -115,6 +116,7 @@ js/store.js              saved details, consent, backup, cleaning of imported da
 js/cloud.js              optional private copy in the person's Claude account
 js/help.js               helper: matching, panel, read aloud, optional Ask Claude
 js/i18n.js               language: text lookup, plurals, number and money formats
+js/log.js                food log: portions, grams, totals and dates (no screen, no storage)
 js/app.js                interface
 fonts/                   Lora (headlines) and Inter (text), subset with Vietnamese, served from this site; see fonts/README.md
 img/                     logos of S-market, K-market and Lidl; img/food/ is for dish photos
@@ -132,7 +134,7 @@ tests/                   JavaScript and Python tests
 
 ## Tests
 
-`node --test tests/*.test.js` runs 92 tests: the targets checked by hand, the planner on 600 random profiles and many diet and allergy combinations, all texts in four languages, amounts in every unit, storage and consent, and the helper. `python3 -I tests/test_prices_tool.py` runs 8 more for the price tool.
+`node --test tests/*.test.js` runs 110 tests: the targets checked by hand, the planner on 600 random profiles and many diet and allergy combinations, all texts in four languages, amounts in every unit, storage and consent, the food log (sums, dates, limits, cleaning of imported data) and the helper. `python3 -I tests/test_prices_tool.py` runs 8 more for the price tool.
 
 ## Known limits
 

@@ -7,7 +7,7 @@ const A = globalThis.Ateria;
 const D = A.I18N;
 const H = A.help;
 const LANGS = A.LANGS.map((l) => l.id);
-const VIEWS = ['plan', 'shop', 'prices', 'profile'];
+const VIEWS = ['plan', 'log', 'shop', 'prices', 'profile'];
 
 test('the list has the topics people get stuck on', () => {
   const ids = D.help.map((t) => t.id);
@@ -61,6 +61,17 @@ test('short, sloppy and accent-free questions still work', () => {
   assert.equal(top('đổi món', 'plan'), 'swap');
   assert.equal(top('backup', 'profile'), 'backup');
   assert.equal(top('can i use it on another phone', 'profile'), 'backup');
+});
+
+test('questions about writing down what was eaten find the food log, and weigh-ins still find the weight topic', () => {
+  const top = (q, v) => (H.match(q, v)[0] || {}).id;
+  assert.equal(top('where do i log what i ate', 'plan'), 'log');
+  assert.equal(top('food diary', 'plan'), 'log');
+  assert.equal(top('kirjaan ruoan', 'plan'), 'log');
+  assert.equal(top('logga mat', 'plan'), 'log');
+  assert.equal(top('ghi lại bữa ăn', 'plan'), 'log');
+  assert.equal(top('track my weight', 'profile'), 'weight');
+  assert.ok(D.help.find((t) => t.id === 'log').actions.includes('log'));
 });
 
 test('nonsense and empty questions match nothing', () => {

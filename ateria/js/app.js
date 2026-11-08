@@ -34,6 +34,7 @@
     view: 'plan', draftGoal: null, draftCuisines: null, flow: false, swipe: { i: 0, liked: [], hist: [], busy: false, msg: '' }, day: 0, open: null, swapOpen: null, plan: null, prices: null, portions: {},
     io: '', ioMsg: null, resetArmed: false, filter: '',
     backup: '', dataMsg: null, wipeArmed: false, removeArmed: false, wtErr: false, cloudMsg: null, cloudAt: null, cloudBusy: false,
+    logDate: today(), logPlanDay: 0, logPortion: 1,
   };
 
   function rec() { return store.active(); }
@@ -471,7 +472,112 @@
       '<p role="status" class="small muted">' + esc(S.cloudBusy ? t('cloud.busy') : msgText(S.cloudMsg)) + (S.cloudAt ? ' ' + esc(t('cloud.at', { time: fmtStamp(S.cloudAt) })) : '') + '</p>';
   }
 
-  const SECTIONS = { people: secPeople, weight: secWeight, favs: secFavs, data: secData, cloud: secCloud };
+  // ---------- food log ----------
+  const LOG = A.log;
+  const LOG_MIN_DAYS = 119; // the date box reaches back this far (the store keeps 120 days)
+  function logTargets() { return S.plan && !S.plan.error ? S.plan.targets : E.computeTargets(P()); }
+  function weekdayShort(d) {
+    try { return new Intl.DateTimeFormat(LOCALES[S.lang], { weekday: 'short', timeZone: 'UTC' }).format(new Date(d + 'T00:00:00Z')); } catch (e) { return d.slice(8); }
+  }
+  function portionText(x) { return I.n(x, Math.abs(x * 10 - Math.round(x * 10)) > 1e-9 ? 2 : (x % 1 ? 1 : 0)); }
+  function logEntryName(e) { return e.t === 'plan' ? I.recipe(e.ref).name : e.t === 'food' ? I.ingName(e.ref) : e.name; }
+  function logEntryMeta(e) {
+    const bits = [];
+    if (e.t === 'plan' && e.x !== 1) bits.push('× ' + portionText(e.x));
+    if (e.t === 'food') bits.push(n0(e.g) + ' g');
+    if (e.p > 0) bits.push(t('macro.protein') + ' ' + n0(e.p) + ' g');
+    return bits.join(' · ');
+  }
+  function defaultSlot() { const h = new Date().getHours(); return h < 10 ? 'breakfast' : h < 15 ? 'lunch' : h < 18 ? 'snack' : 'dinner'; }
+  function slotOptions(sel) {
+    return LOG.SLOTS.map(function (k) { return '<option value="' + k + '"' + (k === sel ? ' selected' : '') + '>' + esc(I.meal(k)) + '</option>'; }).join('');
+  }
+
+  // the chosen day: the last seven days, the date box, the totals against the daily target, and the entries
+  function secLogDay() {
+    const kcal = t('kcal'), tg = logTargets(), now = today();
+    const entries = store.logOf(S.logDate), tot = LOG.totals(entries), left = LOG.left(tot, tg.kcal);
+    let h = '<div class="days week" role="group" aria-label="' + esc(t('log.days')) + '">' + LOG.week(rec().log, now, 7).map(function (w) {
+      return '<button type="button" data-act="logday" data-d="' + w.d + '" aria-pressed="' + (w.d === S.logDate) + '" aria-label="' + esc(t('log.dayAria', { date: fmtDate(w.d), n: n0(w.kcal) })) + '"><b>' +
+        esc(w.d === now ? t('log.today') : weekdayShort(w.d)) + '</b><small>' + (w.n ? n0(w.kcal) : '–') + '</small></button>';
+    }).join('') + '</div>';
+    h += '<label class="field logdate"><span>' + esc(t('log.date')) + '</span><input id="logdate" type="date" value="' + S.logDate + '" min="' + LOG.shiftDate(now, -LOG_MIN_DAYS) + '" max="' + now + '"></label>';
+    h += '<div class="panel logpanel"><h3>' + esc(fmtDate(S.logDate)) + '</h3>';
+    h += '<p class="logbalance' + (left < 0 ? ' over' : '') + '" id="logbalance" tabindex="-1" role="status">' + esc(left >= 0 ? t('log.left', { n: n0(left) }) : t('log.over', { n: n0(-left) })) + '</p>';
+    h += '<div class="dayline">' +
+      gauge(t('gauge.energy'), tot.kcal, tg.kcal, kcal) + gauge(t('macro.protein'), tot.protein, tg.protein, 'g') +
+      gauge(t('macro.carbs'), tot.carbs, tg.carbs, 'g') + gauge(t('macro.fat'), tot.fat, tg.fat, 'g') + '</div>';
+    if (!entries.length) h += '<p class="muted">' + esc(t('log.none')) + '</p>';
+    LOG.SLOTS.forEach(function (slot) {
+      const list = entries.filter(function (e) { return e.m === slot; });
+      if (!list.length) return;
+      h += '<h4 class="logslot"><span>' + esc(I.meal(slot)) + '</span><small class="muted">' + n0(LOG.totals(list).kcal) + ' ' + esc(kcal) + '</small></h4><ul class="loglist">' + list.map(function (e) {
+        const name = logEntryName(e), meta = logEntryMeta(e);
+        return '<li class="logrow"><span class="logname"><span>' + esc(name) + '</span>' + (meta ? '<small class="muted">' + esc(meta) + '</small>' : '') + '</span><b>' + n0(e.k) + ' ' + esc(kcal) + '</b>' +
+          '<button type="button" class="x" data-act="logdel" data-id="' + e.id + '" aria-label="' + esc(t('log.remove', { name: name })) + '">×</button></li>';
+      }).join('') + '</ul>';
+    });
+    return h + '</div>';
+  }
+
+  // the meals of the person's plan, to be added as eaten
+  function secLogPlan() {
+    let h = '<h3>' + A.icon('check', 26) + esc(t('log.fromPlan')) + '</h3>';
+    if (!S.plan || S.plan.error) return h + '<p class="muted">' + esc(t('log.noPlan')) + '</p><a class="btn small" href="#profile">' + esc(t('plan.change')) + '</a>';
+    const kcal = t('kcal'), day = S.plan.days[S.logPlanDay] || S.plan.days[0];
+    h += '<div class="logpick"><label class="field"><span>' + esc(t('log.planDay')) + '</span><select id="logplanday">' + S.plan.days.map(function (d, i) {
+      return '<option value="' + i + '"' + (i === S.logPlanDay ? ' selected' : '') + '>' + esc(t('plan.day', { n: i + 1 })) + '</option>';
+    }).join('') + '</select></label>' +
+      '<label class="field"><span>' + esc(t('log.portion')) + '</span><select id="logportion">' + LOG.PORTIONS.map(function (x) {
+        return '<option value="' + x + '"' + (x === S.logPortion ? ' selected' : '') + '>× ' + portionText(x) + '</option>';
+      }).join('') + '</select></label></div>';
+    h += '<ul class="loglist">' + day.meals.map(function (m, i) {
+      const name = I.recipe(m.recipeId).name;
+      return '<li class="logrow"><span class="logname"><span>' + esc(name) + '</span><small class="muted">' + esc(I.meal(m.meal)) + ' · ' + n0(m.nutrients.kcal * S.logPortion) + ' ' + esc(kcal) + '</small></span>' +
+        '<button class="btn small" type="button" data-act="logplan" data-i="' + i + '" aria-label="' + esc(t('log.add') + ': ' + name) + '">' + esc(t('log.add')) + '</button></li>';
+    }).join('') + '</ul>';
+    return h;
+  }
+
+  function viewLog() {
+    const slot = defaultSlot();
+    let h = consentBanner() + exampleBanner();
+    h += '<div class="row between"><h2>' + esc(t('log.title')) + '</h2></div>';
+    h += '<p class="muted">' + esc(t('log.intro')) + '</p>';
+    h += '<section id="sec-logday" style="display:grid;gap:12px">' + secLogDay() + '</section>';
+    h += '<section class="panel" id="sec-logplan">' + secLogPlan() + '</section>';
+    h += '<section class="panel"><details class="more" open><summary>' + esc(t('log.addFood')) + '</summary>' +
+      '<form id="logfform" class="logform f" novalidate>' +
+      '<label class="field"><span>' + esc(t('log.food')) + '</span><select id="logfood">' + A.INGREDIENTS.map(function (i) { return { id: i.id, n: I.ingName(i.id) }; })
+        .sort(function (x, y) { return x.n.localeCompare(y.n, I.lang()); }).map(function (o) { return '<option value="' + o.id + '">' + esc(o.n) + '</option>'; }).join('') + '</select></label>' +
+      '<label class="field"><span>' + esc(t('log.grams')) + '</span><input id="loggrams" type="number" inputmode="decimal" min="1" max="3000" step="1" value="100"></label>' +
+      '<label class="field"><span>' + esc(t('log.slot')) + '</span><select id="logfslot">' + slotOptions(slot) + '</select></label>' +
+      '<button class="btn primary small" type="submit">' + esc(t('log.add')) + '</button></form></details>' +
+      '<details class="more"><summary>' + esc(t('log.quick')) + '</summary><p class="note">' + esc(t('log.quickHelp')) + '</p>' +
+      '<form id="logqform" class="logform q" novalidate>' +
+      '<label class="field"><span>' + esc(t('log.name')) + '</span><input id="logqname" type="text" maxlength="40" autocomplete="off"></label>' +
+      '<label class="field"><span>' + esc(t('log.kcal')) + '</span><input id="logqkcal" type="number" inputmode="numeric" min="0" max="5000" step="1"></label>' +
+      '<label class="field"><span>' + esc(t('log.protein')) + '</span><input id="logqprot" type="number" inputmode="decimal" min="0" max="500" step="1"></label>' +
+      '<label class="field"><span>' + esc(t('log.slot')) + '</span><select id="logqslot">' + slotOptions(slot) + '</select></label>' +
+      '<button class="btn primary small" type="submit">' + esc(t('log.add')) + '</button></form></details></section>';
+    if (store.consent() !== 'yes') h += '<p class="note">' + esc(t('wt.needSave')) + '</p>';
+    h += '<p class="note">' + esc(t('log.note')) + '</p>';
+    return h;
+  }
+
+  // adds one entry to the chosen day; returns true when it was added
+  function logAdd(entry) {
+    if (!entry) { toast(t('log.err')); return false; }
+    const id = store.addLog(S.logDate, entry);
+    if (id === -1) { toast(t('log.full')); return false; }
+    if (!id) { toast(t('log.err')); return false; }
+    refresh('logday');
+    const s = store.status();
+    toast(t(s.consent === 'yes' && s.error ? 'toast.saveFail' : 'log.added'));
+    return true;
+  }
+
+  const SECTIONS = { people: secPeople, weight: secWeight, favs: secFavs, data: secData, cloud: secCloud, logday: secLogDay, logplan: secLogPlan };
   function refresh(name) {
     const el = document.getElementById('sec-' + name);
     if (!el) return;
@@ -709,7 +815,7 @@
   });
 
   // ---------- render & routing ----------
-  const VIEWS = { welcome: viewWelcome, swipe: viewSwipe, plan: viewPlan, shop: viewShop, prices: viewPrices, profile: viewProfile };
+  const VIEWS = { welcome: viewWelcome, swipe: viewSwipe, plan: viewPlan, log: viewLog, shop: viewShop, prices: viewPrices, profile: viewProfile };
 
   function renderChrome() {
     document.documentElement.lang = S.lang;
@@ -737,6 +843,7 @@
     const h = (location.hash || '').replace('#', '');
     // someone without a profile starts on the welcome screen; everyone else starts on their plan
     S.view = VIEWS[h] ? h : (isExample() ? 'welcome' : 'plan');
+    if (S.view === 'log') S.logDate = today(); // the log opens on today
     if (S.view !== 'swipe' && S.view !== 'profile') { S.flow = false; S.draftGoal = null; S.draftCuisines = null; } // left the welcome flow
     if (S.view === 'swipe' && !S.flow) { S.flow = true; swipeReset(); } // arriving from outside the flow (a link, the back button after finishing): start the cards afresh
     render();
@@ -842,6 +949,18 @@
       refresh('weight');
     }
     else if (act === 'wdel') { store.removeWeight(el.getAttribute('data-d')); kept(); refresh('weight'); }
+    else if (act === 'logday') {
+      S.logDate = el.getAttribute('data-d'); refresh('logday');
+      const b = document.querySelector('[data-act="logday"][aria-pressed="true"]'); if (b) b.focus();
+    }
+    else if (act === 'logplan') {
+      const day = S.plan && !S.plan.error && S.plan.days[S.logPlanDay];
+      logAdd(day ? LOG.fromMeal(day.meals[+el.getAttribute('data-i')], S.logPortion) : null);
+    }
+    else if (act === 'logdel') {
+      store.removeLog(S.logDate, +el.getAttribute('data-id')); kept(); refresh('logday');
+      const b = document.getElementById('logbalance'); if (b) b.focus();
+    }
     else if (act === 'mkbackup') { S.backup = store.exportJSON(); S.dataMsg = null; refresh('data'); }
     else if (act === 'dlbackup') { S.backup = store.exportJSON(); refresh('data'); downloadBackup(S.backup); }
     else if (act === 'cpbackup') {
@@ -913,6 +1032,18 @@
       render();
       return;
     }
+    if (el.id === 'logdate') {
+      if (/^\d{4}-\d{2}-\d{2}$/.test(el.value) && el.value <= today() && el.value >= LOG.shiftDate(today(), -LOG_MIN_DAYS)) S.logDate = el.value;
+      refresh('logday');
+      return;
+    }
+    if (el.id === 'logplanday' || el.id === 'logportion') {
+      if (el.id === 'logplanday') S.logPlanDay = Math.min(6, Math.max(0, parseInt(el.value, 10) || 0));
+      else if (LOG.PORTIONS.indexOf(Number(el.value)) >= 0) S.logPortion = Number(el.value);
+      refresh('logplan');
+      const again = document.getElementById(el.id); if (again) again.focus();
+      return;
+    }
     if (el.id === 'bfile') {
       const f = el.files && el.files[0];
       if (!f) return;
@@ -964,6 +1095,21 @@
   });
 
   document.addEventListener('submit', function (ev) {
+    const val = function (id) { return document.getElementById(id).value; };
+    const num = function (id) { return parseFloat(String(val(id)).replace(',', '.')); };
+    if (ev.target.id === 'logfform') {
+      ev.preventDefault();
+      logAdd(LOG.fromFood(val('logfood'), num('loggrams'), val('logfslot')));
+      return;
+    }
+    if (ev.target.id === 'logqform') {
+      ev.preventDefault();
+      if (logAdd(LOG.quick(val('logqname'), num('logqkcal'), String(val('logqprot')).trim() === '' ? '' : num('logqprot'), val('logqslot')))) {
+        ['logqname', 'logqkcal', 'logqprot'].forEach(function (id) { document.getElementById(id).value = ''; });
+        document.getElementById('logqname').focus();
+      }
+      return;
+    }
     if (ev.target.id !== 'pform') return;
     ev.preventDefault();
     const fd = new FormData(ev.target);

@@ -145,15 +145,16 @@ table, .gauge, .macros, .total, .prices, .wlist, .stepper output, .budgetbig { f
 .langsel select { min-height: 40px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--raise); color: var(--ink); font-weight: 600; }
 .nav {
   position: fixed; left: max(10px, env(safe-area-inset-left, 0px)); right: max(10px, env(safe-area-inset-right, 0px)); bottom: calc(10px + env(safe-area-inset-bottom, 0px)); z-index: 20;
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 6px;
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2px; padding: 6px;
   background: color-mix(in srgb, var(--raise) 94%, transparent); border: 1px solid var(--line); border-radius: 24px;
   box-shadow: var(--shadow); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
 }
 .nav a {
-  display: grid; justify-items: center; gap: 2px; padding: 8px 4px 7px; border-radius: 18px;
+  display: grid; justify-items: center; gap: 2px; padding: 8px 2px 7px; border-radius: 18px; min-width: 0;
   color: var(--muted); text-decoration: none; font-size: 0.78rem; font-weight: 600; line-height: 1.2;
 }
 .nav a svg { width: 22px; height: 22px; }
+@media (max-width: 340px) { .nav { padding: 4px; gap: 0; } .nav a { font-size: 0.68rem; padding: 8px 1px 7px; } }
 .nav a[aria-current='page'] { color: var(--spruce-ink); background: var(--spruce); }
 main { min-width: 0; display: grid; gap: 20px; align-content: start; }
 
@@ -645,3 +646,35 @@ img.dish.fill { width: 100%; height: 100%; border-radius: 0; }
 .budgetbig { font-family: var(--font-display); font-size: clamp(2.2rem, 11vw, 3rem); font-weight: 700; letter-spacing: 0; line-height: 1; color: var(--spruce); }
 .budgetbox input[type='range'] { width: 100%; accent-color: var(--spruce); min-height: 32px; }
 .budgetbox input[type='number'] { max-width: 140px; }
+
+/* ---------- food log ---------- */
+.days.week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; overflow: visible; padding-bottom: 0; }
+.days.week button { min-width: 0; min-height: 56px; padding: 6px 2px; border-radius: 14px; }
+.days.week button b { font-size: 0.88rem; }
+.days.week button small { font-size: 0.74rem; font-variant-numeric: tabular-nums; }
+.logdate { max-width: 220px; }
+.logpanel h3 { margin: 0 0 6px; }
+.logbalance { margin: 0 0 12px; font-weight: 700; color: var(--spruce); }
+.logbalance.over { color: var(--berry); }
+.logslot { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin: 16px 0 6px; font-family: var(--font-display); font-size: 1rem; }
+.loglist { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.logrow { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 4px 4px 4px 12px; border-radius: var(--radius-sm); background: var(--raise); border: 1px solid var(--line); }
+.logname { display: grid; min-width: 0; flex: 1 1 auto; }
+.logname > span { overflow-wrap: anywhere; }
+.logname small { font-size: 0.78rem; }
+.logrow > b { white-space: nowrap; font-variant-numeric: tabular-nums; font-size: 0.92rem; }
+.logrow .x { margin-left: 0; flex: none; }
+.logpick { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 10px 0; }
+.logform { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: end; margin-top: 10px; }
+.logform .field:first-child { grid-column: 1 / -1; }
+.logform .btn { grid-column: 1 / -1; min-height: 44px; }
+.logform.q .field:nth-child(4) { grid-column: 1 / -1; }
+@media (min-width: 640px) {
+  .logform.f { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) auto; }
+  .logform.q { grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)) auto; }
+  .logform .field:first-child { grid-column: auto; }
+  .logform.q .field:nth-child(4) { grid-column: auto; }
+  .logform .btn { grid-column: auto; }
+}
+details.more + details.more { margin-top: 10px; }
+.panel details.more { background: var(--raise); }

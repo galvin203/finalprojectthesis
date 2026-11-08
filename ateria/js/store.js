@@ -1,5 +1,5 @@
 /*
- * Ateria store: keeps the user's own information (profiles, plan choices, ticked items, hearts, weight log, prices).
+ * Ateria store: keeps the user's own information (profiles, plan choices, ticked items, hearts, weight log, food log, prices).
  *
  * Rules this module follows:
  *  - Nothing is written to the device until the user says yes. Before that the app works from memory only.
@@ -21,13 +21,14 @@
   const K_CONSENT = PFX + 'consent';
   const K_BAD = PFX + 'data.bad';
   const V1_KEYS = ['profile', 'seedN', 'swaps', 'prices', 'checked', 'lang'];
-  const LIMITS = { profiles: 6, swaps: 100, liked: 200, weights: 400, name: 30 };
+  const LIMITS = { profiles: 6, swaps: 100, liked: 200, weights: 400, name: 30, logDays: 120, logEntries: 40, logName: 40 };
   const MEALS = ['breakfast', 'lunch', 'snack', 'dinner'];
   const SEXES = ['female', 'male'];
   const ACTIVITIES = ['sedentary', 'active', 'vigorous'];
   const GOALS = ['lose', 'maintain', 'gain', 'muscle'];
   const DIETS = ['omnivore', 'pescatarian', 'vegetarian', 'vegan'];
   const STORE_IDS = ['s', 'k', 'lidl'];
+  const LOG_TYPES = ['plan', 'food', 'quick'];
 
   function num(x, lo, hi, dflt) { x = Number(x); return isFinite(x) && x >= lo && x <= hi ? x : dflt; }
   function int(x, lo, hi, dflt) { x = Math.round(Number(x)); return isFinite(x) && x >= lo && x <= hi ? x : dflt; }
@@ -42,6 +43,7 @@
     const d = new Date(s + 'T00:00:00Z');
     return !isNaN(d.getTime()) && d.toISOString().slice(0, 10) === s;
   }
+  function nextEntryId(used) { return used.reduce(function (a, b) { return Math.max(a, b); }, 0) + 1; }
   function newId(used) {
     for (let i = 1; i < 1000; i++) { const id = 'p' + i; if (used.indexOf(id) < 0) return id; }
     return 'p' + Date.now();
@@ -95,6 +97,46 @@
     });
     return Object.keys(byDate).sort().slice(-LIMITS.weights).map(function (d) { return { d: d, kg: byDate[d] }; });
   };
+  // One thing eaten. Nutrition is kept as it was when the entry was made. Returns null when it cannot be trusted.
+  clean.entry = function (e) {
+    if (!isObj(e) || LOG_TYPES.indexOf(e.t) < 0) return null;
+    const out = { id: int(e.id, 1, 99999, null), m: MEALS.indexOf(e.m) >= 0 ? e.m : 'snack', t: e.t, k: num(e.k, 0, 5000, null) };
+    if (out.k == null) return null;
+    out.k = Math.round(out.k);
+    ['p', 'f', 'c', 'fi'].forEach(function (key) { out[key] = Math.round(num(e[key], 0, 500, 0) * 10) / 10; });
+    if (e.t === 'plan') {
+      if (typeof e.ref !== 'string' || !A.REC[e.ref]) return null;
+      out.ref = e.ref; out.x = num(e.x, 0.25, 4, null);
+      if (out.x == null) return null; // a portion that is not real would be shown wrongly
+    } else if (e.t === 'food') {
+      if (typeof e.ref !== 'string' || !A.ING[e.ref]) return null;
+      out.ref = e.ref; out.g = num(e.g, 1, 3000, null);
+      if (out.g == null) return null;
+      out.g = Math.round(out.g);
+    } else {
+      const nm = typeof e.name === 'string' ? e.name.replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, LIMITS.logName) : '';
+      if (!nm) return null;
+      out.name = nm;
+    }
+    return out;
+  };
+  // { 'YYYY-MM-DD': [entry, ...] }: only real dates, the newest 120 days, at most 40 entries a day, ids unique within a day
+  clean.log = function (o) {
+    const out = {};
+    if (!isObj(o)) return out;
+    Object.keys(o).filter(validDate).sort().slice(-LIMITS.logDays).forEach(function (d) {
+      const used = [], list = [];
+      (Array.isArray(o[d]) ? o[d] : []).forEach(function (raw) {
+        if (list.length >= LIMITS.logEntries) return;
+        const c = clean.entry(raw);
+        if (!c) return;
+        if (c.id == null || used.indexOf(c.id) >= 0) c.id = nextEntryId(used);
+        used.push(c.id); list.push(c);
+      });
+      if (list.length) out[d] = list;
+    });
+    return out;
+  };
   clean.prices = function (o) {
     const out = {};
     if (!isObj(o)) return out;
@@ -116,7 +158,7 @@
     r = isObj(r) ? r : {};
     return {
       id: id, name: clean.name(r.name, dflt), profile: clean.profile(r.profile), seedN: int(r.seedN, 1, 99999, 1), swaps: clean.swaps(r.swaps),
-      checked: clean.checked(r.checked), liked: clean.recipeIds(r.liked), planLiked: clean.recipeIds(r.planLiked), weights: clean.weights(r.weights),
+      checked: clean.checked(r.checked), liked: clean.recipeIds(r.liked), planLiked: clean.recipeIds(r.planLiked), weights: clean.weights(r.weights), log: clean.log(r.log),
     };
   };
   function blankRecord(id, name) { return clean.record({}, id, name); }
@@ -268,6 +310,31 @@
       },
       removeWeight: function (date) { const r = api.active(); r.weights = r.weights.filter(function (w) { return w.d !== date; }); api.save(); },
 
+      // ----- food log (per person, per day) -----
+      logOf: function (date) { return api.active().log[date] || []; },
+      logAll: function () { return api.active().log; },
+      // returns the new entry's id, 0 when the entry or the date is not valid, -1 when the day already has the most entries
+      addLog: function (date, entry) {
+        if (!validDate(date)) return 0;
+        const c = clean.entry(entry);
+        if (!c) return 0;
+        const r = api.active();
+        const list = (r.log[date] || []).slice();
+        if (list.length >= LIMITS.logEntries) return -1;
+        c.id = nextEntryId(list.map(function (e) { return e.id; }));
+        list.push(c);
+        const next = Object.assign({}, r.log); next[date] = list;
+        r.log = clean.log(next); // keeps only the newest days
+        if (!r.log[date]) return 0;
+        api.save(); return c.id;
+      },
+      removeLog: function (date, id) {
+        const r = api.active();
+        const list = (r.log[date] || []).filter(function (e) { return e.id !== id; });
+        if (list.length) r.log[date] = list; else delete r.log[date];
+        api.save();
+      },
+
       // ----- shared by all profiles -----
       prices: function () { return st.data.prices; },
       setPrices: function (p) { st.data.prices = clean.prices(p); api.save(); },
@@ -294,6 +361,7 @@
 
   A.makeStore = makeStore;
   A.storeClean = clean;
+  A.storeLimits = LIMITS;
   A.store = (function () {
     let ls = null;
     try { ls = g.localStorage || null; } catch (e) { ls = null; }

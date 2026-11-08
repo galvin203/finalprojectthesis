@@ -76,7 +76,7 @@ test('every key used in the app code exists', () => {
   ['nordic', 'european', 'asian', 'world'].forEach((c) => assert.ok(D.ui.en['swipe.d.' + c], 'swipe.d.' + c));
   ['empty', 'json', 'format', 'big'].forEach((c) => assert.ok(D.ui.en['data.err.' + c], c));
   ['one', 'other'].forEach((c) => ['leaf', 'pcs', 'clove', 'lemon'].forEach((u) => assert.ok(D.ui.en['unit.' + u + '_' + c], u)));
-  ['you', 'plan', 'shop', 'prices'].forEach((c) => assert.ok(D.ui.en['nav.' + c], c));
+  ['you', 'plan', 'log', 'shop', 'prices'].forEach((c) => assert.ok(D.ui.en['nav.' + c], c));
   // keys built from a prefix in app.js
   ['protein', 'fat', 'carbs', 'fibre'].forEach((x) => assert.ok(D.ui.en['macro.' + x]));
   ['female', 'male'].forEach((x) => assert.ok(D.ui.en['sex.' + x]));

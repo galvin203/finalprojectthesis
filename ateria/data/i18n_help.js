@@ -153,6 +153,14 @@
       'Rulla till Viktlogg i Profil. Ange datum och din vikt och tryck på Lägg till. En liten linje visar förändringen över tid.',
       'Trong Hồ sơ, cuộn xuống Nhật ký cân nặng. Nhập ngày và cân nặng rồi bấm Thêm. Một đường nhỏ cho thấy sự thay đổi theo thời gian.']);
 
+  H('log', 'check', ['log'],
+    'food log,log food,log meal,what i ate,eaten,i ate,track food,track calories,calories eaten,food diary,diary,kirjaus,ruokapaivakirja,kirjaan ruoan,mita sain,syonyt,sain syotya,kalorit,matlogg,logga mat,vad jag at,atit,kostdagbok,nhat ky an uong,ghi bua an,ghi lai bua an,bua an,da an,theo doi calo,an gi,ruoan',
+    ['How do I log what I ate?', 'Miten kirjaan, mitä olen syönyt?', 'Hur loggar jag vad jag har ätit?', 'Làm sao để ghi lại những gì tôi đã ăn?'],
+    ['Open Log. Under “From my plan” choose the plan day, then press “Add” next to a meal you ate. For other food use “Add a food” (an ingredient and grams) or “Quick add” (a name and calories). The bars show how the day compares with your target.',
+      'Avaa Kirjaus. Valitse kohdassa ”Omasta ruokalistasta” ruokalistan päivä ja paina ”Lisää” syömäsi aterian vieressä. Muulle ruoalle käytä kohtaa ”Lisää ruoka-aine” (raaka-aine ja grammat) tai ”Pikakirjaus” (nimi ja kalorit). Palkit näyttävät, miten päivä vastaa tavoitettasi.',
+      'Öppna Logg. Välj dag i planen under ”Från min matplan” och tryck på ”Lägg till” vid en måltid du åt. För annan mat använder du ”Lägg till en matvara” (en ingrediens och gram) eller ”Snabbtillägg” (ett namn och kalorier). Staplarna visar hur dagen står sig mot ditt mål.',
+      'Mở mục Nhật ký. Trong “Từ thực đơn của tôi”, chọn ngày trong thực đơn rồi bấm “Thêm” cạnh bữa bạn đã ăn. Với món khác, dùng “Thêm một thực phẩm” (nguyên liệu và số gam) hoặc “Thêm nhanh” (tên và calo). Các thanh cho thấy cả ngày so với mục tiêu của bạn thế nào.']);
+
   H('language', 'world', [],
     'language,english,finnish,swedish,vietnamese,translate,kieli,englanti,suomi,ruotsi,vietnam,kaanna,sprak,engelska,finska,svenska,vietnamesiska,oversatt,ngon ngu,tieng anh,tieng viet,dich,kielen,kielta,vaihdan kielen,byta sprak,doi ngon ngu',
     ['How do I change the language?', 'Miten vaihdan kielen?', 'Hur byter jag språk?', 'Làm sao để đổi ngôn ngữ?'],
