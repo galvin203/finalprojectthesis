@@ -400,3 +400,10 @@ code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.85em;
   .help-panel:not([hidden]) { animation: help-in 0.18s ease-out; }
   @keyframes help-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 }
+
+/* store logos (images supplied by the project owner; shown only to tell the stores apart) */
+.slogo { display: block; flex: none; object-fit: cover; border-radius: 22%; background: #fff; box-shadow: 0 0 0 1px var(--line); }
+.slogo[data-store="s"] { border-radius: 50%; }
+.store .sname { display: flex; align-items: center; gap: 8px; }
+.prow .lname { display: flex; align-items: center; gap: 6px; }
+.item .prices small { display: flex; align-items: center; min-height: 20px; }

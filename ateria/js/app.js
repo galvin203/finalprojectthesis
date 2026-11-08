@@ -243,6 +243,10 @@
   }
 
   function storeName(id) { return A.STORES.filter(function (s) { return s.id === id; })[0].name; }
+  // store logo; alt text is empty when the store name is written next to it
+  function storeLogo(st, px, named) {
+    return '<img class="slogo" data-store="' + st.id + '" src="' + esc(st.logo) + '" width="' + px + '" height="' + px + '" alt="' + (named ? esc(st.name) : '') + '" decoding="async">';
+  }
 
   // seasonings the week's recipes use; not priced, the person checks the cupboard
   function spiceSection(plan) {
@@ -280,9 +284,10 @@
       else if (best && !T.missing.length) extra = '<span class="sub">' + esc(t('store.more', { eur: eur(T.pack - list.stores[best].pack), store: storeName(best) })) + '</span>';
       let bud = '';
       if (budget > 0 && !T.missing.length) bud = T.food <= budget ? '<span class="sub">' + esc(t('store.under', { eur: eur(budget - T.food) })) + '</span>' : '<span class="sub berry">' + esc(t('store.over', { eur: eur(T.food - budget) })) + '</span>';
-      return '<div class="store' + (isBest ? ' best' : '') + '"><div class="s-left"><span class="sname">' + esc(st.name) + '</span><span class="total">' + eur(T.pack) + '</span></div><div class="s-right"><span class="sub">' + esc(sub) + '</span>' + extra + bud + '</div></div>';
+      return '<div class="store' + (isBest ? ' best' : '') + '"><div class="s-left"><span class="sname">' + storeLogo(st, 32) + '<span>' + esc(st.name) + '</span></span><span class="total">' + eur(T.pack) + '</span></div><div class="s-right"><span class="sub">' + esc(sub) + '</span>' + extra + bud + '</div></div>';
     }).join('') + '</div>';
     h += '<p class="note">' + esc(t('shop.note') + (budget > 0 ? t('shop.noteBudget', { budget: eur(budget) }) : '')) + '</p>';
+    h += '<p class="note small">' + esc(t('shop.logos')) + '</p>';
 
     if (best) {
       const stores = {};
@@ -305,8 +310,8 @@
           '<label class="what" for="chk-' + r.id + '"><b>' + ingName(r.id) + '</b>' + fiName(r.id) + '<span class="muted">' + esc(M.ingredientText(r.id, Math.round(r.grams), 'shop') + (first ? ' · ' + first.packs + ' × ' + I.grams(first.packG) : '')) + '</span></label>' +
           '<div class="prices">' + A.STORES.map(function (s) {
             const b = r.byStore[s.id];
-            if (!b) return '<span><small>' + esc(s.short) + '</small><b class="muted">' + esc(t('item.noPrice')) + '</b></span>';
-            return '<span class="' + (s.id === low ? 'low' : '') + '"><small>' + esc(s.short) + '</small><b>' + eur(b.packCost) + (b.source === 'seed' ? '<i class="est">' + esc(t('est')) + '</i>' : '') + '</b></span>';
+            if (!b) return '<span><small>' + storeLogo(s, 20, true) + '</small><b class="muted">' + esc(t('item.noPrice')) + '</b></span>';
+            return '<span class="' + (s.id === low ? 'low' : '') + '"><small>' + storeLogo(s, 20, true) + '</small><b>' + eur(b.packCost) + (b.source === 'seed' ? '<i class="est">' + esc(t('est')) + '</i>' : '') + '</b></span>';
           }).join('') + '</div></div>';
       }).join('') + '</section>';
     });
@@ -326,7 +331,7 @@
       return '<div class="prow"><div class="ingcell">' + tile(i.id, 40) + '<span><b>' + ingName(i.id) + '</b> ' + fiName(i.id) + '<br><span class="muted small">' + esc(t('prices.perPack', { g: I.grams(i.packG) })) + '</span></span></div><div class="inputs">' + A.STORES.map(function (s) {
         const o = ov[s.id] && ov[s.id][i.id];
         const seed = A.SEED_PRICES[s.id][i.id].price;
-        return '<label>' + esc(s.name) + '<input type="number" inputmode="decimal" step="0.01" min="0" data-act="price" data-s="' + s.id + '" data-id="' + i.id + '" class="' + (o ? 'mine' : '') + '" value="' + (o ? o.price : '') + '" placeholder="' + seed.toFixed(2) + '"></label>';
+        return '<label><span class="lname">' + storeLogo(s, 22) + '<span>' + esc(s.name) + '</span></span><input type="number" inputmode="decimal" step="0.01" min="0" data-act="price" data-s="' + s.id + '" data-id="' + i.id + '" class="' + (o ? 'mine' : '') + '" value="' + (o ? o.price : '') + '" placeholder="' + seed.toFixed(2) + '"></label>';
       }).join('') + '</div></div>';
     }).join('') + '</div>';
 

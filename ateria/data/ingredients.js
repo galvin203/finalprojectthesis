@@ -21,9 +21,9 @@
   };
 
   A.STORES = [
-    { id: 's', name: 'S-market', short: 'S' },
-    { id: 'k', name: 'K-market', short: 'K' },
-    { id: 'lidl', name: 'Lidl', short: 'Lidl' },
+    { id: 's', name: 'S-market', short: 'S', logo: 'img/smarket.jpg' },
+    { id: 'k', name: 'K-market', short: 'K', logo: 'img/kmarket.png' },
+    { id: 'lidl', name: 'Lidl', short: 'Lidl', logo: 'img/lidl.png' },
   ];
 
   // I(id, name, fi, aisle, [kcal, protein, fat, carbs, fibre], packG, price, opts)

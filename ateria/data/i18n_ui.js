@@ -125,6 +125,10 @@
     'Iso luku on kokonaisten pakkausten hinta. ”Ateriat käyttävät” on se osuus pakkauksista, jonka tämän viikon ateriat kuluttavat; ylijäämä riittää seuraaville viikoille.',
     'Det stora talet är vad du betalar för hela förpackningar. ”Måltiderna använder” är den andel av förpackningarna som veckans måltider går åt; resten räcker till kommande veckor.',
     'Con số lớn là số tiền bạn trả cho nguyên bao gói. “Các bữa dùng hết” là phần của các bao gói mà bữa ăn tuần này tiêu thụ; phần còn lại dùng cho những tuần sau.');
+  U('shop.logos', 'Store logos belong to their owners and are used only to tell the stores apart. Ateria is not affiliated with these stores.',
+    'Kauppojen logot kuuluvat niiden omistajille, ja niitä käytetään vain kauppojen erottamiseen toisistaan. Ateria ei ole sidoksissa näihin kauppoihin.',
+    'Butikernas logotyper tillhör sina ägare och används bara för att skilja butikerna åt. Ateria är inte knuten till butikerna.',
+    'Logo các cửa hàng thuộc về chủ sở hữu của họ và chỉ được dùng để phân biệt các cửa hàng. Ateria không liên kết với các cửa hàng này.');
   U('shop.noteBudget', ' Your budget of {budget} is compared with the “meals use” figure.',
     ' Budjettiasi {budget} verrataan ”ateriat käyttävät” -lukuun.',
     ' Din budget på {budget} jämförs med siffran ”måltiderna använder”.',

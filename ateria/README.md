@@ -2,7 +2,7 @@
 
 Weekly meal plans with calorie and protein targets, a recipe for every meal, and a shopping list priced for **S-market, K-market and Lidl** (Finland).
 
-Ateria is inspired by apps like Mealbird, but every recipe, text, drawing and line of code here is original. It is a **separate project from the NutriWise thesis** (Viet Nam).
+Ateria is inspired by apps like Mealbird, but every recipe, text, ingredient drawing and line of code here is original. The only third-party images are the three store logos (see *Store logos* below). It is a **separate project from the NutriWise thesis** (Viet Nam).
 
 * No dependencies: plain HTML, CSS and JavaScript.
 * Four languages: English, Finnish, Swedish and Vietnamese.
@@ -24,7 +24,7 @@ node tools/build_artifact.js          # writes dist/ateria-artifact.html
 
 ### Put it online (Vercel)
 
-Ateria is a static site, so it needs no build tools. In Vercel, import this repository and set **Root Directory** to `ateria`. `vercel.json` already tells Vercel to publish only `index.html`, `styles.css`, `js/` and `data/`, so tests and tools are not served. Every push to `main` then redeploys the site.
+Ateria is a static site, so it needs no build tools. In Vercel, import this repository and set **Root Directory** to `ateria`. `vercel.json` already tells Vercel to publish only `index.html`, `styles.css`, `js/`, `data/` and `img/`, so tests and tools are not served. Every push to `main` then redeploys the site.
 
 ## How to use the app
 
@@ -98,6 +98,7 @@ Before fetching anything automatically, read each shop's terms of use, use it fo
 * Pick the language at the top right. The app starts from the browser language and remembers your choice. Texts, ingredient names, recipes, seasoning, measures, numbers and plurals all follow it.
 * When the language is not Finnish, shopping and price rows also show the Finnish product name in small italics, because that is what is printed on the shelf.
 * Every ingredient has an original flat illustration (111 drawings in `data/icons.js`). They are drawings of the food, **not photos of store products**.
+* **Store logos.** `img/` holds the S-market, K-market and Lidl logos, shown next to each store so the three are easy to tell apart. They belong to their owners and are used only to identify the stores; Ateria is not affiliated with them. Remove the `logo` fields in `data/ingredients.js` to turn them off.
 * To add a language: add it to `A.LANGS` in `data/i18n_ui.js`, add a column to every `U(...)` row and to `data/i18n_food.js`, add entries in `data/i18n_recipes.js` and `data/i18n_help.js`, then run `node --test tests/*.test.js`, which lists what is missing.
 
 ## Project layout
@@ -112,6 +113,7 @@ js/cloud.js              optional private copy in the person's Claude account
 js/help.js               helper: matching, panel, read aloud, optional Ask Claude
 js/i18n.js               language: text lookup, plurals, number and money formats
 js/app.js                interface
+img/                     logos of S-market, K-market and Lidl
 data/ingredients.js      65 ingredients (nutrition, pack size, allergens, swaps, measures)
 data/spices.js           25 seasonings
 data/recipes.js          66 recipes in English
