@@ -31,7 +31,7 @@
   store.init();
   const S = {
     lang: I.setLang(I.detect(store.lang())),
-    view: 'plan', draftGoal: null, day: 0, open: null, swapOpen: null, plan: null, prices: null, portions: {},
+    view: 'plan', draftGoal: null, draftCuisines: null, flow: false, swipe: { i: 0, liked: [], hist: [], busy: false, msg: '' }, day: 0, open: null, swapOpen: null, plan: null, prices: null, portions: {},
     io: '', ioMsg: null, resetArmed: false, filter: '',
     backup: '', dataMsg: null, wipeArmed: false, removeArmed: false, wtErr: false, cloudMsg: null, cloudAt: null, cloudBusy: false,
   };
@@ -479,9 +479,15 @@
     if (name === 'cloud') el.hidden = !(A.cloud && A.cloud.ready);
   }
 
+  function budgetText(b) { // whole euros, as the big number on the budget slider
+    if (!(b > 0)) return t('budget.none');
+    try { return new Intl.NumberFormat(LOCALES[S.lang], { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(b); } catch (e) { return eur(b); }
+  }
   function viewProfile() {
-    const p = S.draftGoal ? Object.assign({}, P(), { goal: S.draftGoal }) : P(); // a goal picked on the welcome screen
-    let h = consentBanner();
+    // a goal and food types picked earlier in the welcome flow
+    const p = Object.assign({}, P(), S.draftGoal ? { goal: S.draftGoal } : {}, S.draftCuisines ? { cuisines: S.draftCuisines } : {});
+    let h = S.flow ? stepBar(3) : '';
+    h += consentBanner();
     h += '<div class="row between"><h2>' + esc(t('profile.title')) + '</h2></div>';
     h += '<section class="panel" id="sec-people">' + secPeople() + '</section>';
     h += '<form class="profile" id="pform" novalidate>';
@@ -496,8 +502,11 @@
     h += '<fieldset><legend>' + esc(t('profile.allergy')) + '</legend><div class="chips">' + A.ALLERGENS.map(function (a) { return chip('checkbox', 'allergy', a[0], I.allergen(a[0]), p.allergies.indexOf(a[0]) >= 0, ALLERGEN_ICON[a[0]]); }).join('') + chip('checkbox', 'lactose', '1', t('profile.lactose'), p.lactoseFree, 'lactose') + '</div></fieldset>';
     h += '<fieldset><legend>' + esc(t('profile.cuisine')) + '</legend><div class="choices four">' + A.CUISINES.map(function (c) { return choice('checkbox', 'cuisine', c, I.cuisine(c), (p.cuisines || []).indexOf(c) >= 0, c); }).join('') + '</div><p class="note">' + esc(t('profile.cuisineNote')) + '</p></fieldset>';
     h += '<fieldset><legend>' + esc(t('profile.meals')) + '</legend><div class="choices four">' + MEALS.map(function (k) { return choice('checkbox', 'meal', k, I.meal(k), p.meals.indexOf(k) >= 0, k); }).join('') + '</div><p class="note">' + esc(t('profile.mealsNote')) + '</p></fieldset>';
-    h += '<div class="grid2"><label class="field"><span>' + esc(t('profile.people')) + '</span><input id="people" name="people" type="number" inputmode="numeric" min="1" max="8" value="' + p.people + '"></label>' +
-      '<label class="field"><span>' + esc(t('profile.budget')) + '</span><input id="budget" name="budget" type="number" inputmode="decimal" min="0" step="1" value="' + (p.budget || 0) + '"></label></div>';
+    h += '<label class="field narrow"><span>' + esc(t('profile.people')) + '</span><input id="people" name="people" type="number" inputmode="numeric" min="1" max="8" value="' + p.people + '"></label>';
+    h += '<div class="budgetbox"><label for="budget">' + esc(t('profile.budget')) + '</label>' +
+      '<output class="budgetbig" id="budgetbig" for="budget budgetrange">' + esc(budgetText(p.budget)) + '</output>' +
+      '<input id="budgetrange" type="range" min="0" max="300" step="5" value="' + Math.min(300, Math.round((p.budget || 0) / 5) * 5) + '" aria-label="' + esc(t('profile.budgetSlide')) + '">' +
+      '<input id="budget" name="budget" type="number" inputmode="decimal" min="0" step="1" value="' + (p.budget || 0) + '"></div>';
     h += '<details class="more"><summary>' + esc(t('profile.dislike')) + (p.dislikes.length ? ' (' + p.dislikes.length + ')' : '') + '</summary><div class="chips">' + A.INGREDIENTS.map(function (i) { return chip('checkbox', 'dislike', i.id, I.ingName(i.id), p.dislikes.indexOf(i.id) >= 0, i.id); }).join('') + '</div></details>';
     h += '<details class="more"><summary>' + esc(t('profile.like')) + (p.favorites.length ? ' (' + p.favorites.length + ')' : '') + '</summary><div class="chips">' + A.INGREDIENTS.map(function (i) { return chip('checkbox', 'favorite', i.id, I.ingName(i.id), p.favorites.indexOf(i.id) >= 0, i.id); }).join('') + '</div></details>';
     h += '<div id="errors" class="errors" role="alert"></div>';
@@ -548,8 +557,153 @@
       '<p class="note">' + esc(t('profile.disclaimer')) + '</p></div>';
   }
 
+
+  // ---------- swipe: choose the kinds of food you like ----------
+  // One card per cuisine. Right (green tick) = like, left (red cross) = not for me. Buttons and the arrow keys do the same.
+  const SWIPE_DISHES = {
+    nordic: ['l_lohikeitto', 'd_meatballs', 'b_berry_oats'],
+    european: ['d_bolognese', 'l_minestrone', 'l_spanish_tortilla'],
+    asian: ['l_pho_chicken', 'd_teriyaki_salmon', 'd_coconut_chicken_curry'],
+    world: ['b_shakshuka', 'l_beef_chili', 'l_hummus_wrap'],
+  };
+  const SWIPE_AT = 90; // px of drag that counts as a choice
+  const ICON_TICK = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12.5l4.6 4.6L19 7.6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const ICON_CROSS = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/></svg>';
+  const ICON_UNDO = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5L4 10l5 5M4.5 10H14a5.5 5.5 0 0 1 0 11h-3" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function reduceMotion() { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
+  function swipeReset() { S.swipe = { i: 0, liked: [], hist: [], busy: false, msg: '' }; }
+
+  // three progress segments for the welcome flow: goal, food, details
+  function stepBar(n, extra) {
+    let h = '<div class="stepbar" role="img" aria-label="' + esc(t('steps.of', { n: n, total: 3 })) + '">';
+    for (let i = 1; i <= 3; i++) h += '<i' + (i <= n ? ' class="on"' : '') + '></i>';
+    return h + '</div><div class="steprow"><p class="stepnum">' + esc(t('steps.of', { n: n, total: 3 })) + '</p>' + (extra || '') + '</div>';
+  }
+  function swipeDish(id) {
+    const r = A.REC[id], ph = dishPhoto(id);
+    return '<li class="swdish"><span class="art' + (ph ? ' photo' : '') + '">' + (ph ? dishImg(id, 96, 'fill') : mealPics(r, 34)) + '</span>' +
+      '<span class="nm">' + esc(I.recipe(id).name) + '</span><span class="muted">' + esc(t('meal.min', { n: r.minutes })) + '</span></li>';
+  }
+  function swipeCard(c, pos) {
+    const n = A.RECIPES.filter(function (r) { return r.cuisine === c; }).length;
+    return '<li class="swipecard" data-c="' + c + '" data-pos="' + pos + '"' + (pos ? ' aria-hidden="true"' : '') + '>' +
+      '<span class="stamp yes" aria-hidden="true">' + ICON_TICK + '</span><span class="stamp no" aria-hidden="true">' + ICON_CROSS + '</span>' +
+      '<span class="swhead">' + tile(c, 64, { badge: false }) + '<span><b class="swname">' + esc(I.cuisine(c)) + '</b><span class="muted">' + esc(t('swipe.recipes', { n: n })) + '</span></span></span>' +
+      '<span class="swdesc">' + esc(t('swipe.d.' + c)) + '</span>' +
+      '<span class="swlist"><span class="muted swlabel">' + esc(t('swipe.examples')) + '</span><ul>' + SWIPE_DISHES[c].map(swipeDish).join('') + '</ul></span></li>';
+  }
+  function viewSwipe() {
+    const sw = S.swipe, all = A.CUISINES, done = sw.i >= all.length;
+    let h = stepBar(2, done ? '' : '<button class="btn quiet small" type="button" data-act="swipeskip">' + esc(t('swipe.skip')) + '</button>');
+    h += '<div class="swipe' + (done ? ' done' : '') + '"><h1 class="swtitle">' + esc(t('swipe.title')) + '</h1>';
+    if (!done) {
+      h += '<p class="swhint">' + esc(t('swipe.hint')) + '</p>';
+      h += '<div class="deckwrap"><ul class="deck" aria-label="' + esc(t('swipe.deck', { n: sw.i + 1, total: all.length })) + '">';
+      for (let k = Math.min(2, all.length - sw.i - 1); k >= 0; k--) h += swipeCard(all[sw.i + k], k);
+      h += '</ul></div>';
+    } else {
+      h += '<section class="swdone" aria-live="polite"><h2>' + esc(t('swipe.done.title')) + '</h2>';
+      if (sw.liked.length) {
+        h += '<p>' + esc(t('swipe.done.some')) + '</p><ul class="swres yes">' + sw.liked.map(function (c) { return '<li><span class="mark">' + ICON_TICK + '</span>' + tile(c, 36, { badge: false }) + esc(I.cuisine(c)) + '</li>'; }).join('') + '</ul>';
+      } else h += '<p>' + esc(t('swipe.done.none')) + '</p>';
+      const no = all.filter(function (c) { return sw.liked.indexOf(c) < 0; });
+      if (no.length && sw.liked.length) h += '<p class="muted">' + esc(t('swipe.done.passed')) + '</p><ul class="swres no">' + no.map(function (c) { return '<li><span class="mark">' + ICON_CROSS + '</span>' + esc(I.cuisine(c)) + '</li>'; }).join('') + '</ul>';
+      h += '</section>';
+    }
+    h += '<div class="swbtns">' +
+      '<button type="button" class="sw-btn no" data-act="swipeno"' + (done ? ' disabled' : '') + ' aria-label="' + esc(t('swipe.no')) + '">' + ICON_CROSS + '</button>' +
+      '<button type="button" class="sw-btn undo" data-act="swipeundo"' + (sw.hist.length ? '' : ' disabled') + ' aria-label="' + esc(t('swipe.undo')) + '">' + ICON_UNDO + '</button>' +
+      '<button type="button" class="sw-btn yes" data-act="swipeyes"' + (done ? ' disabled' : '') + ' aria-label="' + esc(t('swipe.yes')) + '">' + ICON_TICK + '</button></div>';
+    h += '<div class="swlabels" aria-hidden="true"><span>' + esc(t('swipe.no')) + '</span><span>' + esc(t('swipe.undo')) + '</span><span>' + esc(t('swipe.yes')) + '</span></div>';
+    h += '<div class="row swfoot">' + (done
+      ? '<button class="btn primary" type="button" data-act="swipedone">' + esc(t('swipe.continue')) + '</button><button class="btn quiet" type="button" data-act="swipereset">' + esc(t('swipe.again')) + '</button>'
+      : '') + '</div>';
+    h += '<p class="sr" role="status" aria-live="polite">' + esc(sw.msg) + '</p></div>';
+    return h;
+  }
+
+  // animate the top card away, then record the choice
+  function swipeDecide(yes) {
+    const sw = S.swipe;
+    if (S.view !== 'swipe' || sw.busy || sw.i >= A.CUISINES.length) return;
+    const card = document.querySelector('.deck .swipecard[data-pos="0"]');
+    const focused = document.activeElement && document.activeElement.getAttribute ? document.activeElement.getAttribute('data-act') : null;
+    sw.busy = true;
+    const commit = function () {
+      sw.busy = false;
+      if (S.view !== 'swipe') return;
+      const c = A.CUISINES[sw.i];
+      if (yes) sw.liked.push(c);
+      sw.hist.push({ c: c, yes: yes });
+      sw.i++;
+      sw.msg = t(yes ? 'swipe.live.yes' : 'swipe.live.no', { name: I.cuisine(c) });
+      render();
+      if (focused) {
+        let b = document.querySelector('[data-act="' + focused + '"]');
+        if (!b || b.disabled) b = document.querySelector('[data-act="swipedone"]') || document.querySelector('[data-act="swipeyes"]');
+        if (b) b.focus();
+      }
+    };
+    if (!card || reduceMotion()) { commit(); return; }
+    card.style.transition = 'transform 0.22s ease-out, opacity 0.22s ease-out';
+    card.style.transform = 'translateX(' + (yes ? 1 : -1) * Math.max(window.innerWidth, 480) + 'px) rotate(' + (yes ? 16 : -16) + 'deg)';
+    card.style.opacity = '0';
+    setTimeout(commit, 230);
+  }
+  function swipeUndo() {
+    const sw = S.swipe, last = sw.hist.pop();
+    if (!last || sw.busy) { if (last) sw.hist.push(last); return; }
+    sw.i--;
+    if (last.yes) sw.liked.pop();
+    sw.msg = '';
+    render();
+    const b = document.querySelector('[data-act="swipeundo"]:not(:disabled)') || document.querySelector('[data-act="swipeyes"]');
+    if (b) b.focus();
+  }
+
+  // dragging the top card with a finger or the mouse
+  let drag = null;
+  function swipePose(card, dx) {
+    const p = Math.max(-1, Math.min(1, dx / SWIPE_AT));
+    card.style.transform = 'translateX(' + dx + 'px) rotate(' + dx / 18 + 'deg)';
+    const yes = card.querySelector('.stamp.yes'), no = card.querySelector('.stamp.no');
+    if (yes) yes.style.opacity = p > 0 ? p : 0;
+    if (no) no.style.opacity = p < 0 ? -p : 0;
+  }
+  document.addEventListener('pointerdown', function (ev) {
+    const card = ev.target.closest && ev.target.closest('.deck .swipecard[data-pos="0"]');
+    if (!card || S.swipe.busy || (ev.pointerType === 'mouse' && ev.button !== 0)) return;
+    drag = { card: card, id: ev.pointerId, x0: ev.clientX, dx: 0, t0: Date.now() };
+    try { card.setPointerCapture(ev.pointerId); } catch (e) { /* no capture: the drag still works while the pointer stays on the card */ }
+    card.style.transition = 'none';
+  });
+  document.addEventListener('pointermove', function (ev) {
+    if (!drag || ev.pointerId !== drag.id) return;
+    drag.dx = ev.clientX - drag.x0;
+    swipePose(drag.card, drag.dx);
+  });
+  function dragEnd(ev, cancelled) {
+    if (!drag || ev.pointerId !== drag.id) return;
+    const d = drag; drag = null;
+    const fast = Math.abs(d.dx) > 30 && Math.abs(d.dx) / Math.max(1, Date.now() - d.t0) > 0.5; // a quick flick
+    if (!cancelled && (Math.abs(d.dx) >= SWIPE_AT || fast)) { swipeDecide(d.dx > 0); return; }
+    d.card.style.transition = reduceMotion() ? 'none' : 'transform 0.2s ease-out';
+    swipePose(d.card, 0);
+    d.card.style.transform = '';
+  }
+  document.addEventListener('pointerup', function (ev) { dragEnd(ev, false); });
+  document.addEventListener('pointercancel', function (ev) { dragEnd(ev, true); });
+  document.addEventListener('keydown', function (ev) {
+    if (S.view !== 'swipe' || ev.defaultPrevented || ev.altKey || ev.ctrlKey || ev.metaKey) return;
+    const tag = ev.target && ev.target.tagName;
+    if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+    if (ev.key === 'ArrowRight') { ev.preventDefault(); swipeDecide(true); }
+    else if (ev.key === 'ArrowLeft') { ev.preventDefault(); swipeDecide(false); }
+  });
+
   // ---------- render & routing ----------
-  const VIEWS = { welcome: viewWelcome, plan: viewPlan, shop: viewShop, prices: viewPrices, profile: viewProfile };
+  const VIEWS = { welcome: viewWelcome, swipe: viewSwipe, plan: viewPlan, shop: viewShop, prices: viewPrices, profile: viewProfile };
 
   function renderChrome() {
     document.documentElement.lang = S.lang;
@@ -567,7 +721,7 @@
     const main = document.getElementById('main');
     main.innerHTML = VIEWS[S.view]();
     const app = document.querySelector('.app');
-    if (app) app.classList.toggle('is-welcome', S.view === 'welcome');
+    if (app) app.classList.toggle('is-welcome', S.view === 'welcome' || S.view === 'swipe'); // no tab bar while setting up
     document.querySelectorAll('.nav a').forEach(function (a) {
       if (a.getAttribute('href') === '#' + S.view) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
@@ -577,6 +731,8 @@
     const h = (location.hash || '').replace('#', '');
     // someone without a profile starts on the welcome screen; everyone else starts on their plan
     S.view = VIEWS[h] ? h : (isExample() ? 'welcome' : 'plan');
+    if (S.view !== 'swipe' && S.view !== 'profile') { S.flow = false; S.draftGoal = null; S.draftCuisines = null; } // left the welcome flow
+    if (S.view === 'swipe' && !S.flow) { S.flow = true; swipeReset(); } // arriving from outside the flow (a link, the back button after finishing): start the cards afresh
     render();
     window.scrollTo(0, 0);
     if (A.help) A.help.setView(S.view);
@@ -639,7 +795,13 @@
       const next = E.swapMeal(S.plan, P(), d, i, r);
       if (next) { S.plan = next; store.setSwaps(rec().swaps.concat([{ d: d, i: i, r: r }])); kept(); S.swapOpen = null; S.portions = {}; render(); toast(t('toast.swapped')); }
     }
-    else if (act === 'welcomegoal') { S.draftGoal = el.getAttribute('data-goal') || null; location.hash = '#profile'; }
+    else if (act === 'welcomegoal') { S.draftGoal = el.getAttribute('data-goal') || null; S.draftCuisines = null; S.flow = true; swipeReset(); location.hash = '#swipe'; }
+    else if (act === 'swipeyes') swipeDecide(true);
+    else if (act === 'swipeno') swipeDecide(false);
+    else if (act === 'swipeundo') swipeUndo();
+    else if (act === 'swipereset') { swipeReset(); render(); }
+    else if (act === 'swipedone') { S.draftCuisines = S.swipe.liked.slice(); location.hash = '#profile'; }
+    else if (act === 'swipeskip') { S.draftCuisines = null; location.hash = '#profile'; }
     else if (act === 'welcomeexample') { location.hash = '#plan'; }
     else if (act === 'newplan') {
       store.setSeed(rec().seedN + 1); store.setSwaps([]); store.snapshotLiked(); kept();
@@ -787,6 +949,12 @@
       f.focus(); try { f.setSelectionRange(pos, pos); } catch (e) { /* not supported for this input type */ }
     }
     else if (ev.target.id === 'backup') S.backup = ev.target.value;
+    else if (ev.target.id === 'budgetrange' || ev.target.id === 'budget') { // slider and number box show the same budget
+      const num = document.getElementById('budget'), rng = document.getElementById('budgetrange'), big = document.getElementById('budgetbig');
+      if (ev.target.id === 'budgetrange') num.value = ev.target.value;
+      else rng.value = Math.min(300, Math.round((Number(num.value) || 0) / 5) * 5);
+      if (big) big.textContent = budgetText(Math.max(0, Number(num.value) || 0));
+    }
   });
 
   document.addEventListener('submit', function (ev) {
@@ -805,7 +973,7 @@
     if (errors.length) { box.innerHTML = errors.map(function (e) { return '<span>' + esc(t('err.' + e.code)) + '</span>'; }).join(''); return; }
     if (!store.setProfile(p)) { box.innerHTML = '<span>' + esc(t('err.missing')) + '</span>'; return; }
     store.setSeed(1); store.setSwaps([]); store.snapshotLiked(); kept();
-    S.draftGoal = null;
+    S.draftGoal = null; S.draftCuisines = null; S.flow = false;
     resetView();
     buildPlan();
     location.hash = '#plan';

@@ -73,6 +73,7 @@ test('every key used in the app code exists', () => {
   // keys built at run time
   ['start', 'cook', 'end', 'serve'].forEach((w) => assert.ok(D.ui.en['when.' + w], w));
   ['nordic', 'european', 'asian', 'world'].forEach((c) => assert.ok(D.ui.en['cuisine.' + c], c));
+  ['nordic', 'european', 'asian', 'world'].forEach((c) => assert.ok(D.ui.en['swipe.d.' + c], 'swipe.d.' + c));
   ['empty', 'json', 'format', 'big'].forEach((c) => assert.ok(D.ui.en['data.err.' + c], c));
   ['one', 'other'].forEach((c) => ['leaf', 'pcs', 'clove', 'lemon'].forEach((u) => assert.ok(D.ui.en['unit.' + u + '_' + c], u)));
   ['you', 'plan', 'shop', 'prices'].forEach((c) => assert.ok(D.ui.en['nav.' + c], c));

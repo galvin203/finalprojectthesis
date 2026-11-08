@@ -34,6 +34,50 @@
     'Välj vilka du vill. Dessa recept dyker upp oftare, men andra blandas fortfarande in. Välj inga för lite av allt.',
     'Chọn tùy ý. Các món này sẽ xuất hiện nhiều hơn, các món khác vẫn xen vào. Không chọn gì để có một ít mọi loại.');
 
+  U('budget.none', 'No budget', 'Ei budjettia', 'Ingen budget', 'Không đặt ngân sách');
+  U('profile.budgetSlide', 'Weekly food budget, slider', 'Viikoittainen ruokabudjetti, liukusäädin', 'Veckobudget för mat, reglage', 'Ngân sách ăn uống mỗi tuần, thanh trượt');
+  // ---------- swipe: choose the kinds of food you like ----------
+  U('steps.of', 'Step {n} of {total}', 'Vaihe {n}/{total}', 'Steg {n} av {total}', 'Bước {n}/{total}');
+  U('swipe.title', 'Which food do you like?', 'Mistä ruoasta pidät?', 'Vilken mat gillar du?', 'Bạn thích loại món nào?');
+  U('swipe.hint', 'Swipe right (green tick) if you like it, left (red cross) if not.',
+    'Pyyhkäise oikealle (vihreä valintamerkki), jos pidät, vasemmalle (punainen risti), jos et.',
+    'Svep åt höger (grön bock) om du gillar, åt vänster (rött kryss) om inte.',
+    'Quẹt phải (dấu tick xanh) nếu thích, quẹt trái (dấu X đỏ) nếu không.');
+  U('swipe.yes', 'I like it', 'Pidän siitä', 'Jag gillar det', 'Tôi thích');
+  U('swipe.no', 'Not for me', 'Ei minulle', 'Inte för mig', 'Không thích');
+  U('swipe.undo', 'Undo', 'Kumoa', 'Ångra', 'Hoàn tác');
+  U('swipe.skip', 'Skip this step', 'Ohita tämä vaihe', 'Hoppa över steget', 'Bỏ qua bước này');
+  U('swipe.continue', 'Continue', 'Jatka', 'Fortsätt', 'Tiếp tục');
+  U('swipe.again', 'Start over', 'Aloita alusta', 'Börja om', 'Làm lại');
+  U('swipe.examples', 'Some dishes', 'Esimerkkejä', 'Några rätter', 'Vài món');
+  U('swipe.recipes', 'Recipes: {n}', 'Reseptejä: {n}', 'Recept: {n}', 'Số công thức: {n}');
+  U('swipe.deck', 'Food types, card {n} of {total}. Right arrow means like, left arrow means not for me.',
+    'Ruokatyypit, kortti {n}/{total}. Oikea nuoli tarkoittaa pidän, vasen nuoli ei minulle.',
+    'Typer av mat, kort {n} av {total}. Högerpil betyder gillar, vänsterpil betyder inte för mig.',
+    'Loại món, thẻ {n}/{total}. Mũi tên phải là thích, mũi tên trái là không thích.');
+  U('swipe.live.yes', '{name}: liked', '{name}: pidät', '{name}: gillar', '{name}: thích');
+  U('swipe.live.no', '{name}: not for you', '{name}: et pidä', '{name}: gillar inte', '{name}: không thích');
+  U('swipe.done.title', 'Your picks', 'Valintasi', 'Dina val', 'Lựa chọn của bạn');
+  U('swipe.done.some', 'Ateria will plan more of this food:', 'Ateria suunnittelee tätä ruokaa enemmän:', 'Ateria planerar mer av den här maten:', 'Ateria sẽ xếp nhiều món này hơn:');
+  U('swipe.done.none', 'You ticked nothing, so you get a bit of everything.', 'Et valinnut mitään, joten saat vähän kaikkea.', 'Du markerade inget, så du får lite av allt.', 'Bạn chưa chọn loại nào, nên sẽ có một ít của mọi loại.');
+  U('swipe.done.passed', 'Not for you:', 'Ei sinulle:', 'Inte för dig:', 'Bạn không thích:');
+  U('swipe.d.nordic', 'Fish, rye bread, potatoes, berries and skyr. Simple, filling meals.',
+    'Kalaa, ruisleipää, perunaa, marjoja ja skyriä. Yksinkertaisia, täyttäviä aterioita.',
+    'Fisk, rågbröd, potatis, bär och skyr. Enkla, mättande måltider.',
+    'Cá, bánh mì lúa mạch đen, khoai tây, quả mọng và skyr. Bữa ăn đơn giản, no lâu.');
+  U('swipe.d.european', 'Pasta, tomato sauces, soups and bakes, with a Mediterranean touch.',
+    'Pastaa, tomaattikastikkeita, keittoja ja uuniruokia välimerellisellä otteella.',
+    'Pasta, tomatsåser, soppor och ugnsrätter med en touch av Medelhavet.',
+    'Mì ống, sốt cà chua, súp và món nướng, mang hơi hướng Địa Trung Hải.');
+  U('swipe.d.asian', 'Rice, noodles, curries and stir-fries with chicken, fish, shrimp and tofu.',
+    'Riisiä, nuudeleita, currya ja wokkia kanalla, kalalla, katkaravuilla ja tofulla.',
+    'Ris, nudlar, curry och wok med kyckling, fisk, räkor och tofu.',
+    'Cơm, mì, cà ri và món xào với gà, cá, tôm và đậu phụ.');
+  U('swipe.d.world', 'Wraps, hummus, lentils, chili and shakshuka for quick everyday meals.',
+    'Wrapit, hummus, linssit, chili ja shakshuka nopeisiin arkiaterioihin.',
+    'Wraps, hummus, linser, chili och shakshuka till snabba vardagsmåltider.',
+    'Wrap, hummus, đậu lăng, chili và shakshuka cho bữa ăn nhanh hằng ngày.');
+
   // ---------- recipe view ----------
   U('rec.portions', 'Portions', 'Annokset', 'Portioner', 'Số phần ăn');
   U('rec.less', 'Fewer portions', 'Vähemmän annoksia', 'Färre portioner', 'Giảm số phần ăn');
