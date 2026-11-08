@@ -156,3 +156,10 @@ test('a damaged saved file is kept aside and the app starts fresh', () => {
   assert.equal(status.corrupt, true); assert.equal(st.active().profile, null);
   assert.equal(s.m['ateria.v2.data.bad'], '{"profiles": [oops');
 });
+
+test('a profile with the muscle goal is kept as it is', () => {
+  const s = fake(); const st = A.makeStore(s); st.init();
+  assert.ok(st.setProfile(Object.assign({}, P, { goal: 'muscle', activity: 'active' })));
+  assert.equal(st.active().profile.goal, 'muscle');
+  assert.ok(!st.setProfile(Object.assign({}, P, { goal: 'bulk' })), 'an unknown goal is refused');
+});

@@ -35,6 +35,18 @@ test('energy never goes below resting energy and age below 18 is rejected', () =
   assert.ok(E.validateProfile(profile({ age: 17 })).length > 0);
 });
 
+test('the muscle goal adds 10 % energy and 1.8 g protein per kg, and plans a full week', () => {
+  const m = E.computeTargets(profile({ activity: 'active', goal: 'muscle' }));
+  assert.equal(m.adjustment, 0.1);
+  assert.equal(m.kcal, Math.round(1780 * 1.76 * 1.1));  // resting energy 1780 for the test profile
+  assert.equal(m.protein, 144);                        // 80 kg * 1.8
+  assert.ok(m.protein > E.computeTargets(profile({ activity: 'active', goal: 'gain' })).protein);
+  assert.deepEqual(E.validateProfile(profile({ goal: 'muscle' })), []);
+  const plan = E.planWeek(profile({ activity: 'active', goal: 'muscle' }), 5);
+  assert.ok(!plan.error);
+  assert.equal(plan.days.length, 7);
+});
+
 // ---------- 2. data integrity ----------
 test('every recipe ingredient exists and every ingredient has a seed price in all stores', () => {
   A.RECIPES.forEach(r => r.items.forEach(it => assert.ok(A.ING[it.id], r.id + ' uses unknown ' + it.id)));
@@ -65,7 +77,7 @@ function randomProfile(rng) {
   return profile({
     sex: pick(['male', 'female']), age: 18 + Math.floor(rng() * 70), heightCm: 150 + Math.floor(rng() * 50),
     weightKg: 45 + Math.floor(rng() * 70), activity: pick(['sedentary', 'active', 'vigorous']),
-    goal: pick(['lose', 'maintain', 'gain']), diet: pick(['omnivore', 'omnivore', 'pescatarian', 'vegetarian', 'vegan']),
+    goal: pick(['lose', 'maintain', 'gain', 'muscle']), diet: pick(['omnivore', 'omnivore', 'pescatarian', 'vegetarian', 'vegan']),
     allergies, lactoseFree: rng() < 0.2, people: 1 + Math.floor(rng() * 3),
     dislikes: A.INGREDIENTS.filter(() => rng() < 0.04).map(i => i.id),
     meals: pick([['breakfast', 'lunch', 'snack', 'dinner'], ['breakfast', 'lunch', 'snack', 'dinner'], ['breakfast', 'lunch', 'dinner'], ['lunch', 'dinner'], ['dinner']]),

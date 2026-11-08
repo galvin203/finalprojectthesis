@@ -18,7 +18,7 @@
     allergies: [], lactoseFree: false, dislikes: [], favorites: [], meals: ['breakfast', 'lunch', 'snack', 'dinner'], people: 1, budget: 70, cuisines: [],
   };
   const ACTIVITIES = ['sedentary', 'active', 'vigorous'];
-  const GOALS = ['lose', 'maintain', 'gain'];
+  const GOALS = ['lose', 'maintain', 'gain', 'muscle'];
   const DIETS = ['omnivore', 'pescatarian', 'vegetarian', 'vegan'];
   const MEALS = ['breakfast', 'lunch', 'snack', 'dinner'];
   const DIET_ICON = { omnivore: 'chicken', pescatarian: 'cod', vegetarian: 'carrot', vegan: 'leaf' };
@@ -31,7 +31,7 @@
   store.init();
   const S = {
     lang: I.setLang(I.detect(store.lang())),
-    view: 'plan', day: 0, open: null, swapOpen: null, plan: null, prices: null, portions: {},
+    view: 'plan', draftGoal: null, day: 0, open: null, swapOpen: null, plan: null, prices: null, portions: {},
     io: '', ioMsg: null, resetArmed: false, filter: '',
     backup: '', dataMsg: null, wipeArmed: false, removeArmed: false, wtErr: false, cloudMsg: null, cloudAt: null, cloudBusy: false,
   };
@@ -82,10 +82,23 @@
   }
 
   // up to three ingredients that best show what the meal looks like
-  function mealPics(m) {
+  function mealPics(m, px) {
     return m.items.slice().filter(function (it) { return !SEASONING[it.id]; })
       .sort(function (a, b) { return A.ING[b.id].per100.kcal * b.g - A.ING[a.id].per100.kcal * a.g; })
-      .slice(0, 3).map(function (it) { return tile(it.id, 40); }).join('');
+      .slice(0, 3).map(function (it) { return tile(it.id, px || 40); }).join('');
+  }
+  // A real photo of the dish, when the site has one (data/photos.js, made by tools/photos_index.js). Otherwise ''.
+  function dishPhoto(id) { return (A.photo && A.photo(id)) || null; }
+  function dishImg(id, px, cls) {
+    const ph = dishPhoto(id);
+    return ph ? '<img class="dish' + (cls ? ' ' + cls : '') + '" src="' + esc(ph.src) + '" width="' + px + '" height="' + px + '" alt="" loading="lazy" decoding="async">' : '';
+  }
+  // the large photo at the top of an opened recipe; the credit is shown only when the photo's licence asks for one
+  function dishFigure(id) {
+    const ph = dishPhoto(id);
+    if (!ph) return '';
+    return '<figure class="dishfig"><img src="' + esc(ph.src) + '" width="960" height="540" alt="" loading="lazy" decoding="async">' +
+      (ph.credit ? '<figcaption class="note small">' + esc(t('photo.credit', { credit: ph.credit })) + '</figcaption>' : '') + '</figure>';
   }
 
   function planErrorText(plan) {
@@ -142,6 +155,7 @@
     const liked = rec().liked.indexOf(m.recipeId) >= 0;
     const kcal = t('kcal');
     let s = '<div class="detail">';
+    s += dishFigure(m.recipeId);
     s += '<div class="row between"><span class="pill cuisine">' + A.icon(m.cuisine, 20) + esc(I.cuisine(m.cuisine)) + '</span>' +
       '<button class="btn small heart" type="button" data-act="like" data-id="' + m.recipeId + '" aria-pressed="' + liked + '">' + A.icon(liked ? 'heart' : 'heart_o', 20) + '<span>' + esc(t(liked ? 'rec.unlike' : 'rec.like')) + '</span></button></div>';
     s += '<div class="stepper" role="group" aria-label="' + esc(t('rec.portions')) + '"><span class="lab">' + A.icon('people', 22) + esc(t('rec.portions')) + '</span>' +
@@ -186,7 +200,7 @@
       const alts = E.alternatives(P(), m.meal, m.recipeId);
       s += alts.length ? '<div class="swap">' + alts.map(function (a) {
         const f = Math.min(E.CONFIG.FACTOR_MAX, Math.max(E.CONFIG.FACTOR_MIN, m.nutrients.kcal / a.base.kcal));
-        return '<button type="button" data-act="swap" data-d="' + S.day + '" data-i="' + i + '" data-r="' + a.id + '"><span class="swapname"><span class="pics small">' + mealPics({ items: a.items || [] }) + '</span><span>' + esc(I.recipe(a.id).name) + '</span></span><span class="muted">' + esc(t('swap.meta', { min: a.minutes, p: n0(a.base.protein * f) })) + '</span></button>';
+        return '<button type="button" data-act="swap" data-d="' + S.day + '" data-i="' + i + '" data-r="' + a.id + '"><span class="swapname"><span class="pics small">' + (dishPhoto(a.id) ? dishImg(a.id, 40, 'sm') : mealPics({ items: a.items || [] })) + '</span><span>' + esc(I.recipe(a.id).name) + '</span></span><span class="muted">' + esc(t('swap.meta', { min: a.minutes, p: n0(a.base.protein * f) })) + '</span></button>';
       }).join('') + '</div>' : '<p class="muted">' + esc(t('swap.none')) + '</p>';
     }
     return s + '</div>';
@@ -232,7 +246,7 @@
       const rn = I.recipe(m.recipeId);
       const liked = rec().liked.indexOf(m.recipeId) >= 0;
       let s = '<article class="meal"><button class="head" type="button" data-act="open" data-key="' + key + '" aria-expanded="' + open + '">' +
-        '<span class="pics">' + mealPics(m) + '</span>' +
+        (dishPhoto(m.recipeId) ? '<span class="pics photo">' + dishImg(m.recipeId, 76) + '</span>' : '<span class="pics">' + mealPics(m) + '</span>') +
         '<span class="kind">' + A.icon(m.meal, 18) + esc(I.meal(m.meal)) + (m.swapped ? ' · ' + esc(t('meal.swapped')) : '') + '</span>' +
         '<span class="name">' + esc(rn.name) + (liked ? '<span class="likedmark" title="' + esc(t('rec.unlike')) + '">' + A.icon('heart', 16) + '</span>' : '') + '</span>' +
         '<span class="facts"><span class="cu">' + A.icon(m.cuisine, 16) + esc(I.cuisine(m.cuisine)) + '</span><span>' + esc(t('meal.min', { n: m.minutes })) + '</span><span>' + n0(m.nutrients.kcal) + ' ' + esc(kcal) + '</span><span>' + esc(t('meal.protein', { n: n0(m.nutrients.protein) })) + '</span></span></button>';
@@ -466,7 +480,7 @@
   }
 
   function viewProfile() {
-    const p = P();
+    const p = S.draftGoal ? Object.assign({}, P(), { goal: S.draftGoal }) : P(); // a goal picked on the welcome screen
     let h = consentBanner();
     h += '<div class="row between"><h2>' + esc(t('profile.title')) + '</h2></div>';
     h += '<section class="panel" id="sec-people">' + secPeople() + '</section>';
@@ -476,7 +490,8 @@
       '<label class="field"><span>' + esc(t('profile.height')) + '</span><input id="height" name="height" type="number" inputmode="numeric" min="120" max="230" value="' + p.heightCm + '"></label>' +
       '<label class="field"><span>' + esc(t('profile.weight')) + '</span><input id="weight" name="weight" type="number" inputmode="decimal" min="35" max="250" step="0.5" value="' + p.weightKg + '"></label></div>';
     h += '<fieldset><legend>' + esc(t('profile.activity')) + '</legend><div class="choices rows">' + ACTIVITIES.map(function (k) { return choice('radio', 'activity', k, t('activity.' + k), p.activity === k, k); }).join('') + '</div></fieldset>';
-    h += '<fieldset><legend>' + esc(t('profile.goal')) + '</legend><div class="choices three">' + GOALS.map(function (k) { return choice('radio', 'goal', k, t('goal.' + k), p.goal === k, k); }).join('') + '</div></fieldset>';
+    h += '<fieldset><legend>' + esc(t('profile.goal')) + '</legend><div class="choices four">' + GOALS.map(function (k) { return choice('radio', 'goal', k, t('goal.' + k), p.goal === k, k); }).join('') + '</div>' +
+      '<p class="note" id="goalnote"' + (p.goal === 'muscle' ? '' : ' hidden') + '>' + esc(t('profile.goalMuscle')) + '</p></fieldset>';
     h += '<fieldset><legend>' + esc(t('profile.diet')) + '</legend><div class="choices">' + DIETS.map(function (k) { return choice('radio', 'diet', k, t('diet.' + k), p.diet === k, DIET_ICON[k]); }).join('') + '</div></fieldset>';
     h += '<fieldset><legend>' + esc(t('profile.allergy')) + '</legend><div class="chips">' + A.ALLERGENS.map(function (a) { return chip('checkbox', 'allergy', a[0], I.allergen(a[0]), p.allergies.indexOf(a[0]) >= 0, ALLERGEN_ICON[a[0]]); }).join('') + chip('checkbox', 'lactose', '1', t('profile.lactose'), p.lactoseFree, 'lactose') + '</div></fieldset>';
     h += '<fieldset><legend>' + esc(t('profile.cuisine')) + '</legend><div class="choices four">' + A.CUISINES.map(function (c) { return choice('checkbox', 'cuisine', c, I.cuisine(c), (p.cuisines || []).indexOf(c) >= 0, c); }).join('') + '</div><p class="note">' + esc(t('profile.cuisineNote')) + '</p></fieldset>';
@@ -496,8 +511,45 @@
     return h;
   }
 
+  // ---------- welcome: the first screen for someone who has not made a profile yet ----------
+  function dishCard(m) {
+    const ph = dishPhoto(m.recipeId);
+    return '<li class="dishcard"><span class="art' + (ph ? ' photo' : '') + '">' + (ph ? dishImg(m.recipeId, 440, 'fill') : mealPics(m, 56)) + '</span>' +
+      '<span class="body"><span class="kind">' + A.icon(m.meal, 16) + esc(I.meal(m.meal)) + '</span><b class="nm">' + esc(I.recipe(m.recipeId).name) + '</b>' +
+      '<span class="meta">' + esc(t('meal.min', { n: m.minutes })) + ' · ' + n0(m.nutrients.kcal) + ' ' + esc(t('kcal')) + ' · ' + esc(t('meal.protein', { n: n0(m.nutrients.protein) })) + '</span></span></li>';
+  }
+  function viewWelcome() {
+    let dishes = '';
+    if (!S.plan.error) {
+      const seen = {};
+      const picks = S.plan.days[0].meals.concat(S.plan.days[1].meals).filter(function (m) {
+        if (seen[m.recipeId]) return false;
+        seen[m.recipeId] = true; return true;
+      }).slice(0, 6);
+      dishes = '<section class="dishes" aria-labelledby="wl-dishes"><h2 id="wl-dishes">' + esc(t('welcome.dishes')) + '</h2><ul class="dishrow">' + picks.map(dishCard).join('') + '</ul></section>';
+    }
+    const steps = [
+      [t('welcome.s1.t'), t('welcome.s1.b'), ''],
+      [t('welcome.s2.t'), t('welcome.s2.b'), ''],
+      [t('welcome.s3.t'), t('welcome.s3.b'), '<span class="storerow">' + A.STORES.map(function (st) { return storeLogo(st, 28, true); }).join('') + '</span>'],
+    ];
+    return '<div class="welcome">' +
+      '<section class="hero"><h1>' + esc(t('welcome.title')) + '</h1><p class="lead">' + esc(t('welcome.lead')) + '</p>' +
+      '<h2 class="pickh" id="wl-pick">' + esc(t('welcome.pick')) + '</h2>' +
+      '<div class="goalpick" role="group" aria-labelledby="wl-pick">' + GOALS.map(function (k) {
+        return '<button type="button" class="gcard" data-act="welcomegoal" data-goal="' + k + '">' + tile(k, 52, { badge: false }) + '<span>' + esc(t('goal.' + k)) + '</span></button>';
+      }).join('') + '</div>' +
+      '<div class="row"><button class="btn primary" type="button" data-act="welcomegoal" data-goal="">' + esc(t('profile.create')) + '</button>' +
+      '<button class="btn quiet" type="button" data-act="welcomeexample">' + esc(t('welcome.example')) + '</button></div></section>' +
+      dishes +
+      '<section aria-labelledby="wl-how"><h2 id="wl-how">' + esc(t('welcome.how')) + '</h2><ol class="how">' + steps.map(function (s, i) {
+        return '<li><span class="num" aria-hidden="true">' + (i + 1) + '</span><b>' + esc(s[0]) + '</b><span class="muted">' + esc(s[1]) + '</span>' + s[2] + '</li>';
+      }).join('') + '</ol></section>' +
+      '<p class="note">' + esc(t('profile.disclaimer')) + '</p></div>';
+  }
+
   // ---------- render & routing ----------
-  const VIEWS = { plan: viewPlan, shop: viewShop, prices: viewPrices, profile: viewProfile };
+  const VIEWS = { welcome: viewWelcome, plan: viewPlan, shop: viewShop, prices: viewPrices, profile: viewProfile };
 
   function renderChrome() {
     document.documentElement.lang = S.lang;
@@ -514,6 +566,8 @@
   function render() {
     const main = document.getElementById('main');
     main.innerHTML = VIEWS[S.view]();
+    const app = document.querySelector('.app');
+    if (app) app.classList.toggle('is-welcome', S.view === 'welcome');
     document.querySelectorAll('.nav a').forEach(function (a) {
       if (a.getAttribute('href') === '#' + S.view) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
@@ -521,7 +575,8 @@
   }
   function route() {
     const h = (location.hash || '').replace('#', '');
-    S.view = VIEWS[h] ? h : 'plan';
+    // someone without a profile starts on the welcome screen; everyone else starts on their plan
+    S.view = VIEWS[h] ? h : (isExample() ? 'welcome' : 'plan');
     render();
     window.scrollTo(0, 0);
     if (A.help) A.help.setView(S.view);
@@ -584,6 +639,8 @@
       const next = E.swapMeal(S.plan, P(), d, i, r);
       if (next) { S.plan = next; store.setSwaps(rec().swaps.concat([{ d: d, i: i, r: r }])); kept(); S.swapOpen = null; S.portions = {}; render(); toast(t('toast.swapped')); }
     }
+    else if (act === 'welcomegoal') { S.draftGoal = el.getAttribute('data-goal') || null; location.hash = '#profile'; }
+    else if (act === 'welcomeexample') { location.hash = '#plan'; }
     else if (act === 'newplan') {
       store.setSeed(rec().seedN + 1); store.setSwaps([]); store.snapshotLiked(); kept();
       S.open = null; S.swapOpen = null; S.portions = {}; buildPlan(); render(); toast(t('toast.newplan'));
@@ -698,6 +755,12 @@
       rd.readAsText(f);
       return;
     }
+    if (el.name === 'goal' && el.closest && el.closest('#pform')) {
+      S.draftGoal = el.value;
+      const note = document.getElementById('goalnote');
+      if (note) note.hidden = el.value !== 'muscle';
+      return;
+    }
     const act = el.getAttribute && el.getAttribute('data-act');
     if (act === 'check') {
       const c = clone(rec().checked);
@@ -742,6 +805,7 @@
     if (errors.length) { box.innerHTML = errors.map(function (e) { return '<span>' + esc(t('err.' + e.code)) + '</span>'; }).join(''); return; }
     if (!store.setProfile(p)) { box.innerHTML = '<span>' + esc(t('err.missing')) + '</span>'; return; }
     store.setSeed(1); store.setSwaps([]); store.snapshotLiked(); kept();
+    S.draftGoal = null;
     resetView();
     buildPlan();
     location.hash = '#plan';

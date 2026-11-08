@@ -407,3 +407,58 @@ code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.85em;
 .store .sname { display: flex; align-items: center; gap: 8px; }
 .prow .lname { display: flex; align-items: center; gap: 6px; }
 .item .prices small { display: flex; align-items: center; min-height: 20px; }
+
+/* ---------- welcome screen ---------- */
+a.wordmark { color: inherit; text-decoration: none; }
+a.wordmark:hover { color: var(--spruce); }
+.welcome { display: grid; gap: 26px; }
+.welcome h2 { font-size: 1.25rem; }
+.hero { background: var(--spruce); color: var(--spruce-ink); border-radius: 22px; padding: 26px 18px 22px; display: grid; gap: 14px; }
+.hero h1 { font-size: clamp(2rem, 8.5vw, 3.5rem); font-weight: 800; line-height: 1.02; letter-spacing: -0.035em; max-width: 16ch; }
+.hero .lead { max-width: 54ch; font-size: 1.02rem; opacity: 0.94; }
+.hero .pickh { font-size: 1rem; margin-top: 6px; }
+.goalpick { display: grid; gap: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 640px) { .goalpick { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.gcard { display: grid; justify-items: center; align-content: start; gap: 8px; min-height: 112px; padding: 12px 8px; border-radius: 16px; border: 0; background: var(--raise); color: var(--ink); font-weight: 600; font-size: 0.92rem; text-align: center; line-height: 1.2; }
+.gcard:hover { box-shadow: 0 0 0 3px color-mix(in srgb, var(--spruce-ink) 55%, transparent); }
+.gcard:focus-visible { outline: 3px solid var(--spruce-ink); outline-offset: 2px; }
+.hero .row { margin-top: 4px; }
+.hero .btn.primary { background: var(--spruce-ink); color: var(--spruce); border-color: var(--spruce-ink); }
+.hero .btn.quiet { color: inherit; border-color: color-mix(in srgb, currentColor 55%, transparent); }
+.hero :focus-visible { outline-color: var(--spruce-ink); }
+@media (prefers-reduced-motion: no-preference) {
+  .gcard { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+  .gcard:hover { transform: translateY(-2px); }
+}
+
+.dishes { display: grid; gap: 10px; }
+.dishrow { list-style: none; margin: 0 -16px; padding: 2px 16px 8px; display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-inline: 16px; scrollbar-width: thin; }
+.dishcard { flex: 0 0 min(230px, 72%); scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
+.dishcard .art { aspect-ratio: 4 / 3; background: var(--tile); display: flex; gap: 4px; align-items: center; justify-content: center; overflow: hidden; }
+.dishcard .art.photo { display: block; }
+.dishcard .body { padding: 10px 12px 14px; display: grid; gap: 3px; align-content: start; }
+.dishcard .kind { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 600; color: var(--muted); }
+.dishcard .nm { font-family: var(--font-display); font-weight: 650; font-size: 1.05rem; line-height: 1.2; }
+.dishcard .meta { font-size: 0.8rem; color: var(--muted); }
+
+.how { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 720px) { .how { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.how li { display: grid; grid-template-columns: 38px minmax(0, 1fr); column-gap: 12px; row-gap: 4px; align-content: start; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.how .num { grid-row: 1 / span 3; width: 38px; height: 38px; border-radius: 50%; background: var(--spruce); color: var(--spruce-ink); display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; }
+.how li > :not(.num) { grid-column: 2; }
+.how b { font-family: var(--font-display); font-size: 1.02rem; }
+.storerow { display: flex; gap: 10px; margin-top: 6px; }
+.is-welcome .nav { display: none; }
+@media (min-width: 960px) { .is-welcome { grid-template-columns: minmax(0, 1fr); } }
+body:has(.is-welcome) .help-fab { bottom: 20px; }
+body:has(.is-welcome) .help-hint { bottom: 84px; }
+body:has(.is-welcome) .help-panel { bottom: 76px; }
+
+/* ---------- dish photos (shown when data/photos.js lists one for the recipe) ---------- */
+.meal > button.head .pics.photo { display: block; }
+img.dish { display: block; width: 76px; height: 76px; border-radius: 14px; object-fit: cover; background: var(--tile); }
+img.dish.sm { width: 40px; height: 40px; border-radius: 10px; }
+img.dish.fill { width: 100%; height: 100%; border-radius: 0; }
+.dishfig { margin: 0; display: grid; gap: 4px; }
+.dishfig img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-sm); background: var(--tile); }
+.dishfig figcaption { margin: 0; }

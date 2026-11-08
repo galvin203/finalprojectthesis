@@ -80,7 +80,7 @@ test('every key used in the app code exists', () => {
   ['protein', 'fat', 'carbs', 'fibre'].forEach((x) => assert.ok(D.ui.en['macro.' + x]));
   ['female', 'male'].forEach((x) => assert.ok(D.ui.en['sex.' + x]));
   ['sedentary', 'active', 'vigorous'].forEach((x) => assert.ok(D.ui.en['activity.' + x]));
-  ['lose', 'maintain', 'gain'].forEach((x) => assert.ok(D.ui.en['goal.' + x]));
+  ['lose', 'maintain', 'gain', 'muscle'].forEach((x) => assert.ok(D.ui.en['goal.' + x]));
   ['omnivore', 'pescatarian', 'vegetarian', 'vegan'].forEach((x) => assert.ok(D.ui.en['diet.' + x]));
   ['breakfast', 'lunch', 'snack', 'dinner'].forEach((x) => assert.ok(D.ui.en['meal.' + x]));
 });
@@ -221,7 +221,7 @@ test('search matches names in every language', () => {
 // ---------- pictures ----------
 test('every ingredient and every pictogram the app uses has a drawing', () => {
   A.INGREDIENTS.forEach((i) => assert.ok(A.ICONS[i.id], 'no icon for ' + i.id));
-  ['breakfast', 'lunch', 'snack', 'dinner', 'female', 'male', 'sedentary', 'active', 'vigorous', 'lose', 'maintain', 'gain', 'lactose',
+  ['breakfast', 'lunch', 'snack', 'dinner', 'female', 'male', 'sedentary', 'active', 'vigorous', 'lose', 'maintain', 'gain', 'muscle', 'lactose',
     'wheat', 'peanut', 'soybean', 'sesame', 'leaf', 'helper', 'speaker', 'heart', 'heart_o', 'save', 'cloud', 'scale', 'pot', 'nordic', 'european', 'asian', 'world'].forEach((id) => assert.ok(A.ICONS[id], id));
   A.ALLERGENS.forEach((a) => assert.ok(A.ICONS[{ gluten: 'wheat', milk: 'milk', egg: 'egg', fish: 'cod', shellfish: 'shrimp', peanut: 'peanut', nuts: 'almonds', soy: 'soybean', sesame: 'sesame' }[a[0]]], a[0]));
   Object.keys(A.SPICES).forEach((id) => assert.ok(A.ICONS[A.SPICES[id].icon], 'spice icon ' + id));

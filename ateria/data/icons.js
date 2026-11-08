@@ -185,6 +185,7 @@
   I.lose = circ(24, 24, 19, '#e3f1e3') + line('M24 12v22M15 26l9 9 9-9', C.green2, 4.500);
   I.maintain = circ(24, 24, 19, '#e8eef3') + line('M13 19h22M13 29h22', C.blue2, 4.500);
   I.gain = circ(24, 24, 19, '#fbe9e0') + line('M24 36V14M15 22l9-9 9 9', C.orange2, 4.500);
+  I.muscle = circ(24, 24, 19, '#ece4f5') + line('M15 24h18', C.purple, 4) + rect(9, 15, 6, 18, 2.500, C.purple) + rect(14, 18, 4, 12, 1.500, '#8a6bb0') + rect(33, 15, 6, 18, 2.500, C.purple) + rect(30, 18, 4, 12, 1.500, '#8a6bb0');
   I.people = circ(17, 14, 6, C.blue2) + path('M6 40c0-9 5-14 11-14s11 5 11 14z', C.blue2) + circ(33, 17, 5, C.blue) + path('M28 40c0-7 2-11 6-11s8 4 8 11z', C.blue);
   I.wallet = rect(6, 12, 36, 28, 5, C.green2) + path('M30 22h12v10H30a5 5 0 0 1 0-10z', '#5aa85b') + circ(33, 27, 2, C.white) + line('M6 18h28', '#1f5a2b', 2);
   I.clock = circ(24, 24, 17, C.white, ' stroke="' + C.grey2 + '" stroke-width="3"') + line('M24 13v11l7 5', C.ink, 3);

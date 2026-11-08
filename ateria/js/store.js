@@ -25,7 +25,7 @@
   const MEALS = ['breakfast', 'lunch', 'snack', 'dinner'];
   const SEXES = ['female', 'male'];
   const ACTIVITIES = ['sedentary', 'active', 'vigorous'];
-  const GOALS = ['lose', 'maintain', 'gain'];
+  const GOALS = ['lose', 'maintain', 'gain', 'muscle'];
   const DIETS = ['omnivore', 'pescatarian', 'vegetarian', 'vegan'];
   const STORE_IDS = ['s', 'k', 'lidl'];
 

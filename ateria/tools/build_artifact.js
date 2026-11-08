@@ -13,10 +13,13 @@ const scripts = [...index.matchAll(/<script src="([^"]+)"><\/script>/g)].map((m)
 if (!fonts || !body.trim() || scripts.length < 5) throw new Error('index.html did not have the expected structure');
 
 const safe = (js) => js.replace(/<\/script/gi, '<\\/script');
-// the single-file build cannot load img/ files, so logos become data: URIs
-const mime = { '.png': 'image/png', '.jpg': 'image/jpeg' };
-const inlineImages = (text) => fs.readdirSync(path.join(root, 'img')).reduce((t, f) =>
-  t.split('img/' + f).join('data:' + mime[path.extname(f)] + ';base64,' + fs.readFileSync(path.join(root, 'img', f)).toString('base64')), text);
+// the single-file build cannot load img/ files, so every image under img/ (logos, dish photos) becomes a data: URI
+const mime = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp' };
+const imageFiles = (dir, rel) => fs.readdirSync(path.join(root, dir), { withFileTypes: true }).flatMap((e) =>
+  e.isDirectory() ? imageFiles(dir + '/' + e.name, rel + e.name + '/') : mime[path.extname(e.name).toLowerCase()] ? [rel + e.name] : []);
+// longest path first, so 'img/food/a.jpg' is never cut short by a shorter name
+const inlineImages = (text) => imageFiles('img', 'img/').sort((a, b) => b.length - a.length).reduce((t, f) =>
+  t.split(f).join('data:' + mime[path.extname(f).toLowerCase()] + ';base64,' + fs.readFileSync(path.join(root, f)).toString('base64')), text);
 
 const out = inlineImages([
   '<title>Ateria</title>',

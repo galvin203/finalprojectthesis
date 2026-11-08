@@ -185,6 +185,36 @@
   U('goal.lose', 'Lose weight', 'Laihduttaa', 'Gå ner i vikt', 'Giảm cân');
   U('goal.maintain', 'Maintain weight', 'Pitää paino', 'Behålla vikten', 'Giữ cân');
   U('goal.gain', 'Gain weight', 'Lisätä painoa', 'Gå upp i vikt', 'Tăng cân');
+  U('goal.muscle', 'Build muscle (gym)', 'Lisätä lihasta (kuntosali)', 'Bygga muskler (gym)', 'Tăng cơ (tập gym)');
+  U('profile.goalMuscle', 'Food supports muscle gain, but training is what builds muscle: strength training two to three times a week is a common starting point. If you train, pick the second or third activity level above. This goal adds 10 % energy and 1.8 g protein per kg of body weight.',
+    'Ruoka tukee lihaskasvua, mutta lihasta rakentaa harjoittelu: voimaharjoittelu kaksi tai kolme kertaa viikossa on yleinen aloitus. Jos harjoittelet, valitse yltä toinen tai kolmas aktiivisuustaso. Tämä tavoite lisää energiaa 10 % ja proteiinia 1,8 g painokiloa kohti.',
+    'Maten stödjer muskeluppbyggnad, men det är träningen som bygger muskler: styrketräning två till tre gånger i veckan är en vanlig start. Om du tränar, välj den andra eller tredje aktivitetsnivån ovan. Det här målet lägger till 10 % energi och 1,8 g protein per kilo kroppsvikt.',
+    'Ăn uống hỗ trợ tăng cơ, nhưng chính việc tập luyện mới xây cơ: tập tạ 2–3 buổi mỗi tuần là điểm bắt đầu phổ biến. Nếu bạn tập, hãy chọn mức vận động thứ hai hoặc thứ ba ở trên. Mục tiêu này cộng thêm 10 % năng lượng và 1,8 g protein cho mỗi kg cân nặng.');
+  U('welcome.title', 'Your week of meals, planned and priced', 'Viikon ateriat suunniteltuna ja hinnoiteltuna', 'Veckans måltider, planerade och prissatta', 'Một tuần bữa ăn, đã lên kế hoạch và có giá');
+  U('welcome.lead', 'Choose your goal. Ateria plans seven days of meals that fit your calories and protein, then shows what the shopping list costs at S-market, K-market and Lidl.',
+    'Valitse tavoitteesi. Ateria suunnittelee seitsemän päivää aterioita, jotka sopivat kaloreihisi ja proteiiniisi, ja näyttää mitä ostoslista maksaa S-marketissa, K-marketissa ja Lidlissä.',
+    'Välj ditt mål. Ateria planerar sju dagars måltider som passar dina kalorier och ditt protein och visar vad inköpslistan kostar på S-market, K-market och Lidl.',
+    'Chọn mục tiêu của bạn. Ateria lên thực đơn bảy ngày phù hợp lượng calo và protein của bạn, rồi cho biết danh sách đi chợ tốn bao nhiêu ở S-market, K-market và Lidl.');
+  U('welcome.pick', 'What is your goal?', 'Mikä on tavoitteesi?', 'Vad är ditt mål?', 'Mục tiêu của bạn là gì?');
+  U('welcome.example', 'See an example week', 'Katso esimerkkiviikko', 'Se en exempelvecka', 'Xem tuần mẫu');
+  U('welcome.dishes', 'A taste of the week', 'Maistiainen viikosta', 'Smakprov på veckan', 'Xem trước vài món trong tuần');
+  U('welcome.how', 'How it works', 'Näin se toimii', 'Så fungerar det', 'Cách hoạt động');
+  U('welcome.s1.t', 'Tell us about you', 'Kerro itsestäsi', 'Berätta om dig', 'Cho chúng tôi biết về bạn');
+  U('welcome.s1.b', 'Age, height, weight, activity and goal. Allergies and food you dislike are respected.',
+    'Ikä, pituus, paino, aktiivisuus ja tavoite. Allergiat ja inhokit otetaan huomioon.',
+    'Ålder, längd, vikt, aktivitet och mål. Allergier och mat du ogillar respekteras.',
+    'Tuổi, chiều cao, cân nặng, mức vận động và mục tiêu. Dị ứng và món bạn không thích đều được tôn trọng.');
+  U('welcome.s2.t', 'Get a week of meals', 'Saat viikon ateriat', 'Få en vecka med måltider', 'Nhận thực đơn một tuần');
+  U('welcome.s2.b', 'Calories and protein are worked out for you, and every recipe shows exact amounts.',
+    'Kalorit ja proteiini lasketaan puolestasi, ja jokaisessa reseptissä on tarkat määrät.',
+    'Kalorier och protein räknas ut åt dig och varje recept visar exakta mängder.',
+    'Calo và protein được tính sẵn, mỗi công thức đều có định lượng cụ thể.');
+  U('welcome.s3.t', 'Shop at the lowest price', 'Osta edullisimmin', 'Handla till lägsta pris', 'Mua sắm với giá thấp nhất');
+  U('welcome.s3.b', 'The list is grouped by aisle and priced at three stores. Prices start as estimates that you can replace with real ones.',
+    'Lista on ryhmitelty osastoittain ja hinnoiteltu kolmessa kaupassa. Hinnat ovat aluksi arvioita, jotka voit korvata oikeilla.',
+    'Listan är sorterad efter avdelning och prissatt i tre butiker. Priserna börjar som uppskattningar som du kan ersätta med riktiga.',
+    'Danh sách chia theo khu vực và có giá ở ba cửa hàng. Ban đầu giá chỉ là ước tính, bạn có thể thay bằng giá thật.');
+  U('photo.credit', 'Photo: {credit}', 'Kuva: {credit}', 'Foto: {credit}', 'Ảnh: {credit}');
   U('profile.diet', 'Diet', 'Ruokavalio', 'Kost', 'Chế độ ăn');
   U('diet.omnivore', 'Eats everything', 'Syö kaikkea', 'Äter allt', 'Ăn tất cả');
   U('diet.pescatarian', 'Fish, no meat', 'Kalaa, ei lihaa', 'Fisk, inget kött', 'Có cá, không ăn thịt');
