@@ -2,7 +2,7 @@
 
 Weekly meal plans with calorie and protein targets, a recipe for every meal, and a shopping list priced for **S-market, K-market and Lidl** (Finland).
 
-Ateria is inspired by apps like Mealbird, but every recipe, text, ingredient drawing and line of code here is original. The only third-party images are the three store logos (see *Store logos* below). It is a **separate project from the NutriWise thesis** (Viet Nam).
+Ateria is inspired by apps like Mealbird, but the code, texts and ingredient drawings here are original. The recipes are adapted from recipes published by dietitians, universities and health agencies (see *Licence* below). The only third-party images are the three store logos (see *Store logos* below). It is a **separate project from the NutriWise thesis** (Viet Nam).
 
 * No dependencies: plain HTML, CSS and JavaScript.
 * Four languages: English, Finnish, Swedish and Vietnamese.
@@ -15,7 +15,7 @@ Ateria is inspired by apps like Mealbird, but every recipe, text, ingredient dra
 open index.html                       # any browser; double-click works
 
 # 2. Run the tests (Node 18 or newer, Python 3 for the price tool)
-node --test tests/*.test.js           # 110 tests
+node --test tests/*.test.js           # 111 tests
 python3 -I tests/test_prices_tool.py  # 8 tests
 
 # 3. Optional: build one self-contained page (for publishing as a single file)
@@ -73,7 +73,7 @@ Ateria is a static site, so it needs no build tools. In Vercel, import this repo
 | --- | --- | --- |
 | **Prices** | Illustrative, **not real**. Shown with "est." | Enter real prices in the Prices screen or import them (below). |
 | **Nutrition per 100 g** | Approximate reference values, not from a licensed database. | Replace with [Fineli](https://fineli.fi) (THL, open data) or USDA FoodData Central before relying on them. |
-| **Recipes** | Original, but not yet cooked and tasted by a person. | Taste-test them; add your own in `data/recipes.js`. |
+| **Recipes** | Adapted from published dietitian, university and health-agency recipes. The adapted versions are not reviewed by a health professional and not yet cooked and tasted by a person. | Taste-test them; add your own in `data/recipes.js`. |
 | **Translations** | Finnish, Swedish and Vietnamese were written for this project. | Ask a native speaker to review them. Tests check that nothing is missing and that numbers match, not the wording. |
 
 ## Getting real prices
@@ -134,7 +134,7 @@ tests/                   JavaScript and Python tests
 
 ## Tests
 
-`node --test tests/*.test.js` runs 110 tests: the targets checked by hand, the planner on 600 random profiles and many diet and allergy combinations, all texts in four languages, amounts in every unit, storage and consent, the food log (sums, dates, limits, cleaning of imported data) and the helper. `python3 -I tests/test_prices_tool.py` runs 8 more for the price tool.
+`node --test tests/*.test.js` runs 111 tests: the targets checked by hand, the planner on 600 random profiles and many diet and allergy combinations, all texts in four languages, amounts in every unit, storage and consent, the food log (sums, dates, limits, cleaning of imported data) and the helper. `python3 -I tests/test_prices_tool.py` runs 8 more for the price tool.
 
 ## Known limits
 
@@ -142,7 +142,6 @@ tests/                   JavaScript and Python tests
 * Prices change weekly and differ by store location; the app has no store-location logic.
 * Details are kept per browser. To move to another device, use a backup file (or the account copy on Claude).
 * The offline helper answers are fixed text written for this app. Answers from Claude are not reviewed and can be wrong.
-* No licence has been chosen yet.
 
 ## Look and type
 
@@ -150,3 +149,17 @@ tests/                   JavaScript and Python tests
 * **Vietnamese.** Headlines are never letter-spaced tightly and get extra line height when the page language is `vi`, so stacked tone marks do not touch the line above.
 * **Colours.** Spruce green for structure, cloudberry gold for the one main button on the welcome screen, lingonberry red for hearts and warnings. Dark mode keeps the welcome banner and the daily-target card deep green.
 * **Motion.** The only animation that plays by itself is the food stickers on the welcome banner. It is switched off for people who ask for less motion.
+
+## Licence
+
+The code, tests, tools and the author's own texts and drawings are under the [MIT licence](../LICENSE) (Copyright (c) 2026 Nhut Tan Pham). Some parts are not covered by it:
+
+| Part | Terms |
+| --- | --- |
+| Fonts in `fonts/` (Lora, Inter) | SIL Open Font License 1.1, see `fonts/README.md`. |
+| Store logos in `img/` | Trademarks of S Group, Kesko and Lidl. Used only to tell the stores apart; not licensed by this project, and Ateria is not affiliated with the owners. |
+| Recipes in `data/recipes.js` | Adapted from recipes published by dietitians, universities and health agencies. The original publishers keep their rights in their own texts and photos; the MIT licence does not extend to them. |
+| Dish photos in `img/food/` (none yet) | Only photos you took yourself or whose licence allows this use, with a credit where the licence asks for one. |
+| Nutrition and price values | Placeholders, not taken from a licensed database. |
+
+The software is provided "as is", without warranty. It gives general information, not medical or dietetic advice.

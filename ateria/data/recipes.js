@@ -1,5 +1,5 @@
 /*
- * Ateria recipes (English): original, simple recipes written for this project.
+ * Ateria recipes (English): simple recipes adapted for this project from recipes published by dietitians, universities and health agencies.
  * Finnish, Swedish and Vietnamese texts are in data/i18n_recipes.js (same ids, same tokens).
  *
  *   R(id, cuisine, meal, minutes, items, spices, water, name, tip, steps)

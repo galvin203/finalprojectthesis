@@ -18,8 +18,12 @@ More detail, including tests and how to add real prices, is in [`ateria/README.m
 ## Key facts
 
 - Builds a 7-day meal plan from your calorie and protein targets (lose, maintain or gain weight) and a shopping list priced for S-market, K-market and Lidl.
-- 66 original recipes (Nordic, European, Asian and everyday dishes) with amounts in spoons, dl and pieces for 1 to 8 portions, and seasoning listed by the moment it goes in.
+- 66 recipes adapted from recipes published by dietitians, universities and health agencies (Nordic, European, Asian and everyday dishes) with amounts in spoons, dl and pieces for 1 to 8 portions, and seasoning listed by the moment it goes in.
 - Four languages and pictures for every ingredient, so the main steps can be followed without reading much.
 - Your details are saved on your device only if you agree. You can back them up, restore them or delete them. A Help button answers "how do I...?" questions.
 - **Prices and nutrition values are placeholders** until you enter real prices on the Prices screen.
 - Not medical advice. For adults only (18-99).
+
+## Licence
+
+The code is under the [MIT licence](LICENSE) (Copyright (c) 2026 Nhut Tan Pham). Fonts, store logos and recipe sources keep their own terms; the list is in [`ateria/README.md`](ateria/README.md#licence). A future NutriWise folder can carry its own licence file.
