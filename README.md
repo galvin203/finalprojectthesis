@@ -5,7 +5,7 @@ Code for my bachelor's thesis work and a related side project.
 | Folder | What it is | Status |
 | --- | --- | --- |
 | [`ateria/`](ateria/) | **Ateria**: a weekly meal planner with a priced shopping list for S-market, K-market and Lidl (Finland). Works in English, Finnish, Swedish and Vietnamese. | Working (version 2) |
-| *(planned)* | **NutriWise**: the thesis web app (Viet Nam). It will get its own folder so the two projects stay separate. | Not in this repository yet |
+
 
 ## Try Ateria in 30 seconds
 
