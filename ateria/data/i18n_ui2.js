@@ -263,6 +263,26 @@
     'Tee ensin ruokalista, niin voit kirjata sen ateriat tähän.',
     'Gör först din plan, så kan du logga dess måltider här.',
     'Hãy tạo thực đơn trước, rồi bạn có thể ghi các bữa trong đó vào đây.');
+  U('log.ideas', 'Ideas for the rest of today', 'Ideoita päivän loppuun', 'Idéer för resten av dagen', 'Gợi ý cho phần còn lại của hôm nay');
+  U('log.ideasHelp', 'Recipes from Ateria that suit your diet and allergies, sized to the energy you have left.',
+    'Ateria-reseptejä, jotka sopivat ruokavalioosi ja allergioihisi. Annos mitoitetaan jäljellä olevan energian mukaan.',
+    'Recept från Ateria som passar din kost och dina allergier, anpassade till energin du har kvar.',
+    'Các công thức của Ateria phù hợp với chế độ ăn và dị ứng của bạn, được điều chỉnh theo năng lượng còn lại.');
+  U('log.ideasLeft', 'You have {n} kcal left for today.', 'Tälle päivälle on jäljellä {n} kcal.', 'Du har {n} kcal kvar för idag.', 'Hôm nay bạn còn {n} kcal.');
+  U('log.ideasLeftP', 'You have {n} kcal and {p} g of protein left for today.',
+    'Tälle päivälle on jäljellä {n} kcal ja {p} g proteiinia.',
+    'Du har {n} kcal och {p} g protein kvar för idag.',
+    'Hôm nay bạn còn {n} kcal và {p} g chất đạm.');
+  U('log.ideasDone', 'The energy target for today is reached or nearly reached, so there are no ideas.',
+    'Päivän energiatavoite on saavutettu tai lähes saavutettu, joten ideoita ei ole.',
+    'Dagens energimål är nått eller nästan nått, så det finns inga idéer.',
+    'Mục tiêu năng lượng hôm nay đã đạt hoặc gần đạt, nên không có gợi ý nào.');
+  U('log.ideasNone', 'No recipe fits the energy you have left and your restrictions.',
+    'Mikään resepti ei sovi jäljellä olevaan energiaan ja rajoituksiisi.',
+    'Inget recept passar energin du har kvar och dina begränsningar.',
+    'Không có công thức nào phù hợp với năng lượng còn lại và các hạn chế của bạn.');
+  U('log.ideasMore', 'Other ideas', 'Muita ideoita', 'Andra idéer', 'Gợi ý khác');
+  U('log.ideaMeta', '≈ {k} kcal · protein {p} g · {min} min', '≈ {k} kcal · proteiinia {p} g · {min} min', '≈ {k} kcal · protein {p} g · {min} min', '≈ {k} kcal · đạm {p} g · {min} phút');
   U('log.add', 'Add', 'Lisää', 'Lägg till', 'Thêm');
   U('log.addFood', 'Add a food', 'Lisää ruoka-aine', 'Lägg till en matvara', 'Thêm một thực phẩm');
   U('log.food', 'Food', 'Ruoka-aine', 'Matvara', 'Thực phẩm');

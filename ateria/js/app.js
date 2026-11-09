@@ -34,7 +34,7 @@
     view: 'plan', draftGoal: null, draftCuisines: null, flow: false, swipe: { i: 0, liked: [], hist: [], busy: false, msg: '' }, day: 0, open: null, swapOpen: null, plan: null, prices: null, portions: {},
     io: '', ioMsg: null, resetArmed: false, filter: '',
     backup: '', dataMsg: null, wipeArmed: false, removeArmed: false, wtErr: false, cloudMsg: null, cloudAt: null, cloudBusy: false,
-    logDate: today(), logPlanDay: 0, logPortion: 1,
+    logDate: today(), logPlanDay: 0, logPortion: 1, ideaRound: 0,
   };
 
   function rec() { return store.active(); }
@@ -539,6 +539,34 @@
     return h;
   }
 
+  // ideas for the rest of today: recipes that fit the person's diet and allergies, scaled to the energy that is left
+  function logIdeas() {
+    const p = P(), pools = {};
+    LOG.SLOTS.forEach(function (m) {
+      pools[m] = A.RECIPES.filter(function (r) { return r.meal === m; }).map(function (r) { return E.adaptRecipe(r, p); }).filter(Boolean);
+    });
+    return LOG.suggest({ pools: pools, targets: logTargets(), entries: store.logOf(S.logDate), slots: p.meals, round: S.ideaRound });
+  }
+  function secLogIdeas() {
+    if (S.logDate !== today()) return ''; // ideas are for the rest of today only
+    const r = logIdeas();
+    let h = '<h3>' + A.icon('leaf', 26) + esc(t('log.ideas')) + '</h3><p class="note">' + esc(t('log.ideasHelp')) + '</p>';
+    if (r.left < LOG.MIN_LEFT) return h + '<p class="muted">' + esc(t('log.ideasDone')) + '</p>';
+    if (!r.ideas.length) return h + '<p class="muted">' + esc(t('log.ideasNone')) + '</p>';
+    h += '<p class="small muted">' + esc(r.proteinLeft > 0 ? t('log.ideasLeftP', { n: n0(r.left), p: n0(r.proteinLeft) }) : t('log.ideasLeft', { n: n0(r.left) })) + '</p>';
+    LOG.SLOTS.forEach(function (slot) {
+      const list = r.ideas.filter(function (x) { return x.m === slot; });
+      if (!list.length) return;
+      h += '<h4 class="logslot"><span>' + esc(I.meal(slot)) + '</span></h4><ul class="loglist">' + list.map(function (x) {
+        const name = I.recipe(x.id).name, e = x.entry;
+        return '<li class="logrow"><span class="logname"><span>' + esc(name) + '</span><small class="muted">' +
+          esc(t('log.ideaMeta', { k: n0(e.k), p: n0(e.p), min: x.min })) + '</small></span>' +
+          '<button class="btn small" type="button" data-act="logidea" data-id="' + x.id + '" data-m="' + slot + '" aria-label="' + esc(t('log.add') + ': ' + name) + '">' + esc(t('log.add')) + '</button></li>';
+      }).join('') + '</ul>';
+    });
+    return h + (r.more ? '<div class="row"><button class="btn small quiet" type="button" data-act="logmore">' + esc(t('log.ideasMore')) + '</button></div>' : '');
+  }
+
   function viewLog() {
     const slot = defaultSlot();
     let h = consentBanner() + exampleBanner();
@@ -546,6 +574,8 @@
     h += '<p class="muted">' + esc(t('log.intro')) + '</p>';
     h += '<section id="sec-logday" style="display:grid;gap:12px">' + secLogDay() + '</section>';
     h += '<section class="panel" id="sec-logplan">' + secLogPlan() + '</section>';
+    const ideas = secLogIdeas();
+    h += '<section class="panel" id="sec-logideas"' + (ideas ? '' : ' hidden') + '>' + ideas + '</section>';
     h += '<section class="panel"><details class="more" open><summary>' + esc(t('log.addFood')) + '</summary>' +
       '<form id="logfform" class="logform f" novalidate>' +
       '<label class="field"><span>' + esc(t('log.food')) + '</span><select id="logfood">' + A.INGREDIENTS.map(function (i) { return { id: i.id, n: I.ingName(i.id) }; })
@@ -577,12 +607,14 @@
     return true;
   }
 
-  const SECTIONS = { people: secPeople, weight: secWeight, favs: secFavs, data: secData, cloud: secCloud, logday: secLogDay, logplan: secLogPlan };
+  const SECTIONS = { people: secPeople, weight: secWeight, favs: secFavs, data: secData, cloud: secCloud, logday: secLogDay, logplan: secLogPlan, logideas: secLogIdeas };
   function refresh(name) {
     const el = document.getElementById('sec-' + name);
     if (!el) return;
     el.innerHTML = SECTIONS[name]();
     if (name === 'cloud') el.hidden = !(A.cloud && A.cloud.ready);
+    if (name === 'logideas') el.hidden = !el.innerHTML;
+    if (name === 'logday') refresh('logideas'); // what is left of the day changed, or the day itself
   }
 
   function budgetText(b) { // whole euros, as the big number on the budget slider
@@ -950,15 +982,25 @@
     }
     else if (act === 'wdel') { store.removeWeight(el.getAttribute('data-d')); kept(); refresh('weight'); }
     else if (act === 'logday') {
-      S.logDate = el.getAttribute('data-d'); refresh('logday');
+      S.logDate = el.getAttribute('data-d'); S.ideaRound = 0; refresh('logday');
       const b = document.querySelector('[data-act="logday"][aria-pressed="true"]'); if (b) b.focus();
     }
     else if (act === 'logplan') {
       const day = S.plan && !S.plan.error && S.plan.days[S.logPlanDay];
       logAdd(day ? LOG.fromMeal(day.meals[+el.getAttribute('data-i')], S.logPortion) : null);
     }
+    else if (act === 'logidea') {
+      const id = el.getAttribute('data-id'), m = el.getAttribute('data-m');
+      const idea = logIdeas().ideas.filter(function (x) { return x.id === id && x.m === m; })[0];
+      S.ideaRound = 0;
+      if (logAdd(idea ? idea.entry : null)) { const b = document.getElementById('logbalance'); if (b) b.focus(); }
+    }
+    else if (act === 'logmore') {
+      S.ideaRound++; refresh('logideas');
+      const b = document.querySelector('#sec-logideas [data-act="logidea"]'); if (b) b.focus();
+    }
     else if (act === 'logdel') {
-      store.removeLog(S.logDate, +el.getAttribute('data-id')); kept(); refresh('logday');
+      store.removeLog(S.logDate, +el.getAttribute('data-id')); S.ideaRound = 0; kept(); refresh('logday');
       const b = document.getElementById('logbalance'); if (b) b.focus();
     }
     else if (act === 'mkbackup') { S.backup = store.exportJSON(); S.dataMsg = null; refresh('data'); }
@@ -1033,7 +1075,7 @@
       return;
     }
     if (el.id === 'logdate') {
-      if (/^\d{4}-\d{2}-\d{2}$/.test(el.value) && el.value <= today() && el.value >= LOG.shiftDate(today(), -LOG_MIN_DAYS)) S.logDate = el.value;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(el.value) && el.value <= today() && el.value >= LOG.shiftDate(today(), -LOG_MIN_DAYS)) { S.logDate = el.value; S.ideaRound = 0; }
       refresh('logday');
       return;
     }
