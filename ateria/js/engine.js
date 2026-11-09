@@ -6,8 +6,11 @@
  *  - Resting energy: Mifflin-St Jeor (developed for adults; the app accepts ages 18-99).
  *  - Activity: FAO/WHO/UNU 2004 physical activity levels 1.53 / 1.76 / 2.25.
  *  - Goal adjustment: -15 % (lose), 0 (maintain), +10 % (gain weight or build muscle); never below the resting energy.
- *  - Protein 1.6 g/kg (lose, gain), 1.8 g/kg (build muscle) or 1.2 g/kg (maintain); fat 30 % of energy; fibre 14 g per 1000 kcal.
- *    1.8 g/kg sits inside the 1.4-2.0 g/kg range that the ISSN position stand on protein and exercise gives for people who train.
+ *    -15 % lies between the 10 % and 20 % deficits that gave weight loss in Wozniak et al. 2024 (Food Sci Nutr 12(11), 8920-8929);
+ *    +10 % is the lower end of the 10-20 % surplus for novice and intermediate bodybuilders in Iraki et al. 2019 (Sports 7(7), 154).
+ *  - Protein 1.6 g/kg (lose, gain), 1.8 g/kg (build muscle) or 0.83 g/kg (maintain); fat 30 % of energy; fibre 14 g per 1000 kcal.
+ *    0.83 g/kg is the EFSA 2012 population reference intake for adults. 1.6 and 1.8 g/kg sit inside the 1.4-2.0 g/kg range
+ *    that the ISSN position stand on protein and exercise (Jager et al. 2017) gives for people who train.
  * These are generic defaults for an informational tool, not medical or dietetic advice.
  */
 (function (g) {
@@ -16,7 +19,7 @@
   const CONFIG = {
     PAL: { sedentary: 1.53, active: 1.76, vigorous: 2.25 },
     GOAL_ADJ: { lose: -0.15, maintain: 0, gain: 0.1, muscle: 0.1 },
-    PROTEIN_G_PER_KG: { lose: 1.6, maintain: 1.2, gain: 1.6, muscle: 1.8 },
+    PROTEIN_G_PER_KG: { lose: 1.6, maintain: 0.83, gain: 1.6, muscle: 1.8 },
     FAT_SHARE: 0.3,
     FIBRE_PER_1000_KCAL: 14,
     MEAL_SHARE: { breakfast: 0.25, lunch: 0.3, snack: 0.1, dinner: 0.35 },

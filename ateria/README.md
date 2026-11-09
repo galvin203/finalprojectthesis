@@ -62,8 +62,8 @@ Ateria is a static site, so it needs no build tools. In Vercel, import this repo
 ## How the numbers work
 
 * Resting energy: Mifflin–St Jeor. Activity multiplier: 1.53 / 1.76 / 2.25 (FAO/WHO/UNU 2004).
-* Goal: −15 % energy to lose, 0 to maintain, +10 % to gain weight or to build muscle. Energy never goes below resting energy.
-* Protein 1.6 g/kg (lose, gain weight), 1.8 g/kg (build muscle) or 1.2 g/kg (maintain). 1.8 g/kg lies inside the 1.4–2.0 g/kg range that the ISSN position stand on protein and exercise gives for people who train. Food supports muscle gain, but training is what builds muscle: choose the activity level that matches your training. Fat 30 % of energy. Fibre 14 g per 1000 kcal.
+* Goal: −15 % energy to lose, 0 to maintain, +10 % to gain weight or to build muscle. Energy never goes below resting energy. The −15 % lies between the 10 % and 20 % deficits that gave weight loss in a six-month trial of 180 adults with overweight or obesity (Woźniak et al. 2024, Food Science & Nutrition 12(11)). The +10 % is the lower end of the 10–20 % surplus recommended for novice and intermediate bodybuilders (Iraki et al. 2019, Sports 7(7), 154).
+* Protein 1.6 g/kg (lose, gain weight), 1.8 g/kg (build muscle) or 0.83 g/kg (maintain). 0.83 g/kg is the EFSA 2012 population reference intake for adults; people who train may need more, so choose Build muscle or another goal if you train hard. 1.6 and 1.8 g/kg lie inside the 1.4–2.0 g/kg range that the ISSN position stand on protein and exercise gives for people who train. Food supports muscle gain, but training is what builds muscle: choose the activity level that matches your training. Fat 30 % of energy. Fibre 14 g per 1000 kcal.
 * The planner picks meals, scales portions to the daily target and shows a warning when a target cannot be met.
 * A meal you do not select (for example no snacks) is assumed to be eaten elsewhere, so the plan covers only the selected meals' share of the day.
 

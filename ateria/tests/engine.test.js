@@ -22,7 +22,7 @@ test('Mifflin-St Jeor and targets match hand calculation', () => {
   assert.equal(t.bmr, 1780);                       // 10*80 + 6.25*180 - 5*30 + 5
   assert.equal(t.tdee, Math.round(1780 * 1.53));   // 2723
   assert.equal(t.kcal, 2723);
-  assert.equal(t.protein, 96);                     // 80 kg * 1.2
+  assert.equal(t.protein, 66);                     // 80 kg * 0.83 (EFSA 2012 reference intake) = 66.4
   const f = E.computeTargets(profile({ sex: 'female', age: 40, heightCm: 165, weightKg: 60, goal: 'lose' }));
   assert.equal(f.bmr, Math.round(600 + 1031.25 - 200 - 161)); // 1270
   assert.equal(f.kcal, Math.round(Math.max(1270 * 1.53 * 0.85, 1270))); // floor at BMR applies? 1651.6 > 1270 -> 1652
