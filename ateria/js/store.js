@@ -1,5 +1,5 @@
 /*
- * Ateria store: keeps the user's own information (profiles, plan choices, ticked items, hearts, weight log, food log, prices).
+ * Ateria store: keeps the user's own information (profiles, plan choices, ticked items, hearts, weight log, food log).
  *
  * Rules this module follows:
  *  - Nothing is written to the device until the user says yes. Before that the app works from memory only.
@@ -20,14 +20,13 @@
   const K_DATA = PFX + 'data';
   const K_CONSENT = PFX + 'consent';
   const K_BAD = PFX + 'data.bad';
-  const V1_KEYS = ['profile', 'seedN', 'swaps', 'prices', 'checked', 'lang'];
+  const V1_KEYS = ['profile', 'seedN', 'swaps', 'checked', 'lang'];
   const LIMITS = { profiles: 6, swaps: 100, liked: 200, weights: 400, name: 30, logDays: 120, logEntries: 40, logName: 40 };
   const MEALS = ['breakfast', 'lunch', 'snack', 'dinner'];
   const SEXES = ['female', 'male'];
   const ACTIVITIES = ['sedentary', 'active', 'vigorous'];
   const GOALS = ['lose', 'maintain', 'gain', 'muscle'];
   const DIETS = ['omnivore', 'pescatarian', 'vegetarian', 'vegan'];
-  const STORE_IDS = ['s', 'k', 'lidl'];
   const LOG_TYPES = ['plan', 'food', 'quick'];
 
   function num(x, lo, hi, dflt) { x = Number(x); return isFinite(x) && x >= lo && x <= hi ? x : dflt; }
@@ -65,7 +64,6 @@
       favorites: uniqueKnown(p.favorites, function (id) { return !!A.ING[id]; }, 100),
       meals: uniqueKnown(p.meals, function (m) { return MEALS.indexOf(m) >= 0; }, 4),
       people: int(p.people, 1, 8, null),
-      budget: num(p.budget, 0, 10000, 0),
       cuisines: uniqueKnown(p.cuisines, function (c) { return A.CUISINES.indexOf(c) >= 0; }, 4),
     };
     // a profile with a missing required field is dropped (the example profile is shown instead)
@@ -137,22 +135,6 @@
     });
     return out;
   };
-  clean.prices = function (o) {
-    const out = {};
-    if (!isObj(o)) return out;
-    STORE_IDS.forEach(function (s) {
-      if (!isObj(o[s])) return;
-      Object.keys(o[s]).forEach(function (id) {
-        const v = o[s][id];
-        if (!A.ING[id] || !isObj(v)) return;
-        const price = num(v.price, 0.01, 499.99, null);
-        if (price == null) return;
-        out[s] = out[s] || {};
-        out[s][id] = { price: Math.round(price * 100) / 100, packG: num(v.packG, 1, 100000, A.ING[id].packG), source: v.source === 'import' ? 'import' : 'you' };
-      });
-    });
-    return out;
-  };
   clean.name = function (n, dflt) { n = typeof n === 'string' ? n.replace(/[\u0000-\u001f<>]/g, '').trim().slice(0, LIMITS.name) : ''; return n || dflt; };
   clean.record = function (r, id, dflt) {
     r = isObj(r) ? r : {};
@@ -162,7 +144,7 @@
     };
   };
   function blankRecord(id, name) { return clean.record({}, id, name); }
-  function blankData() { return { v: 2, lang: null, prices: {}, active: 'p1', profiles: [blankRecord('p1', 'Me')] }; }
+  function blankData() { return { v: 2, lang: null, active: 'p1', profiles: [blankRecord('p1', 'Me')] }; }
 
   clean.data = function (raw) {
     if (!isObj(raw)) return null;
@@ -177,7 +159,7 @@
     if (!profiles.length) return null;
     const langs = (A.LANGS || []).map(function (l) { return l.id; });
     return {
-      v: 2, lang: langs.indexOf(raw.lang) >= 0 ? raw.lang : null, prices: clean.prices(raw.prices),
+      v: 2, lang: langs.indexOf(raw.lang) >= 0 ? raw.lang : null,
       active: used.indexOf(raw.active) >= 0 ? raw.active : profiles[0].id, profiles: profiles,
     };
   };
@@ -202,7 +184,6 @@
       const rec = clean.record({ name: 'Me', profile: old.profile, seedN: old.seedN, swaps: old.swaps, checked: old.checked }, 'p1', 'Me');
       const d = blankData();
       d.profiles = [rec];
-      d.prices = clean.prices(old.prices);
       d.lang = typeof old.lang === 'string' && (A.LANGS || []).some(function (l) { return l.id === old.lang; }) ? old.lang : null;
       return d;
     }
@@ -336,8 +317,6 @@
       },
 
       // ----- shared by all profiles -----
-      prices: function () { return st.data.prices; },
-      setPrices: function (p) { st.data.prices = clean.prices(p); api.save(); },
       lang: function () { return st.data.lang; },
       setLang: function (l) { st.data.lang = (A.LANGS || []).some(function (x) { return x.id === l; }) ? l : null; api.save(); },
 

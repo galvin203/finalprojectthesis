@@ -1,5 +1,5 @@
 /*
- * Ateria engine: targets, recipe adaptation, 7-day planner, shopping list, store comparison.
+ * Ateria engine: targets, recipe adaptation, 7-day planner, shopping list.
  * Pure functions, no DOM, no network. Every number is calculated here, from the data tables.
  *
  * Assumptions (all adjustable in CONFIG, and shown to the user in the app):
@@ -304,120 +304,44 @@
     return next;
   }
 
-  // ---------- prices & shopping ----------
-  function mergePrices(seed, overrides) {
-    const out = {};
-    Object.keys(seed).forEach(function (s) {
-      out[s] = {};
-      Object.keys(seed[s]).forEach(function (id) { out[s][id] = seed[s][id]; });
-    });
-    Object.keys(overrides || {}).forEach(function (s) {
-      out[s] = out[s] || {};
-      Object.keys(overrides[s]).forEach(function (id) {
-        const o = overrides[s][id];
-        if (o && o.price > 0) out[s][id] = { price: o.price, packG: o.packG > 0 ? o.packG : (A.ING[id] ? A.ING[id].packG : 0), source: o.source || 'you' };
-      });
-    });
-    return out;
-  }
-
-  function shoppingList(plan, p, prices) {
+  // ---------- shopping list ----------
+  // What the planned meals need, ingredient by ingredient: the grams of every meal of the chosen days, for everyone in
+  // the profile (`p.people`). `opts.days` lists the day indexes to shop for (default: all days of the plan).
+  // Each row keeps the meals that use the ingredient, so the list can show where an amount comes from.
+  // No prices: amounts are exactly what the recipes need, they are not rounded up to pack sizes.
+  //   returns { rows: [{ id, name, fi, aisle, grams, uses: [{ d, i, meal, recipeId, g }] }], meals, days }
+  function shoppingList(plan, p, opts) {
     const people = p.people || 1;
-    const grams = {};
-    plan.days.forEach(function (day) {
-      day.meals.forEach(function (m) { m.items.forEach(function (it) { grams[it.id] = (grams[it.id] || 0) + it.g * people; }); });
-    });
-    const stores = A.STORES.map(function (s) { return s.id; });
-    const totals = {};
-    stores.forEach(function (s) { totals[s] = { pack: 0, food: 0, missing: [] }; });
-    const rows = Object.keys(grams).map(function (id) {
-      const ing = A.ING[id];
-      const byStore = {};
-      stores.forEach(function (s) {
-        const pr = prices[s] && prices[s][id];
-        if (!pr || !(pr.price > 0) || !(pr.packG > 0)) { byStore[s] = null; totals[s].missing.push(id); return; }
-        const packs = Math.max(1, Math.ceil(grams[id] / pr.packG - 1e-9));
-        byStore[s] = { price: pr.price, packG: pr.packG, packs: packs, packCost: packs * pr.price, foodCost: (grams[id] / pr.packG) * pr.price, source: pr.source };
-        totals[s].pack += byStore[s].packCost;
-        totals[s].food += byStore[s].foodCost;
-      });
-      return { id: id, name: ing.name, fi: ing.fi, aisle: ing.aisle, grams: grams[id], byStore: byStore };
-    });
-    rows.sort(function (a, b) {
-      const ai = Object.keys(A.AISLES).indexOf(a.aisle), bi = Object.keys(A.AISLES).indexOf(b.aisle);
-      return ai - bi || a.name.localeCompare(b.name);
-    });
-    // cheapest single store (only stores that have every price)
-    let cheapest = null;
-    stores.forEach(function (s) {
-      if (totals[s].missing.length) return;
-      if (!cheapest || totals[s].pack < totals[cheapest].pack) cheapest = s;
-    });
-    // mixed basket: cheapest store per item
-    let mixedTotal = 0;
-    const mixed = {};
-    rows.forEach(function (row) {
-      let best = null;
-      stores.forEach(function (s) { const b = row.byStore[s]; if (b && (!best || b.packCost < row.byStore[best].packCost)) best = s; });
-      if (best) { mixed[row.id] = best; mixedTotal += row.byStore[best].packCost; }
-    });
-    return { rows: rows, stores: totals, cheapest: cheapest, mixed: { total: mixedTotal, assignment: mixed } };
-  }
-
-  // ---------- price import (JSON or CSV text) ----------
-  // JSON: { "s": { "oats": { "price": 1.89, "packG": 1000 } }, "k": {...}, "lidl": {...} }
-  // CSV:  store,ingredient_id,price,pack_g   (store: S, K or Lidl; pack_g optional; use ; as separator for decimal commas)
-  function parsePrices(text) {
-    const out = {};
-    let applied = 0, skipped = 0;
-    function storeId(x) {
-      x = String(x || '').trim().toLowerCase().replace(/[^a-z]/g, '');
-      if (x === 's' || x === 'smarket' || x === 'sgroup') return 's';
-      if (x === 'k' || x === 'kmarket' || x === 'kruoka') return 'k';
-      if (x === 'lidl') return 'lidl';
-      return null;
-    }
-    function put(store, id, price, packG) {
-      const st = storeId(store);
-      const pr = Number(String(price).replace(',', '.'));
-      const pk = Number(String(packG == null ? '' : packG).replace(',', '.'));
-      id = String(id || '').trim();
-      if (!st || !A.ING[id] || !(pr > 0) || pr > 500) { skipped++; return; }
-      out[st] = out[st] || {};
-      out[st][id] = { price: Math.round(pr * 100) / 100, packG: pk > 0 ? pk : A.ING[id].packG, source: 'import' };
-      applied++;
-    }
-    text = String(text || '').trim();
-    if (!text) return { overrides: {}, applied: 0, skipped: 0, error: 'Nothing to import.', errorCode: 'empty' };
-    if (text[0] === '{') {
-      let o;
-      try { o = JSON.parse(text); } catch (e) { return { overrides: {}, applied: 0, skipped: 0, error: 'That is not valid JSON.', errorCode: 'json' }; }
-      if (o && o.prices) o = o.prices;
-      Object.keys(o || {}).forEach(function (st) {
-        const m = o[st];
-        if (!m || typeof m !== 'object') return;
-        Object.keys(m).forEach(function (id) {
-          const v = m[id];
-          if (v && typeof v === 'object') put(st, id, v.price, v.packG); else put(st, id, v, null);
+    const chosen = opts && Array.isArray(opts.days) ? opts.days : null;
+    const need = {};
+    let meals = 0, days = 0;
+    plan.days.forEach(function (day, d) {
+      if (chosen && chosen.indexOf(d) < 0) return;
+      days++;
+      day.meals.forEach(function (m, i) {
+        meals++;
+        m.items.forEach(function (it) {
+          const row = need[it.id] || (need[it.id] = { grams: 0, uses: [] });
+          const g = it.g * people;
+          row.grams += g;
+          const same = row.uses.filter(function (u) { return u.d === d && u.i === i; })[0];
+          if (same) same.g += g; else row.uses.push({ d: d, i: i, meal: m.meal, recipeId: m.recipeId, g: g });
         });
       });
-    } else {
-      text.split(/\r?\n/).forEach(function (line, i) {
-        line = line.trim();
-        if (!line) return;
-        const d = line.indexOf(';') >= 0 ? ';' : (line.indexOf('\t') >= 0 ? '\t' : ',');
-        const c = line.split(d);
-        if (i === 0 && /^store/i.test(c[0])) return;
-        put(c[0], c[1], c[2], c[3]);
-      });
-    }
-    return { overrides: out, applied: applied, skipped: skipped };
+    });
+    const rows = Object.keys(need).map(function (id) {
+      const ing = A.ING[id];
+      return { id: id, name: ing.name, fi: ing.fi, aisle: ing.aisle, grams: need[id].grams, uses: need[id].uses };
+    });
+    const order = Object.keys(A.AISLES);
+    rows.sort(function (a, b) { return order.indexOf(a.aisle) - order.indexOf(b.aisle) || a.name.localeCompare(b.name); });
+    return { rows: rows, meals: meals, days: days };
   }
 
   A.engine = {
     CONFIG: CONFIG, mulberry32: mulberry32, hashSeed: hashSeed, validateProfile: validateProfile, computeTargets: computeTargets,
     nutrientsOf: nutrientsOf, allowed: allowed, adaptRecipe: adaptRecipe, planWeek: planWeek,
-    mergePrices: mergePrices, shoppingList: shoppingList, mealShares: mealShares,
-    alternatives: alternatives, swapMeal: swapMeal, parsePrices: parsePrices,
+    shoppingList: shoppingList, mealShares: mealShares,
+    alternatives: alternatives, swapMeal: swapMeal,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

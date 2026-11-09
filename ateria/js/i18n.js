@@ -86,10 +86,6 @@
     return fmt[k];
   }
   I.n = function (x, digits) { return nf(digits || 0, digits || 0).format(x); };
-  I.eur = function (x) {
-    if (!fmt.eur) fmt.eur = new Intl.NumberFormat(locale(), { style: 'currency', currency: 'EUR' });
-    return fmt.eur.format(x);
-  };
   I.grams = function (g) {
     return g >= 1000 ? nf(0, 2).format(g / 1000) + ' kg' : nf(0, 0).format(g) + ' g';
   };

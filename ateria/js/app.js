@@ -11,11 +11,10 @@
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   const t = function (k, p) { return I.t(k, p); };
   const n0 = function (x) { return I.n(x); };
-  const eur = function (x) { return I.eur(x); };
 
   const SAMPLE = {
     sex: 'female', age: 34, heightCm: 168, weightKg: 68, activity: 'sedentary', goal: 'lose', diet: 'omnivore',
-    allergies: [], lactoseFree: false, dislikes: [], favorites: [], meals: ['breakfast', 'lunch', 'snack', 'dinner'], people: 1, budget: 70, cuisines: [],
+    allergies: [], lactoseFree: false, dislikes: [], favorites: [], meals: ['breakfast', 'lunch', 'snack', 'dinner'], people: 1, cuisines: [],
   };
   const ACTIVITIES = ['sedentary', 'active', 'vigorous'];
   const GOALS = ['lose', 'maintain', 'gain', 'muscle'];
@@ -31,8 +30,7 @@
   store.init();
   const S = {
     lang: I.setLang(I.detect(store.lang())),
-    view: 'plan', draftGoal: null, draftCuisines: null, flow: false, swipe: { i: 0, liked: [], hist: [], busy: false, msg: '' }, day: 0, open: null, swapOpen: null, plan: null, prices: null, portions: {},
-    io: '', ioMsg: null, resetArmed: false, filter: '',
+    view: 'plan', draftGoal: null, draftCuisines: null, flow: false, swipe: { i: 0, liked: [], hist: [], busy: false, msg: '' }, day: 0, open: null, swapOpen: null, plan: null, portions: {}, shopDays: [0, 1, 2, 3, 4, 5, 6],
     backup: '', dataMsg: null, wipeArmed: false, removeArmed: false, wtErr: false, cloudMsg: null, cloudAt: null, cloudBusy: false,
     logDate: today(), logPlanDay: 0, logPortion: 1, ideaRound: 0,
   };
@@ -52,7 +50,6 @@
     S.plan = plan;
     if (S.day > 6) S.day = 0;
   }
-  function buildPrices() { S.prices = E.mergePrices(A.SEED_PRICES, store.prices()); }
   function resetView() { S.day = 0; S.open = null; S.swapOpen = null; S.portions = {}; S.removeArmed = false; }
 
   function toast(msg) {
@@ -112,14 +109,6 @@
     if (w.code === 'energy') return t('warn.energy', { day: w.day, pct: I.pct(w.pct) });
     if (w.code === 'protein') return t('warn.protein', { day: w.day });
     return w.text;
-  }
-  function ioMsgText() {
-    const m = S.ioMsg;
-    if (!m) return '';
-    if (m.k) return t(m.k);
-    let s = I.tn('io.loaded', m.loaded);
-    if (m.skipped) s += ', ' + I.tn('io.skipped', m.skipped);
-    return s + '.';
   }
   function msgText(m) {
     if (!m) return '';
@@ -257,15 +246,9 @@
     return h;
   }
 
-  function storeName(id) { return A.STORES.filter(function (s) { return s.id === id; })[0].name; }
-  // store logo; alt text is empty when the store name is written next to it
-  function storeLogo(st, px, named) {
-    return '<img class="slogo" data-store="' + st.id + '" src="' + esc(st.logo) + '" width="' + px + '" height="' + px + '" alt="' + (named ? esc(st.name) : '') + '" decoding="async">';
-  }
-
-  // seasonings the week's recipes use; not priced, the person checks the cupboard
+  // seasonings the chosen days' recipes use; not counted in grams, the person checks the cupboard
   function spiceSection(plan) {
-    const sm = M.spiceSummary(plan);
+    const sm = M.spiceSummary(plan, S.shopDays);
     const groups = [[t('shop.spicesDried'), sm.salt.concat(sm.dried)], [t('shop.spicesFresh'), sm.fresh]].filter(function (g) { return g[1].length; });
     if (!groups.length) return '';
     return '<section class="aisle spiceaisle"><h3>' + A.icon('spice_jar', 26) + esc(t('shop.spices')) + '</h3><p class="note">' + esc(t('shop.spicesHelp')) + '</p>' +
@@ -276,86 +259,43 @@
       }).join('') + '</section>';
   }
 
+  // where an amount on the shopping list comes from: the meals that use the ingredient
+  function shopUses(r) {
+    return '<details class="uses"><summary>' + esc(t('shop.where')) + '</summary><ul>' + r.uses.map(function (u) {
+      return '<li><span class="when">' + esc(t('plan.day', { n: u.d + 1 })) + ' · ' + esc(I.meal(u.meal)) + '</span><span class="dish">' + esc(I.recipe(u.recipeId).name) + '</span><b>' + esc(M.ingredientText(r.id, Math.round(u.g), 'shop')) + '</b></li>';
+    }).join('') + '</ul></details>';
+  }
+
   function viewShop() {
     let h = consentBanner();
     if (S.plan.error) return h + '<div class="panel"><h2>' + esc(t('shop.none')) + '</h2><p style="margin:8px 0 14px">' + esc(t('shop.createFirst')) + '</p><a class="btn primary" href="#profile">' + esc(t('plan.change')) + '</a></div>';
     const p = P();
-    const list = E.shoppingList(S.plan, p, S.prices);
-    const best = list.cheapest;
-    const budget = Number(p.budget) || 0;
+    const list = E.shoppingList(S.plan, p, { days: S.shopDays });
     const checked = rec().checked;
-    let seedUsed = false;
-    list.rows.forEach(function (r) { Object.keys(r.byStore).forEach(function (s) { if (r.byStore[s] && r.byStore[s].source === 'seed') seedUsed = true; }); });
     h += exampleBanner();
-    h += '<div class="row between"><h2>' + esc(t('shop.title')) + '</h2><span class="muted small">' + esc(I.tn('shop.people', p.people)) + ', ' + esc(t('shop.days')) + '</span></div>';
-    if (seedUsed) h += '<div class="banner"><div>' + t('shop.placeholder', { link: '<a href="#prices">' + esc(t('shop.placeholderLink')) + '</a>' }) + '</div></div>';
-    h += '<div class="stores">' + A.STORES.map(function (st) {
-      const T = list.stores[st.id];
-      const isBest = st.id === best;
-      let sub = t('store.use', { eur: eur(T.food) });
-      if (T.missing.length) sub = I.tn('store.missing', T.missing.length);
-      let extra = '';
-      if (isBest) extra = '<span class="pill">' + esc(t('store.lowest')) + '</span>';
-      else if (best && !T.missing.length) extra = '<span class="sub">' + esc(t('store.more', { eur: eur(T.pack - list.stores[best].pack), store: storeName(best) })) + '</span>';
-      let bud = '';
-      if (budget > 0 && !T.missing.length) bud = T.food <= budget ? '<span class="sub">' + esc(t('store.under', { eur: eur(budget - T.food) })) + '</span>' : '<span class="sub berry">' + esc(t('store.over', { eur: eur(T.food - budget) })) + '</span>';
-      return '<div class="store' + (isBest ? ' best' : '') + '"><div class="s-left"><span class="sname">' + storeLogo(st, 32) + '<span>' + esc(st.name) + '</span></span><span class="total">' + eur(T.pack) + '</span></div><div class="s-right"><span class="sub">' + esc(sub) + '</span>' + extra + bud + '</div></div>';
+    h += '<div class="row between"><h2>' + esc(t('shop.title')) + '</h2><span class="muted small">' + esc(I.tn('shop.people', p.people)) + '</span></div>';
+    h += '<h3 class="subh" id="shopdays-h">' + esc(t('shop.forDays')) + '</h3>';
+    h += '<div class="days" role="group" aria-labelledby="shopdays-h">' + S.plan.days.map(function (d, i) {
+      return '<button type="button" data-act="shopday" data-i="' + i + '" aria-pressed="' + (S.shopDays.indexOf(i) >= 0) + '"><b>' + esc(t('plan.day', { n: i + 1 })) + '</b><small>' + esc(I.tn('shop.meals', d.meals.length)) + '</small></button>';
     }).join('') + '</div>';
-    h += '<p class="note">' + esc(t('shop.note') + (budget > 0 ? t('shop.noteBudget', { budget: eur(budget) }) : '')) + '</p>';
-    h += '<p class="note small">' + esc(t('shop.logos')) + '</p>';
-
-    if (best) {
-      const stores = {};
-      Object.keys(list.mixed.assignment).forEach(function (id) { stores[list.mixed.assignment[id]] = true; });
-      const saving = list.stores[best].pack - list.mixed.total;
-      if (saving > 0.005) h += '<div class="banner info"><div>' + t('shop.mixed', { total: eur(list.mixed.total), saving: eur(saving), store: esc(storeName(best)), n: Object.keys(stores).length }) + '</div></div>';
-    }
+    h += '<div class="row between"><button class="btn small" type="button" data-act="shopall"' + (S.shopDays.length === S.plan.days.length ? ' disabled' : '') + '>' + esc(t('shop.allDays')) + '</button>' +
+      '<span class="muted small" role="status">' + esc(I.tn('shop.items', list.rows.length) + ' · ' + I.tn('shop.meals', list.meals)) + '</span></div>';
+    h += '<p class="note">' + esc(t('shop.note')) + '</p>';
+    if (!list.rows.length) return h + '<div class="panel"><p>' + esc(t('shop.noDays')) + '</p></div>';
 
     const groups = {};
     list.rows.forEach(function (r) { (groups[r.aisle] = groups[r.aisle] || []).push(r); });
     Object.keys(A.AISLES).forEach(function (aisle) {
       if (!groups[aisle]) return;
       h += '<section class="aisle"><h3>' + A.icon(AISLE_ICON[aisle], 26) + esc(I.aisle(aisle)) + '</h3>' + groups[aisle].map(function (r) {
-        const first = A.STORES.map(function (s) { return r.byStore[s.id]; }).filter(Boolean)[0];
-        let low = null;
-        A.STORES.forEach(function (s) { const b = r.byStore[s.id]; if (b && (!low || b.packCost < r.byStore[low].packCost)) low = s.id; });
         const done = !!checked[r.id];
         return '<div class="item' + (done ? ' done' : '') + '"><input type="checkbox" id="chk-' + r.id + '" data-act="check" data-id="' + r.id + '"' + (done ? ' checked' : '') + ' aria-label="' + esc(t('item.got', { name: I.ingName(r.id) })) + '">' +
           tile(r.id, 52) +
-          '<label class="what" for="chk-' + r.id + '"><b>' + ingName(r.id) + '</b>' + fiName(r.id) + '<span class="muted">' + esc(M.ingredientText(r.id, Math.round(r.grams), 'shop') + (first ? ' · ' + first.packs + ' × ' + I.grams(first.packG) : '')) + '</span></label>' +
-          '<div class="prices">' + A.STORES.map(function (s) {
-            const b = r.byStore[s.id];
-            if (!b) return '<span><small>' + storeLogo(s, 20, true) + '</small><b class="muted">' + esc(t('item.noPrice')) + '</b></span>';
-            return '<span class="' + (s.id === low ? 'low' : '') + '"><small>' + storeLogo(s, 20, true) + '</small><b>' + eur(b.packCost) + (b.source === 'seed' ? '<i class="est">' + esc(t('est')) + '</i>' : '') + '</b></span>';
-          }).join('') + '</div></div>';
+          '<label class="what" for="chk-' + r.id + '"><b>' + ingName(r.id) + '</b>' + fiName(r.id) + '<span class="amount">' + esc(M.ingredientText(r.id, Math.round(r.grams), 'shop')) + '</span><span class="muted small">' + esc(I.tn('shop.uses', r.uses.length)) + '</span></label>' +
+          shopUses(r) + '</div>';
       }).join('') + '</section>';
     });
     h += spiceSection(S.plan);
-    return h;
-  }
-
-  function viewPrices() {
-    const ov = store.prices();
-    let h = '<div class="row between"><h2>' + esc(t('prices.title')) + '</h2></div>';
-    h += '<div class="banner"><div>' + t('prices.banner') + '</div></div>';
-    h += '<label class="field"><span>' + esc(t('prices.find')) + '</span><input id="filter" type="search" value="' + esc(S.filter) + '" placeholder="' + esc(t('prices.findPh')) + '" autocomplete="off"></label>';
-    const q = S.filter.trim().toLowerCase();
-    h += '<div class="pricegrid">' + A.INGREDIENTS.filter(function (i) {
-      return !q || I.allNames(i.id).indexOf(q) >= 0;
-    }).map(function (i) {
-      return '<div class="prow"><div class="ingcell">' + tile(i.id, 40) + '<span><b>' + ingName(i.id) + '</b> ' + fiName(i.id) + '<br><span class="muted small">' + esc(t('prices.perPack', { g: I.grams(i.packG) })) + '</span></span></div><div class="inputs">' + A.STORES.map(function (s) {
-        const o = ov[s.id] && ov[s.id][i.id];
-        const seed = A.SEED_PRICES[s.id][i.id].price;
-        return '<label><span class="lname">' + storeLogo(s, 22) + '<span>' + esc(s.name) + '</span></span><input type="number" inputmode="decimal" step="0.01" min="0" data-act="price" data-s="' + s.id + '" data-id="' + i.id + '" class="' + (o ? 'mine' : '') + '" value="' + (o ? o.price : '') + '" placeholder="' + seed.toFixed(2) + '"></label>';
-      }).join('') + '</div></div>';
-    }).join('') + '</div>';
-
-    h += '<section class="panel" style="display:grid;gap:10px"><h3>' + esc(t('io.title')) + '</h3>' +
-      '<p class="note">' + t('io.help') + '</p>' +
-      '<textarea id="io" aria-label="' + esc(t('io.aria')) + '" spellcheck="false">' + esc(S.io) + '</textarea>' +
-      '<div class="row"><button class="btn primary small" type="button" data-act="ioload">' + esc(t('io.load')) + '</button><button class="btn small" type="button" data-act="iocopy">' + esc(t('io.copy')) + '</button>' +
-      '<button class="btn small quiet" type="button" data-act="ioreset">' + esc(S.resetArmed ? t('io.resetArmed') : t('io.reset')) + '</button></div>' +
-      '<p id="iomsg" role="status" class="small muted">' + esc(ioMsgText()) + '</p></section>';
     return h;
   }
 
@@ -617,10 +557,6 @@
     if (name === 'logday') refresh('logideas'); // what is left of the day changed, or the day itself
   }
 
-  function budgetText(b) { // whole euros, as the big number on the budget slider
-    if (!(b > 0)) return t('budget.none');
-    try { return new Intl.NumberFormat(LOCALES[S.lang], { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(b); } catch (e) { return eur(b); }
-  }
   function viewProfile() {
     // a goal and food types picked earlier in the welcome flow
     const p = Object.assign({}, P(), S.draftGoal ? { goal: S.draftGoal } : {}, S.draftCuisines ? { cuisines: S.draftCuisines } : {});
@@ -641,10 +577,6 @@
     h += '<fieldset><legend>' + esc(t('profile.cuisine')) + '</legend><div class="choices four">' + A.CUISINES.map(function (c) { return choice('checkbox', 'cuisine', c, I.cuisine(c), (p.cuisines || []).indexOf(c) >= 0, c); }).join('') + '</div><p class="note">' + esc(t('profile.cuisineNote')) + '</p></fieldset>';
     h += '<fieldset><legend>' + esc(t('profile.meals')) + '</legend><div class="choices four">' + MEALS.map(function (k) { return choice('checkbox', 'meal', k, I.meal(k), p.meals.indexOf(k) >= 0, k); }).join('') + '</div><p class="note">' + esc(t('profile.mealsNote')) + '</p></fieldset>';
     h += '<label class="field narrow"><span>' + esc(t('profile.people')) + '</span><input id="people" name="people" type="number" inputmode="numeric" min="1" max="8" value="' + p.people + '"></label>';
-    h += '<div class="budgetbox"><label for="budget">' + esc(t('profile.budget')) + '</label>' +
-      '<output class="budgetbig" id="budgetbig" for="budget budgetrange">' + esc(budgetText(p.budget)) + '</output>' +
-      '<input id="budgetrange" type="range" min="0" max="300" step="5" value="' + Math.min(300, Math.round((p.budget || 0) / 5) * 5) + '" aria-label="' + esc(t('profile.budgetSlide')) + '">' +
-      '<input id="budget" name="budget" type="number" inputmode="decimal" min="0" step="1" value="' + (p.budget || 0) + '"></div>';
     h += '<details class="more"><summary>' + esc(t('profile.dislike')) + (p.dislikes.length ? ' (' + p.dislikes.length + ')' : '') + '</summary><div class="chips">' + A.INGREDIENTS.map(function (i) { return chip('checkbox', 'dislike', i.id, I.ingName(i.id), p.dislikes.indexOf(i.id) >= 0, i.id); }).join('') + '</div></details>';
     h += '<details class="more"><summary>' + esc(t('profile.like')) + (p.favorites.length ? ' (' + p.favorites.length + ')' : '') + '</summary><div class="chips">' + A.INGREDIENTS.map(function (i) { return chip('checkbox', 'favorite', i.id, I.ingName(i.id), p.favorites.indexOf(i.id) >= 0, i.id); }).join('') + '</div></details>';
     h += '<div id="errors" class="errors" role="alert"></div>';
@@ -681,7 +613,7 @@
     const steps = [
       [t('welcome.s1.t'), t('welcome.s1.b'), ''],
       [t('welcome.s2.t'), t('welcome.s2.b'), ''],
-      [t('welcome.s3.t'), t('welcome.s3.b'), '<span class="storerow">' + A.STORES.map(function (st) { return storeLogo(st, 28, true); }).join('') + '</span>'],
+      [t('welcome.s3.t'), t('welcome.s3.b'), ''],
     ];
     return '<div class="welcome">' +
       '<section class="hero"><h1>' + esc(t('welcome.title')) + '</h1><p class="lead">' + esc(t('welcome.lead')) + '</p>' +
@@ -847,7 +779,7 @@
   });
 
   // ---------- render & routing ----------
-  const VIEWS = { welcome: viewWelcome, swipe: viewSwipe, plan: viewPlan, log: viewLog, shop: viewShop, prices: viewPrices, profile: viewProfile };
+  const VIEWS = { welcome: viewWelcome, swipe: viewSwipe, plan: viewPlan, log: viewLog, shop: viewShop, profile: viewProfile };
 
   function renderChrome() {
     document.documentElement.lang = S.lang;
@@ -886,7 +818,7 @@
   function reload(langFromData) {
     if (langFromData && store.lang()) S.lang = I.setLang(store.lang());
     resetView(); S.backup = '';
-    buildPrices(); buildPlan(); renderChrome(); render();
+    buildPlan(); renderChrome(); render();
   }
 
   // ---------- events ----------
@@ -922,7 +854,15 @@
     const el = ev.target.closest('[data-act]');
     if (!el) return;
     const act = el.getAttribute('data-act');
-    if (act === 'day') { S.day = +el.getAttribute('data-i'); S.open = null; S.swapOpen = null; render(); }
+    if (act === 'shopday') {
+      const d = +el.getAttribute('data-i'), at = S.shopDays.indexOf(d);
+      if (at >= 0) S.shopDays.splice(at, 1); else { S.shopDays.push(d); S.shopDays.sort(function (a, b) { return a - b; }); }
+      render();
+      const again = document.querySelector('[data-act="shopday"][data-i="' + d + '"]');
+      if (again) again.focus({ preventScroll: true });
+    }
+    else if (act === 'shopall') { S.shopDays = [0, 1, 2, 3, 4, 5, 6]; render(); }
+    else if (act === 'day') { S.day = +el.getAttribute('data-i'); S.open = null; S.swapOpen = null; render(); }
     else if (act === 'open') { const k = el.getAttribute('data-key'); S.open = S.open === k ? null : k; S.swapOpen = null; render(); }
     else if (act === 'swapopen') { const k = el.getAttribute('data-key'); S.swapOpen = S.swapOpen === k ? null : k; render(); }
     else if (act === 'portions') {
@@ -1036,33 +976,6 @@
         else refresh('cloud');
       });
     }
-    else if (act === 'ioload') {
-      const text = document.getElementById('io').value;
-      S.io = text;
-      const r = E.parsePrices(text);
-      if (r.error) S.ioMsg = { k: r.errorCode === 'json' ? 'io.errJson' : 'io.errEmpty' };
-      else {
-        const ov = clone(store.prices());
-        Object.keys(r.overrides).forEach(function (s) { ov[s] = ov[s] || {}; Object.keys(r.overrides[s]).forEach(function (id) { ov[s][id] = r.overrides[s][id]; }); });
-        store.setPrices(ov); kept(); buildPrices();
-        S.ioMsg = { loaded: r.applied, skipped: r.skipped };
-        S.io = '';
-      }
-      render();
-    }
-    else if (act === 'iocopy') {
-      const text = JSON.stringify(store.prices(), null, 2);
-      const ta = document.getElementById('io');
-      ta.value = text; S.io = text;
-      const say = function (k) { S.ioMsg = { k: k }; document.getElementById('iomsg').textContent = ioMsgText(); };
-      const done = function () { say('io.copied'); };
-      const fail = function () { ta.select(); say('io.copyFail'); };
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fail); else fail();
-    }
-    else if (act === 'ioreset') {
-      if (!S.resetArmed) { S.resetArmed = true; render(); return; }
-      store.setPrices({}); kept(); buildPrices(); S.resetArmed = false; S.ioMsg = { k: 'io.removed' }; render();
-    }
   });
 
   document.addEventListener('change', function (ev) {
@@ -1109,31 +1022,10 @@
       store.setChecked(c); kept();
       el.closest('.item').classList.toggle('done', el.checked);
     }
-    else if (act === 'price') {
-      const s = el.getAttribute('data-s'), id = el.getAttribute('data-id');
-      const ov = clone(store.prices());
-      const v = parseFloat(String(el.value).replace(',', '.'));
-      if (v > 0 && v < 500) { ov[s] = ov[s] || {}; ov[s][id] = { price: Math.round(v * 100) / 100, packG: A.ING[id].packG, source: 'you' }; el.classList.add('mine'); }
-      else { if (ov[s]) delete ov[s][id]; el.value = ''; el.classList.remove('mine'); }
-      store.setPrices(ov); kept(); buildPrices();
-    }
   });
 
   document.addEventListener('input', function (ev) {
-    if (ev.target.id === 'filter') {
-      S.filter = ev.target.value;
-      const pos = ev.target.selectionStart;
-      render();
-      const f = document.getElementById('filter');
-      f.focus(); try { f.setSelectionRange(pos, pos); } catch (e) { /* not supported for this input type */ }
-    }
-    else if (ev.target.id === 'backup') S.backup = ev.target.value;
-    else if (ev.target.id === 'budgetrange' || ev.target.id === 'budget') { // slider and number box show the same budget
-      const num = document.getElementById('budget'), rng = document.getElementById('budgetrange'), big = document.getElementById('budgetbig');
-      if (ev.target.id === 'budgetrange') num.value = ev.target.value;
-      else rng.value = Math.min(300, Math.round((Number(num.value) || 0) / 5) * 5);
-      if (big) big.textContent = budgetText(Math.max(0, Number(num.value) || 0));
-    }
+    if (ev.target.id === 'backup') S.backup = ev.target.value;
   });
 
   document.addEventListener('submit', function (ev) {
@@ -1160,7 +1052,7 @@
       activity: fd.get('activity'), goal: fd.get('goal'), diet: fd.get('diet'),
       allergies: fd.getAll('allergy'), lactoseFree: fd.get('lactose') === '1',
       dislikes: fd.getAll('dislike'), favorites: fd.getAll('favorite'), meals: fd.getAll('meal'), cuisines: fd.getAll('cuisine'),
-      people: Number(fd.get('people')), budget: Math.max(0, Number(fd.get('budget')) || 0),
+      people: Number(fd.get('people')),
     };
     const errors = E.validateProfile(p);
     const box = document.getElementById('errors');
@@ -1177,7 +1069,6 @@
 
   window.addEventListener('hashchange', route);
   renderChrome();
-  buildPrices();
   buildPlan();
   route();
   if (A.cloud) A.cloud.init(function (ok) { if (ok) refresh('cloud'); });

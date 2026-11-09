@@ -132,7 +132,7 @@ button { cursor: pointer; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .muted { color: var(--muted); }
 .small { font-size: 0.875rem; }
-table, .gauge, .macros, .total, .prices, .wlist, .stepper output, .budgetbig { font-variant-numeric: tabular-nums; }
+table, .gauge, .macros, .wlist, .stepper output { font-variant-numeric: tabular-nums; }
 
 /* ---------- shell ---------- */
 .app { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
@@ -145,7 +145,7 @@ table, .gauge, .macros, .total, .prices, .wlist, .stepper output, .budgetbig { f
 .langsel select { min-height: 40px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--raise); color: var(--ink); font-weight: 600; }
 .nav {
   position: fixed; left: max(10px, env(safe-area-inset-left, 0px)); right: max(10px, env(safe-area-inset-right, 0px)); bottom: calc(10px + env(safe-area-inset-bottom, 0px)); z-index: 20;
-  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2px; padding: 6px;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; padding: 6px;
   background: color-mix(in srgb, var(--raise) 94%, transparent); border: 1px solid var(--line); border-radius: 24px;
   box-shadow: var(--shadow); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
 }
@@ -235,33 +235,16 @@ tfoot td { font-weight: 700; border-bottom: 0; }
 .swap button:hover { border-color: var(--spruce); }
 
 /* ---------- shop ---------- */
-.stores { display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.store { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 14px; display: grid; gap: 2px; align-content: start; }
-.store.best { border: 2px solid var(--spruce); padding: 13px; background: var(--spruce-soft); }
-.store .sname { font-weight: 600; font-size: 0.9rem; }
-.store .total { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.3rem, 5.5vw, 2rem); line-height: 1.2; letter-spacing: 0; }
-.store .sub { font-size: 0.78rem; color: var(--muted); }
 .aisle { display: grid; gap: 4px; }
 .aisle h3 { padding: 6px 0 2px; font-size: 0.95rem; color: var(--muted); }
 .item { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 4px 10px; align-items: start; padding: 12px 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
 .item input[type='checkbox'] { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--spruce); }
 .item .what b { font-weight: 600; }
 .item.done .what { text-decoration: line-through; color: var(--muted); }
-.item .prices { grid-column: 2; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; font-size: 0.85rem; }
-.item .prices span { display: grid; }
-.item .prices small { color: var(--muted); font-size: 0.72rem; }
-.item .prices .low b { color: var(--spruce); }
-.est { font-size: 0.72rem; font-style: normal; color: var(--amber); font-weight: 600; margin-left: 4px; }
 
-/* ---------- prices ---------- */
-.pricegrid { display: grid; gap: 8px; }
-.prow { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); }
-.prow .inputs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.prow label { display: grid; gap: 2px; font-size: 0.75rem; color: var(--muted); }
-.field input, .field select, .field textarea, .prow input {
+.field input, .field select, .field textarea {
   min-height: 44px; width: 100%; padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--line); background: var(--raise);
 }
-.prow input.mine { border-color: var(--spruce); background: var(--spruce-soft); }
 textarea { min-height: 120px; resize: vertical; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.82rem; }
 
 /* ---------- profile form ---------- */
@@ -308,9 +291,17 @@ details.more .chips { margin-top: 10px; }
 .aisle h3 { display: flex; align-items: center; gap: 8px; }
 .aisle h3 .ico { flex: none; }
 .item { grid-template-columns: 28px 52px minmax(0, 1fr); align-items: center; }
-.item .prices { grid-column: 1 / -1; }
 .item .what { display: grid; gap: 1px; min-width: 0; }
-.prow .ingcell { align-items: center; }
+.item .what .amount { font-weight: 600; font-size: 1rem; font-variant-numeric: tabular-nums; }
+.subh { margin: 6px 0 0; font-size: 0.95rem; color: var(--muted); }
+/* where an amount comes from: the meals that use the ingredient */
+.item .uses { grid-column: 2 / -1; font-size: 0.85rem; }
+.item .uses summary { cursor: pointer; color: var(--spruce); min-height: 32px; display: flex; align-items: center; }
+.item .uses ul { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 4px; }
+.item .uses li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; padding: 6px 10px; background: var(--raise); border-radius: 10px; }
+.item .uses .when { flex: none; color: var(--muted); }
+.item .uses .dish { flex: 1 1 8rem; min-width: 0; }
+.item .uses b { margin-left: auto; font-variant-numeric: tabular-nums; }
 
 /* choice cards: big picture, short label */
 .choices { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
@@ -337,14 +328,6 @@ details.more .chips { margin-top: 10px; }
 /* ingredient cell inside the meal table: name, then amount */
 .ingcell .amt { display: block; font-weight: 600; font-size: 0.88rem; }
 
-/* store cards: stacked rows on narrow screens so long Finnish and Vietnamese lines stay readable */
-.store .s-left, .store .s-right { display: contents; }
-@media (max-width: 520px) {
-  .stores { grid-template-columns: minmax(0, 1fr); }
-  .store { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); column-gap: 14px; align-items: center; }
-  .store .s-left, .store .s-right { display: grid; gap: 2px; align-content: center; }
-  .store .total { font-size: 1.6rem; }
-}
 
 /* ---------- recipe detail: portions, seasoning, method ---------- */
 .detail h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; margin: 0; }
@@ -464,12 +447,6 @@ code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.85em;
   @keyframes help-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 }
 
-/* store logos (images supplied by the project owner; shown only to tell the stores apart) */
-.slogo { display: block; flex: none; object-fit: cover; border-radius: 22%; background: #fff; box-shadow: 0 0 0 1px var(--line); }
-.slogo[data-store="s"] { border-radius: 50%; }
-.store .sname { display: flex; align-items: center; gap: 8px; }
-.prow .lname { display: flex; align-items: center; gap: 6px; }
-.item .prices small { display: flex; align-items: center; min-height: 20px; }
 
 /* ---------- welcome screen ---------- */
 a.wordmark { color: inherit; text-decoration: none; }
@@ -558,7 +535,6 @@ a.wordmark:hover { color: var(--spruce); }
 .how .num { grid-row: 1 / span 3; width: 44px; height: 44px; border-radius: 50%; background: var(--cloud); color: var(--cloud-ink); display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; }
 .how li > :not(.num) { grid-column: 2; }
 .how b { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; line-height: 1.3; }
-.storerow { display: flex; gap: 10px; margin-top: 6px; }
 .is-welcome .nav { display: none; }
 @media (min-width: 960px) { .is-welcome { grid-template-columns: minmax(0, 1fr); } }
 body:has(.is-welcome) .help-fab { bottom: 20px; }
@@ -639,13 +615,8 @@ img.dish.fill { width: 100%; height: 100%; border-radius: 0; }
   .sw-btn:active:not(:disabled) { transform: scale(0.94); }
 }
 
-/* ---------- weekly budget: a big number with a slider ---------- */
+/* ---------- profile form ---------- */
 .field.narrow { max-width: 180px; }
-.budgetbox { display: grid; gap: 8px; padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
-.budgetbox > label { font-weight: 600; font-size: 0.9rem; }
-.budgetbig { font-family: var(--font-display); font-size: clamp(2.2rem, 11vw, 3rem); font-weight: 700; letter-spacing: 0; line-height: 1; color: var(--spruce); }
-.budgetbox input[type='range'] { width: 100%; accent-color: var(--spruce); min-height: 32px; }
-.budgetbox input[type='number'] { max-width: 140px; }
 
 /* ---------- food log ---------- */
 .days.week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; overflow: visible; padding-bottom: 0; }

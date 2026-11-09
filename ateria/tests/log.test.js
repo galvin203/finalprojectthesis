@@ -8,7 +8,7 @@ const L = A.log;
 const E = A.engine;
 
 function fake() { const m = {}; return { m, getItem: (k) => (k in m ? m[k] : null), setItem: (k, v) => { m[k] = String(v); }, removeItem: (k) => { delete m[k]; } }; }
-const P = { sex: 'female', age: 34, heightCm: 168, weightKg: 68, activity: 'sedentary', goal: 'lose', diet: 'omnivore', allergies: [], meals: ['breakfast', 'lunch', 'snack', 'dinner'], people: 1, budget: 70, cuisines: [] };
+const P = { sex: 'female', age: 34, heightCm: 168, weightKg: 68, activity: 'sedentary', goal: 'lose', diet: 'omnivore', allergies: [], meals: ['breakfast', 'lunch', 'snack', 'dinner'], people: 1, cuisines: [] };
 const plan = () => E.planWeek(P, 7, {});
 
 test('an entry from the plan carries the nutrition of that meal, scaled by the portion', () => {
@@ -353,9 +353,10 @@ test('the ideas are wired in: section, buttons, refresh with the day, today only
   assert.match(app, /if \(S\.logDate !== today\(\)\) return ''/);
 });
 
-test('the tab bar has room for five tabs on a narrow phone', () => {
-  assert.match(read('styles.css'), /\.nav \{[^}]*grid-template-columns: repeat\(5,/);
-  assert.equal((read('index.html').match(/<nav class="nav"[\s\S]*?<\/nav>/)[0].match(/<a href=/g) || []).length, 5);
+test('the tab bar has four tabs: Plan, Log, Shop and You', () => {
+  assert.match(read('styles.css'), /\.nav \{[^}]*grid-template-columns: repeat\(4,/);
+  const nav = read('index.html').match(/<nav class="nav"[\s\S]*?<\/nav>/)[0];
+  assert.deepEqual([...nav.matchAll(/<a href="#(\w+)"/g)].map((m) => m[1]), ['plan', 'log', 'shop', 'profile']);
 });
 
 test('every log text exists in all four languages and the consent text mentions the log', () => {

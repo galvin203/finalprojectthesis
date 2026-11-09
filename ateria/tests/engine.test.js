@@ -3,7 +3,6 @@ const assert = require('node:assert/strict');
 require('../data/ingredients.js');
 require('../data/spices.js');
 require('../data/recipes.js');
-require('../data/prices.js');
 require('../js/engine.js');
 const A = globalThis.Ateria;
 const E = A.engine;
@@ -12,7 +11,7 @@ function profile(over) {
   return Object.assign({
     sex: 'male', age: 30, heightCm: 180, weightKg: 80, activity: 'sedentary', goal: 'maintain',
     diet: 'omnivore', allergies: [], lactoseFree: false, dislikes: [], favorites: [],
-    meals: ['breakfast', 'lunch', 'dinner'], people: 1, budget: 0,
+    meals: ['breakfast', 'lunch', 'dinner'], people: 1,
   }, over || {});
 }
 
@@ -48,12 +47,11 @@ test('the muscle goal adds 10 % energy and 1.8 g protein per kg, and plans a ful
 });
 
 // ---------- 2. data integrity ----------
-test('every recipe ingredient exists and every ingredient has a seed price in all stores', () => {
+test('every recipe ingredient exists and the app holds no prices', () => {
   A.RECIPES.forEach(r => r.items.forEach(it => assert.ok(A.ING[it.id], r.id + ' uses unknown ' + it.id)));
-  A.INGREDIENTS.forEach(i => ['s', 'k', 'lidl'].forEach(s => {
-    const p = A.SEED_PRICES[s][i.id];
-    assert.ok(p && p.price > 0 && p.packG > 0, i.id + '/' + s);
-  }));
+  A.INGREDIENTS.forEach(i => assert.ok(!('price' in i) && !('packG' in i), i.id + ' carries a price or pack size'));
+  assert.equal(A.SEED_PRICES, undefined);
+  assert.equal(A.STORES, undefined);
   const meals = { breakfast: 0, lunch: 0, dinner: 0 };
   A.RECIPES.forEach(r => meals[r.meal]++);
   assert.ok(meals.breakfast >= 7 && meals.lunch >= 7 && meals.dinner >= 7, JSON.stringify(meals));
@@ -154,42 +152,77 @@ test('impossible restrictions return a clear error, not a crash', () => {
 });
 
 // ---------- 4. shopping list, recomputed independently ----------
+// grams of every ingredient the meals of the chosen days need, for `people` people
+function needed(plan, people, days) {
+  const need = {};
+  plan.days.forEach((d, di) => { if (days && !days.includes(di)) return; d.meals.forEach(m => m.items.forEach(it => { need[it.id] = (need[it.id] || 0) + it.g * people; })); });
+  return need;
+}
+
 test('shopping list totals equal an independent recomputation', () => {
   const p = profile({ people: 2, goal: 'lose' });
   const plan = E.planWeek(p, 5);
-  const prices = E.mergePrices(A.SEED_PRICES, {});
-  const list = E.shoppingList(plan, p, prices);
-
-  const need = {};
-  plan.days.forEach(d => d.meals.forEach(m => m.items.forEach(it => { need[it.id] = (need[it.id] || 0) + it.g * 2; })));
+  const list = E.shoppingList(plan, p);
+  const need = needed(plan, 2);
   assert.equal(list.rows.length, Object.keys(need).length);
-  ['s', 'k', 'lidl'].forEach(s => {
-    let pack = 0, food = 0;
-    Object.keys(need).forEach(id => {
-      const pr = prices[s][id];
-      pack += Math.ceil(need[id] / pr.packG - 1e-9) * pr.price;
-      food += need[id] / pr.packG * pr.price;
-    });
-    assert.ok(Math.abs(list.stores[s].pack - pack) < 1e-6, s + ' pack total');
-    assert.ok(Math.abs(list.stores[s].food - food) < 1e-6, s + ' food total');
-    assert.ok(list.stores[s].pack >= list.stores[s].food - 1e-9);
+  list.rows.forEach(r => {
+    assert.ok(Math.abs(r.grams - need[r.id]) < 1e-6, r.id + ' grams');
+    assert.equal(r.aisle, A.ING[r.id].aisle);
   });
-  const cheapest = ['s', 'k', 'lidl'].sort((a, b) => list.stores[a].pack - list.stores[b].pack)[0];
-  assert.equal(list.cheapest, cheapest);
-  assert.ok(list.mixed.total <= list.stores[cheapest].pack + 1e-9, 'mixed basket cannot cost more than the cheapest single store');
+  assert.equal(list.days, 7);
+  assert.equal(list.meals, plan.days.reduce((n, d) => n + d.meals.length, 0));
+  // rows come grouped by aisle in the order of A.AISLES
+  const order = Object.keys(A.AISLES);
+  for (let i = 1; i < list.rows.length; i++) assert.ok(order.indexOf(list.rows[i - 1].aisle) <= order.indexOf(list.rows[i].aisle), 'aisle order at ' + i);
 });
 
-test('user price overrides replace seed prices and missing prices are reported', () => {
-  const p = profile();
-  const plan = E.planWeek(p, 2);
-  const over = { lidl: { oats: { price: 0.99, packG: 1000 } } };
-  const prices = E.mergePrices(A.SEED_PRICES, over);
-  assert.equal(prices.lidl.oats.price, 0.99);
-  assert.equal(prices.lidl.oats.source, 'you');
-  delete prices.k.oats;
-  const list = E.shoppingList(plan, p, prices);
-  assert.ok(list.stores.k.missing.includes('oats') || !plan.days.some(d => d.meals.some(m => m.items.some(i => i.id === 'oats'))));
-  assert.notEqual(list.cheapest, 'k');
+test('every amount on the shopping list can be traced to the meals that use it', () => {
+  const p = profile({ people: 3 });
+  const plan = E.planWeek(p, 8);
+  const list = E.shoppingList(plan, p);
+  list.rows.forEach(r => {
+    assert.ok(r.uses.length >= 1, r.id + ' has no meal');
+    const sum = r.uses.reduce((a, u) => a + u.g, 0);
+    assert.ok(Math.abs(sum - r.grams) < 1e-6, r.id + ': the meals add up to the total');
+    const keys = r.uses.map(u => u.d + ':' + u.i);
+    assert.equal(new Set(keys).size, keys.length, r.id + ' lists a meal twice');
+    r.uses.forEach(u => {
+      const m = plan.days[u.d].meals[u.i];
+      assert.equal(m.recipeId, u.recipeId); assert.equal(m.meal, u.meal);
+      assert.ok(m.items.some(it => it.id === r.id), u.recipeId + ' does not use ' + r.id);
+    });
+  });
+});
+
+test('shopping for chosen days counts only the meals of those days', () => {
+  const p = profile({ people: 2 });
+  const plan = E.planWeek(p, 6);
+  const some = E.shoppingList(plan, p, { days: [1, 4] });
+  const need = needed(plan, 2, [1, 4]);
+  assert.equal(some.days, 2);
+  assert.equal(some.meals, plan.days[1].meals.length + plan.days[4].meals.length);
+  assert.equal(some.rows.length, Object.keys(need).length);
+  some.rows.forEach(r => {
+    assert.ok(Math.abs(r.grams - need[r.id]) < 1e-6, r.id);
+    r.uses.forEach(u => assert.ok(u.d === 1 || u.d === 4, r.id + ' uses day ' + u.d));
+  });
+  const all = E.shoppingList(plan, p, { days: [0, 1, 2, 3, 4, 5, 6] });
+  assert.deepEqual(all.rows.map(r => [r.id, r.grams]), E.shoppingList(plan, p).rows.map(r => [r.id, r.grams]));
+  const none = E.shoppingList(plan, p, { days: [] });
+  assert.equal(none.rows.length, 0); assert.equal(none.meals, 0);
+  // two halves of the week add up to the whole week
+  const a = E.shoppingList(plan, p, { days: [0, 1, 2] }), b = E.shoppingList(plan, p, { days: [3, 4, 5, 6] });
+  all.rows.forEach(r => {
+    const ga = (a.rows.find(x => x.id === r.id) || { grams: 0 }).grams, gb = (b.rows.find(x => x.id === r.id) || { grams: 0 }).grams;
+    assert.ok(Math.abs(ga + gb - r.grams) < 1e-6, r.id);
+  });
+});
+
+test('a swapped-in ingredient is what the list asks for, not the original', () => {
+  const p = profile({ lactoseFree: true });
+  const plan = E.planWeek(p, 4);
+  const list = E.shoppingList(plan, p);
+  assert.ok(!list.rows.some(r => A.ING[r.id].lactose), 'the list holds an ingredient with lactose');
 });
 
 test('swapping a meal keeps restrictions, keeps the meal calories and recomputes the day', () => {
@@ -210,23 +243,6 @@ test('swapping a meal keeps restrictions, keeps the meal calories and recomputes
   assert.equal(plan.days[day].meals[idx].recipeId, old.recipeId, 'original plan is not mutated');
   // a recipe that conflicts with the profile is refused
   assert.equal(E.swapMeal(plan, p, day, idx, 'l_salmon_potato'), null);
-});
-
-test('price import accepts JSON and CSV and rejects bad rows', () => {
-  const csv = 'store,ingredient_id,price,pack_g\nS,oats,1.79,1000\nK-market,milk,1.55,\nLidl;rice;2,10;1000\nlidl,nonsense,1,1\nS,oats,-1,1000';
-  const r = E.parsePrices(csv);
-  assert.equal(r.applied, 3);
-  assert.equal(r.skipped, 2);
-  assert.equal(r.overrides.s.oats.price, 1.79);
-  assert.equal(r.overrides.k.milk.packG, 1000);   // default pack size when none is given
-  assert.equal(r.overrides.lidl.rice.price, 2.1); // decimal comma with ; separator
-  const j = E.parsePrices(JSON.stringify({ s: { egg: { price: 3.1, packG: 600 } }, k: { egg: 3.4 }, x: { egg: 1 } }));
-  assert.equal(j.applied, 2);
-  assert.equal(j.skipped, 1);
-  assert.ok(E.parsePrices('{ not json').error);
-  const merged = E.mergePrices(A.SEED_PRICES, j.overrides);
-  assert.equal(merged.s.egg.price, 3.1);
-  assert.equal(merged.s.egg.packG, 600);
 });
 
 // ---------- 13. recipe set v2: cuisines, hearts, restrictive diets ----------
@@ -315,7 +331,7 @@ test('new ingredients: nutrition values are plausible (protein+fat+carbs fit in 
 });
 
 test('a recipe used for two or more people scales ingredient grams linearly in the shopping list', () => {
-  const one = E.shoppingList(E.planWeek(profile({ people: 1 }), 3), profile({ people: 1 }), E.mergePrices(A.SEED_PRICES, {}));
-  const three = E.shoppingList(E.planWeek(profile({ people: 3 }), 3), profile({ people: 3 }), E.mergePrices(A.SEED_PRICES, {}));
+  const one = E.shoppingList(E.planWeek(profile({ people: 1 }), 3), profile({ people: 1 }));
+  const three = E.shoppingList(E.planWeek(profile({ people: 3 }), 3), profile({ people: 3 }));
   one.rows.forEach((r) => { const t = three.rows.find((x) => x.id === r.id); assert.ok(t, r.id); assert.ok(Math.abs(t.grams - 3 * r.grams) < 0.5, r.id); });
 });

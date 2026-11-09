@@ -28,11 +28,11 @@ test('the JPEG reader finds the size in the frame header', () => {
   assert.equal(tool.jpegSize(Buffer.from('not a jpeg at all')), null);
 });
 
-test('the single-file build leaves no img/ path behind, so logos and photos still show there', () => {
+test('the single-file build leaves no img/ path behind, so photos still show there', () => {
   execFileSync(process.execPath, [path.join(root, 'tools/build_artifact.js')], { stdio: 'pipe' });
   const out = fs.readFileSync(path.join(root, 'dist/ateria-artifact.html'), 'utf8');
   assert.ok(!/(src|href)="img\//.test(out), 'an image is still loaded from img/');
-  assert.ok((out.match(/data:image\//g) || []).length >= 3 + Object.keys(A.PHOTOS).length);
+  assert.ok((out.match(/data:image\//g) || []).length >= Object.keys(A.PHOTOS).length);
 });
 
 test('the welcome screen and photo credit texts exist in all four languages', () => {

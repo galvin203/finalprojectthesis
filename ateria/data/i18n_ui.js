@@ -19,11 +19,13 @@
   function U(key, en, fi, sv, vi) { ui.en[key] = en; ui.fi[key] = fi; ui.sv[key] = sv; ui.vi[key] = vi; }
 
   // ---------- shell ----------
-  U('brand.tag', 'Weekly meal plans with a priced shopping list', 'Viikon ruokalista ja hinnoiteltu ostoslista', 'Veckans matplan med prissatt inköpslista', 'Thực đơn cả tuần kèm danh sách đi chợ có giá');
+  U('brand.tag', 'Meal plans, food log and shopping list',
+    'Ruokalista, kirjaus ja ostoslista',
+    'Matplan, logg och inköpslista',
+    'Thực đơn, nhật ký ăn uống và danh sách đi chợ');
   U('nav.aria', 'Main', 'Päävalikko', 'Huvudmeny', 'Menu chính');
   U('nav.plan', 'Plan', 'Ruokalista', 'Matplan', 'Thực đơn');
   U('nav.shop', 'Shop', 'Ostokset', 'Inköp', 'Đi chợ');
-  U('nav.prices', 'Prices', 'Hinnat', 'Priser', 'Giá');
   U('nav.you', 'You', 'Profiili', 'Profil', 'Hồ sơ');
   U('lang.label', 'Language', 'Kieli', 'Språk', 'Ngôn ngữ');
 
@@ -105,69 +107,45 @@
   U('shop.none', 'No shopping list yet', 'Ei vielä ostoslistaa', 'Ingen inköpslista ännu', 'Chưa có danh sách đi chợ');
   U('shop.createFirst', 'Create a plan first.', 'Luo ensin suunnitelma.', 'Skapa en plan först.', 'Hãy tạo thực đơn trước.');
   U('shop.title', 'Shopping list', 'Ostoslista', 'Inköpslista', 'Danh sách đi chợ');
+  U('shop.forDays', 'Buy for these days',
+    'Osta näille päiville',
+    'Handla för dessa dagar',
+    'Mua cho những ngày này');
+  U('shop.allDays', 'All days',
+    'Kaikki päivät',
+    'Alla dagar',
+    'Cả tuần');
+  U('shop.noDays', 'Choose at least one day to see what to buy.',
+    'Valitse vähintään yksi päivä nähdäksesi, mitä ostaa.',
+    'Välj minst en dag för att se vad du ska köpa.',
+    'Hãy chọn ít nhất một ngày để xem cần mua gì.');
+  U('shop.where', 'Where it is used',
+    'Missä käytetään',
+    'Var det används',
+    'Dùng ở đâu');
+  U('shop.items_one', '{n} item',
+    '{n} tuote',
+    '{n} vara',
+    '{n} món');
+  U('shop.items_other', '{n} items',
+    '{n} tuotetta',
+    '{n} varor',
+    '{n} món');
+  U('shop.meals_one', '{n} meal',
+    '{n} ateria',
+    '{n} måltid',
+    '{n} bữa');
+  U('shop.meals_other', '{n} meals',
+    '{n} ateriaa',
+    '{n} måltider',
+    '{n} bữa');
   U('shop.people_one', '{n} person', '{n} henkilö', '{n} person', '{n} người');
   U('shop.people_other', '{n} people', '{n} henkilöä', '{n} personer', '{n} người');
-  U('shop.days', '7 days', '7 päivää', '7 dagar', '7 ngày');
-  U('shop.placeholder', '<strong>Placeholder prices.</strong> Prices marked “est.” are illustrative numbers, not real store prices. {link} to compare the stores properly.',
-    '<strong>Esimerkkihinnat.</strong> ”arv.”-merkityt hinnat ovat havainnollistavia lukuja, eivät kauppojen todellisia hintoja. {link}, jotta voit verrata kauppoja oikein.',
-    '<strong>Platshållarpriser.</strong> Priser markerade ”uppsk.” är illustrativa siffror, inte butikernas verkliga priser. {link} för att jämföra butikerna på riktigt.',
-    '<strong>Giá minh họa.</strong> Các giá có dấu “ước tính” chỉ là con số minh họa, không phải giá thật của cửa hàng. {link} để so sánh các cửa hàng cho đúng.');
-  U('shop.placeholderLink', 'Enter real prices', 'Syötä todelliset hinnat', 'Ange verkliga priser', 'Nhập giá thật');
-  U('est', 'est.', 'arv.', 'uppsk.', 'ước tính');
-  U('store.use', 'meals use {eur}', 'ateriat käyttävät {eur}', 'måltiderna använder {eur}', 'các bữa dùng hết {eur}');
-  U('store.missing_one', '{n} price missing', '{n} hinta puuttuu', '{n} pris saknas', 'thiếu {n} giá');
-  U('store.missing_other', '{n} prices missing', '{n} hintaa puuttuu', '{n} priser saknas', 'thiếu {n} giá');
-  U('store.lowest', 'Lowest', 'Edullisin', 'Lägst', 'Rẻ nhất');
-  U('store.more', '{eur} more than {store}', '{eur} enemmän kuin {store}', '{eur} mer än {store}', 'đắt hơn {store} {eur}');
-  U('store.under', '{eur} under budget', '{eur} budjetin alla', '{eur} under budgeten', 'dưới ngân sách {eur}');
-  U('store.over', '{eur} over budget', '{eur} yli budjetin', '{eur} över budgeten', 'vượt ngân sách {eur}');
-  U('shop.note', 'The large number is what you pay for whole packs. “Meals use” is the share of those packs this week’s meals consume; leftovers carry over to later weeks.',
-    'Iso luku on kokonaisten pakkausten hinta. ”Ateriat käyttävät” on se osuus pakkauksista, jonka tämän viikon ateriat kuluttavat; ylijäämä riittää seuraaville viikoille.',
-    'Det stora talet är vad du betalar för hela förpackningar. ”Måltiderna använder” är den andel av förpackningarna som veckans måltider går åt; resten räcker till kommande veckor.',
-    'Con số lớn là số tiền bạn trả cho nguyên bao gói. “Các bữa dùng hết” là phần của các bao gói mà bữa ăn tuần này tiêu thụ; phần còn lại dùng cho những tuần sau.');
-  U('shop.logos', 'Store logos belong to their owners and are used only to tell the stores apart. Ateria is not affiliated with these stores.',
-    'Kauppojen logot kuuluvat niiden omistajille, ja niitä käytetään vain kauppojen erottamiseen toisistaan. Ateria ei ole sidoksissa näihin kauppoihin.',
-    'Butikernas logotyper tillhör sina ägare och används bara för att skilja butikerna åt. Ateria är inte knuten till butikerna.',
-    'Logo các cửa hàng thuộc về chủ sở hữu của họ và chỉ được dùng để phân biệt các cửa hàng. Ateria không liên kết với các cửa hàng này.');
-  U('shop.noteBudget', ' Your budget of {budget} is compared with the “meals use” figure.',
-    ' Budjettiasi {budget} verrataan ”ateriat käyttävät” -lukuun.',
-    ' Din budget på {budget} jämförs med siffran ”måltiderna använder”.',
-    ' Ngân sách {budget} của bạn được so với con số “các bữa dùng hết”.');
-  U('shop.mixed', '<strong>Item by item</strong> the cheapest basket is {total}, which is {saving} less than {store} alone, but means visiting {n} stores.',
-    '<strong>Tuote tuotteelta</strong> edullisin ostoskori maksaa {total}, eli {saving} vähemmän kuin pelkkä {store}, mutta vaatii käyntiä {n} kaupassa.',
-    '<strong>Vara för vara</strong> kostar den billigaste varukorgen {total}, vilket är {saving} mindre än enbart {store}, men innebär besök i {n} butiker.',
-    '<strong>Mua từng món</strong> thì giỏ hàng rẻ nhất là {total}, rẻ hơn mua toàn bộ ở {store} {saving}, nhưng bạn phải ghé {n} cửa hàng.');
+  U('shop.note', 'Amounts are the totals the recipes need for everyone in the plan, for the days you choose. Open “Where it is used” to see which meals need an ingredient. Check what you already have at home before you buy.',
+    'Määrät ovat kokonaismäärät, jotka reseptit vaativat kaikille suunnitelman henkilöille valitsemiesi päivien ajalta. Avaa ”Missä käytetään” nähdäksesi, mitkä ateriat tarvitsevat ainesosan. Tarkista, mitä sinulla on jo kotona, ennen kuin ostat.',
+    'Mängderna är de totala mängder som recepten behöver för alla i planen under de dagar du väljer. Öppna ”Var det används” för att se vilka måltider som behöver en ingrediens. Kolla vad du redan har hemma innan du handlar.',
+    'Số lượng là tổng lượng các công thức cần cho tất cả mọi người trong kế hoạch, trong những ngày bạn chọn. Mở “Dùng ở đâu” để xem những bữa nào cần nguyên liệu đó. Hãy kiểm tra những gì đã có ở nhà trước khi mua.');
   U('item.got', 'Got {name}', 'Ostettu: {name}', 'Köpt: {name}', 'Đã mua {name}');
-  U('item.noPrice', 'no price', 'ei hintaa', 'inget pris', 'chưa có giá');
-
-  // ---------- prices ----------
-  U('prices.title', 'Prices', 'Hinnat', 'Priser', 'Giá');
-  U('prices.banner', '<strong>Placeholder prices.</strong> The numbers shown in grey are illustrative placeholders. Type the price you see in the store for one pack and it replaces the placeholder. Nothing is fetched from the stores.',
-    '<strong>Esimerkkihinnat.</strong> Harmaalla näytetyt luvut ovat havainnollistavia esimerkkejä. Kirjoita kaupassa näkemäsi yhden pakkauksen hinta, niin se korvaa esimerkkiluvun. Kaupoista ei haeta mitään.',
-    '<strong>Platshållarpriser.</strong> Siffrorna i grått är illustrativa platshållare. Skriv det pris du ser i butiken för en förpackning så ersätter det platshållaren. Ingenting hämtas från butikerna.',
-    '<strong>Giá minh họa.</strong> Các con số màu xám chỉ là giá giữ chỗ để minh họa. Hãy gõ giá một bao gói mà bạn thấy ở cửa hàng, nó sẽ thay thế giá minh họa. Ứng dụng không tự lấy dữ liệu từ cửa hàng.');
-  U('prices.find', 'Find an ingredient', 'Etsi ainesosa', 'Sök ingrediens', 'Tìm nguyên liệu');
-  U('prices.findPh', 'Oats, milk, rice…', 'Kaurahiutale, maito, riisi…', 'Havregryn, mjölk, ris…', 'Yến mạch, sữa, gạo…');
-  U('prices.perPack', 'price per {g} pack', 'hinta {g} pakkaukselle', 'pris per förpackning om {g}', 'giá cho gói {g}');
-  U('io.title', 'Import or export prices', 'Tuo tai vie hintoja', 'Importera eller exportera priser', 'Nhập hoặc xuất giá');
-  U('io.help', 'Paste JSON or CSV (columns: store, ingredient_id, price, pack_g; stores are S, K and Lidl) and press Load. Use Copy to keep your own prices. <code>tools/prices_tool.py</code> produces this format.',
-    'Liitä JSON tai CSV (sarakkeet: store, ingredient_id, price, pack_g; kaupat ovat S, K ja Lidl) ja paina Lataa. Kopioi-painikkeella voit tallentaa omat hintasi. <code>tools/prices_tool.py</code> tuottaa tämän muodon.',
-    'Klistra in JSON eller CSV (kolumner: store, ingredient_id, price, pack_g; butikerna är S, K och Lidl) och tryck på Läs in. Använd Kopiera för att spara dina egna priser. <code>tools/prices_tool.py</code> skapar det här formatet.',
-    'Dán JSON hoặc CSV (các cột: store, ingredient_id, price, pack_g; cửa hàng là S, K và Lidl) rồi bấm Nạp. Dùng Sao chép để lưu giá của riêng bạn. <code>tools/prices_tool.py</code> tạo ra định dạng này.');
-  U('io.aria', 'Prices as JSON or CSV', 'Hinnat JSON- tai CSV-muodossa', 'Priser som JSON eller CSV', 'Giá ở dạng JSON hoặc CSV');
-  U('io.load', 'Load', 'Lataa', 'Läs in', 'Nạp');
-  U('io.copy', 'Copy my prices', 'Kopioi hintani', 'Kopiera mina priser', 'Sao chép giá của tôi');
-  U('io.reset', 'Remove my prices', 'Poista hintani', 'Ta bort mina priser', 'Xóa giá của tôi');
-  U('io.resetArmed', 'Press again to remove all my prices', 'Paina uudelleen poistaaksesi kaikki hintani', 'Tryck igen för att ta bort alla mina priser', 'Bấm lần nữa để xóa toàn bộ giá của tôi');
-  U('io.loaded_one', 'Loaded {n} price', 'Ladattu {n} hinta', 'Läste in {n} pris', 'Đã nạp {n} giá');
-  U('io.loaded_other', 'Loaded {n} prices', 'Ladattu {n} hintaa', 'Läste in {n} priser', 'Đã nạp {n} giá');
-  U('io.skipped_one', 'skipped {n} row (unknown store or ingredient, or a bad number)', 'ohitettu {n} rivi (tuntematon kauppa tai ainesosa tai virheellinen luku)', 'hoppade över {n} rad (okänd butik eller ingrediens, eller ett felaktigt tal)', 'bỏ qua {n} dòng (cửa hàng hoặc nguyên liệu không rõ, hoặc số không hợp lệ)');
-  U('io.skipped_other', 'skipped {n} rows (unknown store or ingredient, or a bad number)', 'ohitettu {n} riviä (tuntematon kauppa tai ainesosa tai virheellinen luku)', 'hoppade över {n} rader (okänd butik eller ingrediens, eller ett felaktigt tal)', 'bỏ qua {n} dòng (cửa hàng hoặc nguyên liệu không rõ, hoặc số không hợp lệ)');
-  U('io.copied', 'Copied. Paste it into a file to keep it.', 'Kopioitu. Liitä se tiedostoon tallentaaksesi.', 'Kopierat. Klistra in det i en fil för att spara det.', 'Đã sao chép. Hãy dán vào một tệp để lưu lại.');
-  U('io.copyFail', 'Select the text above and copy it.', 'Valitse yllä oleva teksti ja kopioi se.', 'Markera texten ovan och kopiera den.', 'Hãy chọn đoạn văn bản ở trên và sao chép.');
-  U('io.removed', 'Your prices were removed.', 'Hintasi poistettiin.', 'Dina priser togs bort.', 'Giá của bạn đã được xóa.');
-  U('io.errEmpty', 'Nothing to import.', 'Ei tuotavaa.', 'Inget att importera.', 'Không có gì để nhập.');
-  U('io.errJson', 'That is not valid JSON.', 'Tämä ei ole kelvollista JSONia.', 'Det är inte giltig JSON.', 'Đó không phải JSON hợp lệ.');
 
   // ---------- profile ----------
   U('profile.title', 'Your details', 'Tietosi', 'Dina uppgifter', 'Thông tin của bạn');
@@ -190,11 +168,11 @@
     'Ruoka tukee lihaskasvua, mutta lihasta rakentaa harjoittelu: voimaharjoittelu kaksi tai kolme kertaa viikossa on yleinen aloitus. Jos harjoittelet, valitse yltä toinen tai kolmas aktiivisuustaso. Tämä tavoite lisää energiaa 10 % ja proteiinia 1,8 g painokiloa kohti.',
     'Maten stödjer muskeluppbyggnad, men det är träningen som bygger muskler: styrketräning två till tre gånger i veckan är en vanlig start. Om du tränar, välj den andra eller tredje aktivitetsnivån ovan. Det här målet lägger till 10 % energi och 1,8 g protein per kilo kroppsvikt.',
     'Ăn uống hỗ trợ tăng cơ, nhưng chính việc tập luyện mới xây cơ: tập tạ 2–3 buổi mỗi tuần là điểm bắt đầu phổ biến. Nếu bạn tập, hãy chọn mức vận động thứ hai hoặc thứ ba ở trên. Mục tiêu này cộng thêm 10 % năng lượng và 1,8 g protein cho mỗi kg cân nặng.');
-  U('welcome.title', 'Your week of meals, planned and priced', 'Viikon ateriat suunniteltuna ja hinnoiteltuna', 'Veckans måltider, planerade och prissatta', 'Một tuần bữa ăn, đã lên kế hoạch và có giá');
-  U('welcome.lead', 'Choose your goal. Ateria plans seven days of meals that fit your calories and protein, then shows what the shopping list costs at S-market, K-market and Lidl.',
-    'Valitse tavoitteesi. Ateria suunnittelee seitsemän päivää aterioita, jotka sopivat kaloreihisi ja proteiiniisi, ja näyttää mitä ostoslista maksaa S-marketissa, K-marketissa ja Lidlissä.',
-    'Välj ditt mål. Ateria planerar sju dagars måltider som passar dina kalorier och ditt protein och visar vad inköpslistan kostar på S-market, K-market och Lidl.',
-    'Chọn mục tiêu của bạn. Ateria lên thực đơn bảy ngày phù hợp lượng calo và protein của bạn, rồi cho biết danh sách đi chợ tốn bao nhiêu ở S-market, K-market và Lidl.');
+  U('welcome.title', 'Your week of meals, planned and ready to shop for', 'Viikon ateriat suunniteltuna ja valmiina ostoslistaksi', 'Veckans måltider, planerade och klara för inköp', 'Một tuần bữa ăn, đã lên kế hoạch và sẵn sàng đi chợ');
+  U('welcome.lead', 'Choose your goal. Ateria plans seven days of meals that fit your calories and protein, then lists what to buy for them.',
+    'Valitse tavoitteesi. Ateria suunnittelee seitsemän päivää aterioita, jotka sopivat kaloreihisi ja proteiiniisi, ja listaa, mitä niihin tarvitsee ostaa.',
+    'Välj ditt mål. Ateria planerar sju dagars måltider som passar dina kalorier och ditt protein och listar vad du behöver köpa till dem.',
+    'Chọn mục tiêu của bạn. Ateria lên thực đơn bảy ngày phù hợp lượng calo và protein của bạn, rồi liệt kê những gì cần mua cho các bữa đó.');
   U('welcome.pick', 'What is your goal?', 'Mikä on tavoitteesi?', 'Vad är ditt mål?', 'Mục tiêu của bạn là gì?');
   U('welcome.example', 'See an example week', 'Katso esimerkkiviikko', 'Se en exempelvecka', 'Xem tuần mẫu');
   U('welcome.dishes', 'A taste of the week', 'Maistiainen viikosta', 'Smakprov på veckan', 'Xem trước vài món trong tuần');
@@ -209,11 +187,14 @@
     'Kalorit ja proteiini lasketaan puolestasi, ja jokaisessa reseptissä on tarkat määrät.',
     'Kalorier och protein räknas ut åt dig och varje recept visar exakta mängder.',
     'Calo và protein được tính sẵn, mỗi công thức đều có định lượng cụ thể.');
-  U('welcome.s3.t', 'Shop at the lowest price', 'Osta edullisimmin', 'Handla till lägsta pris', 'Mua sắm với giá thấp nhất');
-  U('welcome.s3.b', 'The list is grouped by aisle and priced at three stores. Prices start as estimates that you can replace with real ones.',
-    'Lista on ryhmitelty osastoittain ja hinnoiteltu kolmessa kaupassa. Hinnat ovat aluksi arvioita, jotka voit korvata oikeilla.',
-    'Listan är sorterad efter avdelning och prissatt i tre butiker. Priserna börjar som uppskattningar som du kan ersätta med riktiga.',
-    'Danh sách chia theo khu vực và có giá ở ba cửa hàng. Ban đầu giá chỉ là ước tính, bạn có thể thay bằng giá thật.');
+  U('welcome.s3.t', 'Buy what the meals need',
+    'Osta se, mitä ateriat tarvitsevat',
+    'Köp det måltiderna behöver',
+    'Mua đúng thứ các bữa ăn cần');
+  U('welcome.s3.b', 'The list adds up the amounts for every meal and person, grouped by aisle. Choose the days you shop for and see which meals use each item.',
+    'Lista laskee yhteen jokaisen aterian ja henkilön määrät ja ryhmittelee ne osastoittain. Valitse päivät, joille ostat, ja katso, mitkä ateriat käyttävät kutakin tuotetta.',
+    'Listan summerar mängderna för varje måltid och person, sorterade efter avdelning. Välj vilka dagar du handlar för och se vilka måltider som använder varje vara.',
+    'Danh sách cộng dồn lượng nguyên liệu cho từng bữa và từng người, chia theo khu vực. Chọn những ngày bạn đi chợ và xem bữa nào dùng từng món.');
   U('photo.credit', 'Photo: {credit}', 'Kuva: {credit}', 'Foto: {credit}', 'Ảnh: {credit}');
   U('profile.diet', 'Diet', 'Ruokavalio', 'Kost', 'Chế độ ăn');
   U('diet.omnivore', 'Eats everything', 'Syö kaikkea', 'Äter allt', 'Ăn tất cả');
@@ -228,7 +209,6 @@
     'Måltider du utelämnar antas ätas någon annanstans, så planen täcker bara de valda måltidernas andel av din dag.',
     'Những bữa bạn bỏ chọn được coi là ăn ở nơi khác, nên kế hoạch chỉ bao gồm phần năng lượng của các bữa đã chọn.');
   U('profile.people', 'People you shop for', 'Henkilöt, joille ostat ruokaa', 'Personer du handlar åt', 'Số người bạn đi chợ cho');
-  U('profile.budget', 'Weekly food budget (€, 0 for none)', 'Viikoittainen ruokabudjetti (€, 0 = ei budjettia)', 'Veckobudget för mat (€, 0 för ingen)', 'Ngân sách ăn uống mỗi tuần (€, 0 nếu không đặt)');
   U('profile.dislike', 'Ingredients you dislike', 'Ainesosat, joista et pidä', 'Ingredienser du inte gillar', 'Nguyên liệu bạn không thích');
   U('profile.like', 'Ingredients you like', 'Ainesosat, joista pidät', 'Ingredienser du gillar', 'Nguyên liệu bạn thích');
   U('profile.create', 'Create my plan', 'Luo suunnitelmani', 'Skapa min plan', 'Tạo thực đơn của tôi');

@@ -2,7 +2,7 @@
  * Ateria measures: turns gram amounts into kitchen measures (teaspoons, tablespoons, decilitres, pieces, cloves)
  * and fills the {tokens} of a recipe with the amounts for the chosen portion and number of people.
  *
- * Nothing here changes a calculation: calories, protein and prices always use grams. This module only changes
+ * Nothing here changes a calculation: calories, protein and shopping amounts always use grams. This module only changes
  * how an amount is DISPLAYED. Densities (g per tbsp / dl) are rounded everyday values from data/ingredients.js.
  *
  * Needs data/ingredients.js, data/spices.js, data/recipes.js and js/i18n.js to be loaded first.
@@ -164,10 +164,12 @@
     return { name: loc.name, tip: loc.tip, steps: loc.steps.map(fill), spices: spices, water: water, swaps: swaps };
   };
 
-  // Seasonings needed for a whole plan: { dried: [{id, uses}], fresh: [...], salt: bool } for the shopping view.
-  M.spiceSummary = function (plan) {
+  // Seasonings needed for a plan: { dried: [{id, uses}], fresh: [...], salt: [...] } for the shopping view.
+  // `days` (optional) lists the day indexes to count; the default is every day of the plan.
+  M.spiceSummary = function (plan, days) {
     const uses = {};
-    plan.days.forEach(function (day) {
+    plan.days.forEach(function (day, d) {
+      if (days && days.indexOf(d) < 0) return;
       day.meals.forEach(function (m) {
         A.REC[m.recipeId].spices.forEach(function (s) { uses[s.id] = (uses[s.id] || 0) + 1; });
       });

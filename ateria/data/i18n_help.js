@@ -4,7 +4,7 @@
  * (The optional "Ask Claude" button in js/help.js uses the same list as its notes.)
  *
  *   H(id, icon, actions, keywords, [q en, fi, sv, vi], [a en, fi, sv, vi])
- *     actions   views the answer can open: plan | shop | prices | profile
+ *     actions   views the answer can open: plan | log | shop | profile
  *     keywords  words in any language, lower case, written with or without accents (matching ignores accents)
  *     "\n" in an answer starts a new paragraph.
  *
@@ -66,28 +66,14 @@
       'Mở một bữa ăn và dùng nút + và − cạnh Số phần ăn. Mọi lượng nguyên liệu sẽ thay đổi. Để đi chợ cho nhiều người hơn, hãy đổi “Số người bạn đi chợ cho” trong Hồ sơ.']);
 
   H('shopping', 'tomato', ['shop'],
-    'shopping,list,shop,store,cheapest,tick,check off,buy,ostos,ostoslista,kauppa,edullisin,merkitse,osta,inkop,inkopslista,butik,billigast,bocka,kopa,di cho,danh sach,cua hang,re nhat,mua',
+    'shopping,list,shop,quantity,amount,how much,days,tick,check off,buy,ostos,ostoslista,kauppa,maara,paljonko,paivat,merkitse,osta,inkop,inkopslista,mangd,hur mycket,dagar,bocka,kopa,di cho,danh sach,so luong,bao nhieu,ngay,mua',
     ['How does the shopping list work?', 'Miten ostoslista toimii?', 'Hur fungerar inköpslistan?', 'Danh sách đi chợ hoạt động thế nào?'],
-    ['Shop lists everything for the week, grouped by store aisle. Tick an item when you have it. The top shows what each store costs and which is cheapest.',
-      'Ostokset-näkymä listaa viikon tarvikkeet kauppaosastoittain. Merkitse tuote, kun olet saanut sen. Ylhäällä näkyy, mitä kukin kauppa maksaa ja mikä on edullisin.',
-      'Inköp listar allt för veckan, grupperat efter butiksavdelning. Bocka av en vara när du har den. Överst ser du vad varje butik kostar och vilken som är billigast.',
-      'Mục Đi chợ liệt kê mọi thứ cho cả tuần, xếp theo khu vực trong cửa hàng. Đánh dấu khi bạn đã mua được. Phía trên cho biết mỗi cửa hàng tốn bao nhiêu và cửa hàng nào rẻ nhất.']);
+    ['Shop adds up what the planned meals need for everyone you cook for, grouped by store aisle. Use “Buy for these days” to shop for only some of the days. Open “Where it is used” to see which meals need an item. Tick an item when you have it.',
+      'Ostokset laskee yhteen, mitä suunnitellut ateriat tarvitsevat kaikille, joille laitat ruokaa, ja ryhmittelee tuotteet kauppaosastoittain. Valitse ”Osta näille päiville”, jos ostat vain osalle päivistä. Avaa ”Missä käytetään” nähdäksesi, mitkä ateriat tarvitsevat tuotteen. Merkitse tuote, kun olet saanut sen.',
+      'Inköp summerar vad de planerade måltiderna behöver för alla du lagar mat åt, grupperat efter butiksavdelning. Använd ”Handla för dessa dagar” om du bara handlar för en del av dagarna. Öppna ”Var det används” för att se vilka måltider som behöver en vara. Bocka av en vara när du har den.',
+      'Mục Đi chợ cộng dồn những gì các bữa đã lên kế hoạch cần cho tất cả mọi người bạn nấu ăn cùng, xếp theo khu vực trong cửa hàng. Dùng “Mua cho những ngày này” nếu bạn chỉ đi chợ cho một vài ngày. Mở “Dùng ở đâu” để xem bữa nào cần món đó. Đánh dấu khi bạn đã mua được.']);
 
-  H('prices', 'wallet', ['prices'],
-    'price,prices,est,estimate,placeholder,cost,euro,real price,hinta,hinnat,arv,arvio,esimerkki,pris,priser,uppsk,uppskattning,exempel,gia,gia tien,uoc tinh,gia that',
-    ['Why do prices say “est.”?', 'Miksi hinnoissa lukee ”arv.”?', 'Varför står det ”uppsk.” vid priserna?', 'Vì sao giá có chữ “ước tính”?'],
-    ['Prices marked “est.” are example numbers, not real store prices. Open Prices and type the price you see in the store, and it replaces the example.',
-      'Hinnat, joissa lukee ”arv.”, ovat esimerkkilukuja, eivät kauppojen todellisia hintoja. Avaa Hinnat ja kirjoita kaupassa näkemäsi hinta, niin se korvaa esimerkin.',
-      'Priser markerade ”uppsk.” är exempelsiffror, inte butikernas riktiga priser. Öppna Priser och skriv det pris du ser i butiken, så ersätter det exemplet.',
-      'Giá có chữ “ước tính” là con số ví dụ, không phải giá thật của cửa hàng. Mở mục Giá và gõ giá bạn thấy ở cửa hàng, nó sẽ thay thế giá ví dụ.']);
 
-  H('budget', 'wallet', ['profile', 'shop'],
-    'budget,money,cheap,afford,save money,euro,budjetti,raha,halpa,saasta,pengar,billig,spara,ngan sach,tien,re,tiet kiem',
-    ['How do I set a food budget?', 'Miten asetan ruokabudjetin?', 'Hur ställer jag in en matbudget?', 'Làm sao để đặt ngân sách ăn uống?'],
-    ['In You, type your weekly food budget in euros. In Shop, each store shows if you are under or over budget. Use 0 for no budget.',
-      'Kirjoita Profiilissa viikoittainen ruokabudjettisi euroina. Ostokset-näkymässä jokainen kauppa näyttää, oletko budjetin alla vai yli. Käytä arvoa 0, jos et halua budjettia.',
-      'Skriv din veckobudget för mat i euro i Profil. I Inköp visar varje butik om du är under eller över budgeten. Använd 0 för ingen budget.',
-      'Trong Hồ sơ, nhập ngân sách ăn uống mỗi tuần bằng euro. Ở mục Đi chợ, mỗi cửa hàng cho biết bạn dưới hay vượt ngân sách. Nhập 0 nếu không đặt ngân sách.']);
 
   H('spices', 'spice_jar', ['plan'],
     'spice,spices,seasoning,salt,pepper,herb,herbs,taste,how much,flavour,mauste,mausteet,suola,pippuri,yrtti,maku,kuinka paljon,krydda,kryddor,peppar,ort,smak,hur mycket,gia vi,muoi,tieu,rau thom,nem,bao nhieu',

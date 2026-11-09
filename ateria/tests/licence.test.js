@@ -12,7 +12,7 @@ test('the repository has an MIT licence, the READMEs list what it does not cover
   assert.match(lic, /THE SOFTWARE IS PROVIDED "AS IS"/);
   const readme = read('README.md'), root = read('../README.md');
   assert.match(readme, /## Licence/);
-  ['SIL Open Font License', 'Trademarks of S Group, Kesko and Lidl', 'recipes published by dietitians'].forEach((x) => assert.ok(readme.includes(x), x));
+  ['SIL Open Font License', 'recipes published by dietitians'].forEach((x) => assert.ok(readme.includes(x), x));
   assert.match(root, /## Licence/);
   [readme, root, read('data/recipes.js')].forEach((s) => {
     assert.ok(!/No licence has been chosen/i.test(s));

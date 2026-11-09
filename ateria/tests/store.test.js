@@ -6,12 +6,12 @@ require('../js/store.js');
 const A = globalThis.Ateria;
 
 function fake() { const m = {}; return { m, getItem: (k) => (k in m ? m[k] : null), setItem: (k, v) => { m[k] = String(v); }, removeItem: (k) => { delete m[k]; } }; }
-const P = { sex: 'female', age: 34, heightCm: 168, weightKg: 68, activity: 'sedentary', goal: 'lose', diet: 'omnivore', allergies: ['milk'], meals: ['breakfast', 'lunch', 'dinner'], people: 1, budget: 70, cuisines: ['nordic'] };
+const P = { sex: 'female', age: 34, heightCm: 168, weightKg: 68, activity: 'sedentary', goal: 'lose', diet: 'omnivore', allergies: ['milk'], meals: ['breakfast', 'lunch', 'dinner'], people: 1, cuisines: ['nordic'] };
 
 test('nothing is written to the device before the person says yes', () => {
   const s = fake(); const st = A.makeStore(s); st.init();
   assert.equal(st.consent(), null);
-  st.setProfile(P); st.toggleLike('d_meatballs'); st.addWeight('2026-11-07', 68); st.setLang('fi'); st.setPrices({ s: { oats: { price: 1.5 } } });
+  st.setProfile(P); st.toggleLike('d_meatballs'); st.addWeight('2026-11-07', 68); st.setLang('fi');
   assert.deepEqual(Object.keys(s.m), [], 'something was written without consent');
   assert.equal(st.active().profile.age, 34, 'the app still works from memory');
 });
@@ -92,7 +92,7 @@ test('imported text is cleaned: unknown fields dropped, bad values refused, no m
   assert.equal(st.parseImport('{oops').code, 'json');
   assert.equal(st.parseImport('{"x":1}').code, 'format');
   assert.equal(st.parseImport('x'.repeat(2100000)).code, 'big');
-  const evil = st.parseImport(JSON.stringify({ profiles: [{ id: '<b>', name: '<script>x</script>Ann', profile: { sex: 'x' }, swaps: [{ d: 99, i: 1, r: 'nope' }, { d: 1, i: 2, r: 'd_meatballs' }], liked: ['d_meatballs', 'zzz'], weights: [{ d: 'bad', kg: 1 }, { d: '2026-01-01', kg: 70 }], checked: { oats: true, nothing: true, milk: 'yes' } }], prices: { s: { oats: { price: -3 }, milk: { price: 2.5, packG: 1000 } }, evil: { oats: { price: 1 } } }, lang: 'xx' }));
+  const evil = st.parseImport(JSON.stringify({ profiles: [{ id: '<b>', name: '<script>x</script>Ann', profile: { sex: 'x' }, swaps: [{ d: 99, i: 1, r: 'nope' }, { d: 1, i: 2, r: 'd_meatballs' }], liked: ['d_meatballs', 'zzz'], weights: [{ d: 'bad', kg: 1 }, { d: '2026-01-01', kg: 70 }], checked: { oats: true, nothing: true, milk: 'yes' } }], prices: { s: { oats: { price: 1 } } }, budget: 50, lang: 'xx' }));
   assert.ok(evil.ok);
   const r = evil.data.profiles[0];
   assert.ok(!/[<>]/.test(r.name)); assert.equal(r.profile, null);
@@ -100,14 +100,14 @@ test('imported text is cleaned: unknown fields dropped, bad values refused, no m
   assert.deepEqual(r.liked, ['d_meatballs']);
   assert.deepEqual(r.weights, [{ d: '2026-01-01', kg: 70 }]);
   assert.deepEqual(r.checked, { oats: true });
-  assert.deepEqual(Object.keys(evil.data.prices), ['s']); assert.deepEqual(Object.keys(evil.data.prices.s), ['milk']);
+  assert.equal(evil.data.prices, undefined, 'prices of an old backup are not kept');
   assert.equal(evil.data.lang, null);
   assert.match(r.id, /^[a-z0-9_-]{1,24}$/i);
 });
 
 test('backup round trip keeps everything', () => {
   const s = fake(); const st = A.makeStore(s); st.init(); st.setProfile(P); st.setConsent(true);
-  st.toggleLike('d_meatballs'); st.addWeight('2026-11-07', 68); st.setPrices({ k: { oats: { price: 1.99, packG: 1000, source: 'you' } } });
+  st.toggleLike('d_meatballs'); st.addWeight('2026-11-07', 68);
   const text = st.exportJSON();
   const other = A.makeStore(fake()); other.init();
   const r = other.parseImport(text); assert.ok(r.ok);

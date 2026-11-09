@@ -1,7 +1,7 @@
 // Kitchen measures, recipe views and seasoning. Run: node --test tests/measure.test.js
 const test = require('node:test');
 const assert = require('node:assert/strict');
-['ingredients', 'spices', 'recipes', 'icons', 'i18n_ui', 'i18n_ui2', 'i18n_food', 'i18n_recipes', 'prices'].forEach((f) => require('../data/' + f + '.js'));
+['ingredients', 'spices', 'recipes', 'icons', 'i18n_ui', 'i18n_ui2', 'i18n_food', 'i18n_recipes'].forEach((f) => require('../data/' + f + '.js'));
 ['engine', 'i18n', 'measure'].forEach((f) => require('../js/' + f + '.js'));
 const A = globalThis.Ateria;
 const M = A.measure;
@@ -154,7 +154,7 @@ test('a swapped ingredient is found by the original token (milk -> oat drink)', 
 
 test('seasoning summary for a plan sorts salt, dried and fresh', () => {
   const E = A.engine;
-  const p = { sex: 'female', age: 34, heightCm: 168, weightKg: 68, activity: 'active', goal: 'maintain', diet: 'omnivore', allergies: [], lactoseFree: false, dislikes: [], favorites: [], meals: ['breakfast', 'lunch', 'snack', 'dinner'], people: 1, budget: 0, cuisines: [] };
+  const p = { sex: 'female', age: 34, heightCm: 168, weightKg: 68, activity: 'active', goal: 'maintain', diet: 'omnivore', allergies: [], lactoseFree: false, dislikes: [], favorites: [], meals: ['breakfast', 'lunch', 'snack', 'dinner'], people: 1, cuisines: [] };
   const plan = E.planWeek(p, 12345);
   const s = M.spiceSummary(plan);
   assert.ok(s.dried.length > 3 && s.fresh.length >= 1);

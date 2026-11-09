@@ -12,7 +12,6 @@ require('../data/i18n_ui2.js');
 require('../data/i18n_food.js');
 require('../data/i18n_recipes.js');
 require('../data/i18n_help.js');
-require('../data/prices.js');
 require('../js/engine.js');
 require('../js/i18n.js');
 require('../js/measure.js');
@@ -76,7 +75,7 @@ test('every key used in the app code exists', () => {
   ['nordic', 'european', 'asian', 'world'].forEach((c) => assert.ok(D.ui.en['swipe.d.' + c], 'swipe.d.' + c));
   ['empty', 'json', 'format', 'big'].forEach((c) => assert.ok(D.ui.en['data.err.' + c], c));
   ['one', 'other'].forEach((c) => ['leaf', 'pcs', 'clove', 'lemon'].forEach((u) => assert.ok(D.ui.en['unit.' + u + '_' + c], u)));
-  ['you', 'plan', 'log', 'shop', 'prices'].forEach((c) => assert.ok(D.ui.en['nav.' + c], c));
+  ['you', 'plan', 'log', 'shop'].forEach((c) => assert.ok(D.ui.en['nav.' + c], c));
   // keys built from a prefix in app.js
   ['protein', 'fat', 'carbs', 'fibre'].forEach((x) => assert.ok(D.ui.en['macro.' + x]));
   ['female', 'male'].forEach((x) => assert.ok(D.ui.en['sex.' + x]));
@@ -193,12 +192,12 @@ test('aisles and allergens are named in all languages', () => {
   A.ALLERGENS.forEach((a) => assert.equal(D.allergen[a[0]].length, 4, a[0]));
 });
 
-test('number, money and percent formats follow the language', () => {
-  I.setLang('en'); assert.equal(I.eur(1.99), '€1.99'); assert.equal(I.n(1819), '1,819');
-  I.setLang('fi'); assert.match(I.eur(1.99), /^1,99\s€$/); assert.equal(I.pct(-15), '−15 %');
-  I.setLang('sv'); assert.match(I.eur(1.99), /^1,99\s€$/);
-  I.setLang('vi'); assert.match(I.eur(1.99), /^1,99\s€$/); assert.equal(I.pct(10), '+10%');
+test('number and percent formats follow the language, and no money format is left', () => {
+  I.setLang('en'); assert.equal(I.n(1819), '1,819'); assert.equal(I.grams(1500), '1.5\u00a0kg');
+  I.setLang('fi'); assert.match(I.grams(1500), /^1,5\skg$/); assert.equal(I.pct(-15), '\u221215\u00a0%');
+  I.setLang('vi'); assert.equal(I.pct(10), '+10%');
   I.setLang('en');
+  assert.equal(I.eur, undefined);
 });
 
 test('language detection: stored choice, then browser list, then English', () => {

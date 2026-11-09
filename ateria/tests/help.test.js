@@ -7,13 +7,13 @@ const A = globalThis.Ateria;
 const D = A.I18N;
 const H = A.help;
 const LANGS = A.LANGS.map((l) => l.id);
-const VIEWS = ['plan', 'log', 'shop', 'prices', 'profile'];
+const VIEWS = ['plan', 'log', 'shop', 'profile'];
 
 test('the list has the topics people get stuck on', () => {
   const ids = D.help.map((t) => t.id);
   assert.equal(new Set(ids).size, ids.length, 'duplicate topic id');
   assert.ok(ids.length >= 20);
-  ['start', 'profile', 'swap', 'newplan', 'portions', 'spices', 'units', 'shopping', 'prices', 'save', 'backup', 'people', 'weight', 'allergies', 'cuisine', 'numbers'].forEach((id) => assert.ok(ids.includes(id), 'missing topic ' + id));
+  ['start', 'profile', 'swap', 'newplan', 'portions', 'spices', 'units', 'shopping', 'save', 'backup', 'people', 'weight', 'allergies', 'cuisine', 'numbers'].forEach((id) => assert.ok(ids.includes(id), 'missing topic ' + id));
 });
 
 test('every topic has a question and an answer in all four languages, an icon and valid buttons', () => {
@@ -83,7 +83,7 @@ test('nonsense and empty questions match nothing', () => {
 });
 
 test('the screen the person is on breaks ties', () => {
-  const plan = H.match('prices', 'prices'); assert.ok(plan.length);
+  const list = H.match('shopping list', 'shop'); assert.ok(list.length); assert.equal(list[0].id, 'shopping');
   const a = H.match('how do i change it', 'plan'), b = H.match('how do i change it', 'profile');
   assert.ok(a.length && b.length);
 });

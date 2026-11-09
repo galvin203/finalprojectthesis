@@ -34,8 +34,6 @@
     'Välj vilka du vill. Dessa recept dyker upp oftare, men andra blandas fortfarande in. Välj inga för lite av allt.',
     'Chọn tùy ý. Các món này sẽ xuất hiện nhiều hơn, các món khác vẫn xen vào. Không chọn gì để có một ít mọi loại.');
 
-  U('budget.none', 'No budget', 'Ei budjettia', 'Ingen budget', 'Không đặt ngân sách');
-  U('profile.budgetSlide', 'Weekly food budget, slider', 'Viikoittainen ruokabudjetti, liukusäädin', 'Veckobudget för mat, reglage', 'Ngân sách ăn uống mỗi tuần, thanh trượt');
   // ---------- swipe: choose the kinds of food you like ----------
   U('steps.of', 'Step {n} of {total}', 'Vaihe {n}/{total}', 'Steg {n} av {total}', 'Bước {n}/{total}');
   U('swipe.title', 'Which food do you like?', 'Mistä ruoasta pidät?', 'Vilken mat gillar du?', 'Bạn thích loại món nào?');
@@ -112,14 +110,17 @@
 
   // ---------- shopping: seasonings ----------
   U('shop.spices', 'Check your cupboard', 'Tarkista kaappisi', 'Kolla skafferiet', 'Kiểm tra tủ bếp của bạn');
-  U('shop.spicesHelp', 'Seasonings are not priced. Check what you already have at home; buy only what is missing.',
-    'Mausteilla ei ole hintaa. Tarkista, mitä sinulla on jo kotona, ja osta vain puuttuvat.',
-    'Kryddor är inte prissatta. Kolla vad du redan har hemma och köp bara det som saknas.',
-    'Gia vị không được tính giá. Hãy kiểm tra những gì đã có ở nhà và chỉ mua món còn thiếu.');
+  U('shop.spicesHelp', 'Seasonings are not counted in grams. Check what you already have at home; buy only what is missing.',
+    'Mausteita ei lasketa grammoina. Tarkista, mitä sinulla on jo kotona, ja osta vain puuttuvat.',
+    'Kryddor räknas inte i gram. Kolla vad du redan har hemma och köp bara det som saknas.',
+    'Gia vị không được tính theo gam. Hãy kiểm tra những gì đã có ở nhà và chỉ mua món còn thiếu.');
   U('shop.spicesDried', 'Dried spices and salt', 'Kuivatut mausteet ja suola', 'Torkade kryddor och salt', 'Gia vị khô và muối');
   U('shop.spicesFresh', 'Fresh herbs and lemon', 'Tuoreet yrtit ja sitruuna', 'Färska örter och citron', 'Rau thơm tươi và chanh');
   U('shop.uses_one', 'in {n} meal', '{n} ateriassa', 'i {n} måltid', 'trong {n} bữa');
-  U('shop.uses_other', 'in {n} meals', '{n} aterialla', 'i {n} måltider', 'trong {n} bữa');
+  U('shop.uses_other', 'in {n} meals',
+    '{n} ateriassa',
+    'i {n} måltider',
+    'trong {n} bữa');
 
   // ---------- saved data ----------
   U('data.title', 'My data', 'Tietoni', 'Mina uppgifter', 'Dữ liệu của tôi');
