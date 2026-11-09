@@ -535,6 +535,67 @@
     return h;
   }
 
+  // ---------- progress ----------
+  // The sources named on the screen (the same ones as in the thesis reference list).
+  const PROGRESS_SOURCES = [
+    { text: 'Burke, L. E., Wang, J. and Sevick, M. A. 2011. Self-monitoring in weight loss: a systematic review of the literature. Journal of the American Dietetic Association 111(1), 92–102.', url: 'https://doi.org/10.1016/j.jada.2010.10.008' },
+    { text: 'Iraki, J., Fitschen, P., Espinar, S. and Helms, E. 2019. Nutrition recommendations for bodybuilders in the off-season: a narrative review. Sports 7(7), article 154.', url: 'https://doi.org/10.3390/sports7070154' },
+    { text: 'Jensen, M. D. et al. 2014. 2013 AHA/ACC/TOS Guideline for the management of overweight and obesity in adults. Circulation 129(25 Suppl 2), S102–S138.', url: 'https://acc.org/Latest-in-Cardiology/Journal-Scans/2014/07/10/16/17/2013-AHA-ACC-TOS-Guideline-for-the-Management-of-Overweight' },
+  ];
+  function signed(x, digits) { return (x > 0 ? '+' : x < 0 ? '−' : '') + I.n(Math.abs(x), digits); }
+  function progWeekLabel(w, i) { return i === 0 ? t('prog.last7') : fmtDate(w.from) + ' – ' + fmtDate(w.to); }
+
+  function progWeightRows(weeks) {
+    return '<ul class="proglist">' + weeks.map(function (w, i) {
+      let s = '<li' + (i === 0 ? ' class="now"' : '') + '><span class="when">' + esc(progWeekLabel(w, i)) + '</span>';
+      if (w.kg == null) return s + '<span class="sub"><span>' + esc(t('prog.noWeight')) + '</span></span></li>';
+      return s + '<span class="val">' + I.n(w.kg, 1) + ' kg</span><span class="sub"><span>' + esc(I.tn('prog.weighIns', w.weighIns)) + '</span>' +
+        '<span>' + esc(w.change ? t('prog.vsBefore', { d: signed(w.change.kg, 1), pct: signed(w.change.pct, 2) }) : t('prog.noChange')) + '</span></span></li>';
+    }).join('') + '</ul>';
+  }
+  function progFoodRows(weeks) {
+    return '<ul class="proglist">' + weeks.map(function (w, i) {
+      const s = '<li' + (i === 0 ? ' class="now"' : '') + '><span class="when">' + esc(progWeekLabel(w, i)) + '</span>';
+      if (!w.days) return s + '<span class="sub"><span>' + esc(t('prog.noFood')) + '</span></span></li>';
+      return s + '<span class="val days">' + esc(t('prog.daysLogged', { n: w.days })) + '</span><span class="sub">' +
+        '<span>' + esc(w.kcalPct != null ? t('prog.kcalLine', { kcal: n0(w.kcal), pct: n0(w.kcalPct) }) : t('prog.kcalOnly', { kcal: n0(w.kcal) })) + '</span>' +
+        '<span>' + esc(w.proteinPct != null ? t('prog.proteinLine', { g: n0(w.protein), pct: n0(w.proteinPct) }) : t('prog.proteinOnly', { g: n0(w.protein) })) + '</span></span></li>';
+    }).join('') + '</ul>';
+  }
+  // The goal note says only what a source says. A verdict on the weekly change exists for gaining weight or muscle only.
+  function progGoal(d, goal) {
+    let h = '<h3>' + A.icon('heart', 26) + esc(t('prog.goal')) + '</h3>';
+    if (d.ref) {
+      h += '<p>' + esc(t('prog.gainRef')) + '</p>';
+      const v = d.verdict, pr = v ? { pct: signed(v.pct, 2) } : null;
+      h += '<p class="verdict">' + esc(!v ? t('prog.gainNeed') : v.status === 'below' ? t('prog.gainBelow', pr) : v.status === 'above' ? t('prog.gainAbove', pr) : t('prog.gainWithin', pr)) + '</p>';
+    } else h += '<p>' + esc(t(goal === 'lose' ? 'prog.loseRef' : 'prog.keepRef')) + '</p>';
+    h += '<p class="note">' + esc(t('prog.logRef')) + '</p><p class="note">' + esc(t('prog.avgNote')) + '</p>';
+    h += '<details class="more"><summary>' + esc(t('prog.sources')) + '</summary><ul class="sources">' + PROGRESS_SOURCES.map(function (x) {
+      return '<li>' + esc(x.text) + ' <a href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">' + esc(x.url) + '</a></li>';
+    }).join('') + '</ul></details>';
+    return h;
+  }
+
+  function viewProgress() {
+    const r = rec(), goal = P().goal;
+    const d = LOG.weeks({ end: today(), log: r.log, weights: r.weights, targets: logTargets(), goal: goal, count: 4 });
+    let h = consentBanner() + exampleBanner();
+    h += '<div class="row between"><h2>' + esc(t('prog.title')) + '</h2></div>';
+    h += '<p class="muted">' + esc(t('prog.intro')) + '</p>';
+    if (d.empty) {
+      return h + '<section class="panel"><p>' + esc(t('prog.empty')) + '</p><div class="row"><a class="btn primary small" href="#log">' + esc(t('prog.toLog')) + '</a>' +
+        '<a class="btn small" href="#profile">' + esc(t('prog.toWeight')) + '</a></div></section>';
+    }
+    h += '<section class="panel"><h3>' + A.icon('scale', 26) + esc(t('prog.weight')) + '</h3>' + weightChart(r.weights) + progWeightRows(d.weeks);
+    if (d.since) h += '<p class="small"><b>' + esc(t('prog.since', { date: fmtDate(d.since.from), d: signed(d.since.kg, 1), pct: signed(d.since.pct, 2) })) + '</b></p>';
+    h += '</section>';
+    h += '<section class="panel"><h3>' + A.icon('tomato', 26) + esc(t('prog.food')) + '</h3>' + progFoodRows(d.weeks) + '</section>';
+    h += '<section class="panel">' + progGoal(d, goal) + '</section>';
+    if (store.consent() !== 'yes') h += '<p class="note">' + esc(t('wt.needSave')) + '</p>';
+    return h;
+  }
+
   // adds one entry to the chosen day; returns true when it was added
   function logAdd(entry) {
     if (!entry) { toast(t('log.err')); return false; }
@@ -779,7 +840,7 @@
   });
 
   // ---------- render & routing ----------
-  const VIEWS = { welcome: viewWelcome, swipe: viewSwipe, plan: viewPlan, log: viewLog, shop: viewShop, profile: viewProfile };
+  const VIEWS = { welcome: viewWelcome, swipe: viewSwipe, plan: viewPlan, log: viewLog, progress: viewProgress, shop: viewShop, profile: viewProfile };
 
   function renderChrome() {
     document.documentElement.lang = S.lang;

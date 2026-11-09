@@ -353,10 +353,10 @@ test('the ideas are wired in: section, buttons, refresh with the day, today only
   assert.match(app, /if \(S\.logDate !== today\(\)\) return ''/);
 });
 
-test('the tab bar has four tabs: Plan, Log, Shop and You', () => {
-  assert.match(read('styles.css'), /\.nav \{[^}]*grid-template-columns: repeat\(4,/);
+test('the tab bar has five tabs: Plan, Log, Progress, Shop and You', () => {
+  assert.match(read('styles.css'), /\.nav \{[^}]*grid-template-columns: repeat\(5,/);
   const nav = read('index.html').match(/<nav class="nav"[\s\S]*?<\/nav>/)[0];
-  assert.deepEqual([...nav.matchAll(/<a href="#(\w+)"/g)].map((m) => m[1]), ['plan', 'log', 'shop', 'profile']);
+  assert.deepEqual([...nav.matchAll(/<a href="#(\w+)"/g)].map((m) => m[1]), ['plan', 'log', 'progress', 'shop', 'profile']);
 });
 
 test('every log text exists in all four languages and the consent text mentions the log', () => {

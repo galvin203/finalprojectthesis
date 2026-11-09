@@ -10,6 +10,10 @@
  * L.suggest proposes recipes for the rest of the day from what is already logged: the energy and protein that are
  * left, and the meals that have no entry yet.
  *
+ * L.weeks sums the last weeks up for the Progress screen: the average weight of each week and its change from the week
+ * before, the days logged and the average energy and protein of those days. It judges a weekly weight change only for
+ * the gain and muscle goals, where a sourced range exists (L.WEEK_REF).
+ *
  * Nutrition values come from data/ingredients.js and are approximate. Not medical or dietetic advice.
  * Needs js/engine.js (A.engine.nutrientsOf, A.CONFIG.MEAL_SHARE) and the data files.
  */
@@ -122,5 +126,69 @@
       out.push({ d: d, kcal: L.totals(list).kcal, n: list.length });
     }
     return out;
+  };
+
+  // ---------- weekly progress ----------
+  // Weekly change of body weight, in % of body weight, that the app compares a gain with: about 0.25-0.5 % a week for
+  // novice and intermediate bodybuilders (Iraki et al. 2019). It is applied to the gain and muscle goals only. No range was
+  // found for losing or keeping weight, so those goals get no verdict.
+  L.WEEK_REF = { gain: [0.25, 0.5], muscle: [0.25, 0.5] };
+  const r2 = function (x) { return Math.round(x * 100) / 100; };
+
+  // o.end      the last day, 'YYYY-MM-DD' (today)
+  // o.log      { 'YYYY-MM-DD': [entry, ...] } as the store keeps it
+  // o.weights  [{ d, kg }], oldest first
+  // o.targets  { kcal, protein } of one day (optional)
+  // o.goal     'lose' | 'maintain' | 'gain' | 'muscle'
+  // o.count    number of weeks (default 4). Week 0 is the 7 days that end on `end`, week 1 the 7 days before, and so on.
+  // Returns { empty, weeks: [{ from, to, days, kcal, protein, kcalPct, proteinPct, weighIns, kg, change }], since, ref, verdict }
+  //   days        days of the week with at least one entry; kcal and protein are the averages of those days (null if none)
+  //   kg          the average of the weights of the week (null if none); change = { kg, pct } from the week before, when both
+  //               weeks have a weight
+  //   since       from the first weight to the latest one: { from, to, kg, pct } (null with fewer than two weights)
+  //   verdict     { status: 'below' | 'within' | 'above', pct } for the gain and muscle goals, from the change of week 0
+  L.weeks = function (o) {
+    const count = Math.max(1, Math.min(12, o.count || 4));
+    const log = o.log || {}, ws = (o.weights || []).filter(function (w) { return w && typeof w.d === 'string' && finite(w.kg) != null; });
+    const tg = o.targets || {};
+    const raw = [];
+    for (let i = 0; i <= count; i++) { // one more week than shown, so that the oldest shown week has a week before it
+      const to = L.shiftDate(o.end, -7 * i), from = L.shiftDate(to, -6);
+      let days = 0, kcal = 0, protein = 0;
+      for (let j = 0; j < 7; j++) {
+        const list = log[L.shiftDate(from, j)] || [];
+        if (!list.length) continue;
+        const t = L.totals(list);
+        days++; kcal += t.kcal; protein += t.protein;
+      }
+      const w = ws.filter(function (x) { return x.d >= from && x.d <= to; });
+      raw.push({ from: from, to: to, days: days, kcal: days ? kcal / days : null, protein: days ? protein / days : null,
+        weighIns: w.length, kg: w.length ? w.reduce(function (a, x) { return a + x.kg; }, 0) / w.length : null });
+    }
+    const weeks = raw.slice(0, count).map(function (w, i) {
+      const prev = raw[i + 1];
+      let change = null;
+      if (w.kg != null && prev.kg != null) change = { kg: r2(w.kg - prev.kg), pct: r2((w.kg - prev.kg) / prev.kg * 100) };
+      return {
+        from: w.from, to: w.to, days: w.days,
+        kcal: w.kcal == null ? null : Math.round(w.kcal), protein: w.protein == null ? null : r1(w.protein),
+        kcalPct: w.kcal != null && tg.kcal > 0 ? Math.round(w.kcal / tg.kcal * 100) : null,
+        proteinPct: w.protein != null && tg.protein > 0 ? Math.round(w.protein / tg.protein * 100) : null,
+        weighIns: w.weighIns, kg: w.kg == null ? null : r1(w.kg), change: change,
+      };
+    });
+    let since = null;
+    if (ws.length >= 2) {
+      const a = ws[0], b = ws[ws.length - 1];
+      since = { from: a.d, to: b.d, kg: r2(b.kg - a.kg), pct: r2((b.kg - a.kg) / a.kg * 100) };
+    }
+    const ref = L.WEEK_REF[o.goal] || null;
+    let verdict = null;
+    if (ref && weeks[0].change) {
+      const pct = weeks[0].change.pct;
+      verdict = { status: pct < ref[0] ? 'below' : pct > ref[1] ? 'above' : 'within', pct: pct };
+    }
+    const empty = !ws.length && !weeks.some(function (w) { return w.days > 0; });
+    return { empty: empty, weeks: weeks, since: since, ref: ref, verdict: verdict };
   };
 })(typeof window !== 'undefined' ? window : globalThis);

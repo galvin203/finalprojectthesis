@@ -61,6 +61,7 @@
   const BY_VIEW = {
     plan: ['swap', 'portions', 'spices', 'units', 'newplan', 'numbers'],
     log: ['log', 'numbers', 'save'],
+    progress: ['progress', 'weight', 'log'],
     shop: ['shopping', 'portions', 'spices'],
     profile: ['profile', 'allergies', 'cuisine', 'save', 'backup', 'people', 'weight'],
   };
@@ -79,7 +80,7 @@
       'You are the help assistant inside a meal-planning app called Ateria. Answer in ' + langName + '.',
       'Only help the person use the app: where to tap, what a word or screen means. Use short, plain sentences (at most 90 words), no markdown and no lists longer than four steps.',
       'Never give medical, diet or nutrition advice and never state calorie or nutrient numbers. For health questions say they should ask a doctor or a dietitian.',
-      'If the notes below do not contain the answer, say you are not sure and point to the closest topic. The person is on the "' + view + '" screen. The app has four screens: Plan, Log, Shop and You.',
+      'If the notes below do not contain the answer, say you are not sure and point to the closest topic. The person is on the "' + view + '" screen. The app has five screens: Plan, Log, Progress, Shop and You.',
       'Notes about the app:', notes, '', 'The person asks: ' + String(question).slice(0, 300),
     ].join('\n');
   };

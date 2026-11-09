@@ -4,7 +4,7 @@
  * (The optional "Ask Claude" button in js/help.js uses the same list as its notes.)
  *
  *   H(id, icon, actions, keywords, [q en, fi, sv, vi], [a en, fi, sv, vi])
- *     actions   views the answer can open: plan | log | shop | profile
+ *     actions   views the answer can open: plan | log | progress | shop | profile
  *     keywords  words in any language, lower case, written with or without accents (matching ignores accents)
  *     "\n" in an answer starts a new paragraph.
  *
@@ -132,7 +132,7 @@
       'Được. Trong Hồ sơ, dùng mục “Kế hoạch của ai” ở trên cùng và bấm “Thêm người”. Mỗi người có thông tin, món yêu thích và nhật ký cân nặng riêng.']);
 
   H('weight', 'scale', ['profile'],
-    'weight log,record weight,weigh,scale,progress,track,painopaivakirja,punnitus,edistyminen,seuranta,viktlogg,vaga,framsteg,folja,nhat ky can nang,can,tien trinh,theo doi,record,my weight,painoni,kirjaan,kirjaa,registrerar,min vikt,ghi lai,ghi can nang',
+    'weight log,record weight,weigh,scale,track,painopaivakirja,punnitus,seuranta,viktlogg,vaga,folja,nhat ky can nang,can,theo doi,record,my weight,painoni,kirjaan,kirjaa,registrerar,min vikt,ghi lai,ghi can nang',
     ['How do I record my weight?', 'Miten kirjaan painoni?', 'Hur registrerar jag min vikt?', 'Làm sao để ghi lại cân nặng?'],
     ['In You, scroll to Weight log. Enter the date and your weight and press Add. A small line shows the change over time.',
       'Vieritä Profiilissa kohtaan Painopäiväkirja. Anna päivämäärä ja painosi ja paina Lisää. Pieni viiva näyttää muutoksen ajan myötä.',
@@ -146,6 +146,14 @@
       'Avaa Kirjaus. Valitse kohdassa ”Omasta ruokalistasta” ruokalistan päivä ja paina ”Lisää” syömäsi aterian vieressä. Muulle ruoalle käytä kohtaa ”Lisää ruoka-aine” (raaka-aine ja grammat) tai ”Pikakirjaus” (nimi ja kalorit). Palkit näyttävät, miten päivä vastaa tavoitettasi. Kohta ”Ideoita päivän loppuun” ehdottaa reseptejä, jotka sopivat jäljellä olevaan energiaan.',
       'Öppna Logg. Välj dag i planen under ”Från min matplan” och tryck på ”Lägg till” vid en måltid du åt. För annan mat använder du ”Lägg till en matvara” (en ingrediens och gram) eller ”Snabbtillägg” (ett namn och kalorier). Staplarna visar hur dagen står sig mot ditt mål. ”Idéer för resten av dagen” föreslår recept som passar energin du har kvar.',
       'Mở mục Nhật ký. Trong “Từ thực đơn của tôi”, chọn ngày trong thực đơn rồi bấm “Thêm” cạnh bữa bạn đã ăn. Với món khác, dùng “Thêm một thực phẩm” (nguyên liệu và số gam) hoặc “Thêm nhanh” (tên và calo). Các thanh cho thấy cả ngày so với mục tiêu của bạn thế nào. Mục “Gợi ý cho phần còn lại của hôm nay” đề xuất công thức phù hợp với năng lượng còn lại.']);
+
+  H('progress', 'scale', ['progress'],
+    'progress,weekly progress,my progress,week,weekly,weekly average,average,summary,trend,results,this week,last week,edistyminen,edistys,viikko,viikoittain,viikon,yhteenveto,keskiarvo,tulokset,viime viikko,framsteg,vecka,veckovis,sammanfattning,genomsnitt,resultat,forra veckan,tien trinh,theo tuan,tong ket,trung binh,xu huong,ket qua,tuan truoc',
+    ['Where can I see my weekly progress?', 'Mistä näen viikoittaisen edistymiseni?', 'Var ser jag mina framsteg per vecka?', 'Tôi xem tiến trình theo tuần ở đâu?'],
+    ['Open Progress. It shows the last four weeks: the average weight of each week and its change from the week before, how many days you logged, and your average energy and protein on those days. It uses what you entered in the food log and the weight log, so add a weight at least once a week. For gaining weight or muscle it compares the weekly change with a reference range; for other goals it shows the numbers without rating them.',
+      'Avaa Edistys. Se näyttää neljä viimeistä viikkoa: kunkin viikon keskipainon ja sen muutoksen edelliseen viikkoon, montako päivää kirjasit sekä keskimääräisen energian ja proteiinin niiltä päiviltä. Se käyttää ruokakirjauksiasi ja painopäiväkirjaa, joten lisää paino vähintään kerran viikossa. Painon tai lihasmassan kasvattamisessa viikoittaista muutosta verrataan viitevälin kanssa, muissa tavoitteissa luvut näytetään arvioimatta niitä.',
+      'Öppna Framsteg. Där ser du de fyra senaste veckorna: veckans medelvikt och dess förändring från veckan före, hur många dagar du loggade och din genomsnittliga energi och protein de dagarna. Den använder det du lagt in i matloggen och viktloggen, så lägg till en vikt minst en gång i veckan. Vid viktökning eller muskeluppbyggnad jämförs veckoförändringen med ett referensintervall; för andra mål visas siffrorna utan bedömning.',
+      'Mở mục Tiến trình. Mục này cho thấy bốn tuần gần nhất: cân nặng trung bình mỗi tuần và mức thay đổi so với tuần trước, số ngày bạn đã ghi, cùng năng lượng và chất đạm trung bình của những ngày đó. Nó dùng những gì bạn đã nhập trong nhật ký ăn uống và nhật ký cân nặng, nên hãy thêm cân nặng ít nhất mỗi tuần một lần. Với mục tiêu tăng cân hoặc tăng cơ, mức thay đổi theo tuần được so với một khoảng tham chiếu; với mục tiêu khác, các con số chỉ được hiển thị mà không đánh giá.']);
 
   H('language', 'world', [],
     'language,english,finnish,swedish,vietnamese,translate,kieli,englanti,suomi,ruotsi,vietnam,kaanna,sprak,engelska,finska,svenska,vietnamesiska,oversatt,ngon ngu,tieng anh,tieng viet,dich,kielen,kielta,vaihdan kielen,byta sprak,doi ngon ngu',

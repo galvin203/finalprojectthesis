@@ -310,4 +310,75 @@
     'Määrät ja ravintoarvot ovat likimääräisiä, joten pidä summia suuntaa-antavina. Tämä ei ole lääketieteellistä eikä ravitsemusneuvontaa. Kirjaus ei muuta ruokalistaasi.',
     'Mängder och näringsvärden är ungefärliga, så se summorna som en vägledning. Det här är inte medicinska råd eller kostråd. Loggen ändrar inte din plan.',
     'Khối lượng và giá trị dinh dưỡng chỉ là ước lượng, nên hãy xem tổng số như một tham khảo. Đây không phải lời khuyên y tế hay dinh dưỡng. Nhật ký không làm thay đổi thực đơn của bạn.');
+  // ---------- weekly progress ----------
+  U('nav.progress', 'Progress', 'Edistys', 'Framsteg', 'Tiến trình');
+  U('prog.title', 'Weekly progress', 'Viikoittainen edistyminen', 'Framsteg per vecka', 'Tiến trình theo tuần');
+  U('prog.intro', 'The last four weeks, from your food log and your weight entries. A week is seven days, and the first one ends today.',
+    'Neljä viimeistä viikkoa ruokakirjauksistasi ja painomerkinnöistäsi. Viikko on seitsemän päivää, ja ensimmäinen päättyy tänään.',
+    'De fyra senaste veckorna, utifrån din matlogg och dina viktuppgifter. En vecka är sju dagar och den första slutar i dag.',
+    'Bốn tuần gần nhất, tính từ nhật ký ăn uống và các lần ghi cân nặng của bạn. Một tuần là bảy ngày và tuần đầu tiên kết thúc hôm nay.');
+  U('prog.empty', 'Nothing to show yet. Log what you eat and add your weight now and then, and the weeks will fill in here.',
+    'Ei vielä mitään näytettävää. Kirjaa syömäsi ja lisää painosi silloin tällöin, niin viikot täyttyvät tänne.',
+    'Inget att visa ännu. Logga vad du äter och lägg till din vikt då och då, så fylls veckorna på här.',
+    'Chưa có gì để hiển thị. Hãy ghi lại những gì bạn ăn và thỉnh thoảng thêm cân nặng, các tuần sẽ được điền vào đây.');
+  U('prog.toLog', 'Open the log', 'Avaa kirjaus', 'Öppna loggen', 'Mở nhật ký');
+  U('prog.toWeight', 'Add a weight', 'Lisää paino', 'Lägg till vikt', 'Thêm cân nặng');
+  U('prog.weight', 'Weight by week', 'Paino viikoittain', 'Vikt per vecka', 'Cân nặng theo tuần');
+  U('prog.food', 'Food by week', 'Ruoka viikoittain', 'Mat per vecka', 'Ăn uống theo tuần');
+  U('prog.last7', 'Last 7 days', 'Viimeiset 7 päivää', 'Senaste 7 dagarna', '7 ngày gần nhất');
+  U('prog.weighIns_one', '{n} weigh-in', '{n} punnitus', '{n} vägning', '{n} lần cân');
+  U('prog.weighIns_other', '{n} weigh-ins', '{n} punnitusta', '{n} vägningar', '{n} lần cân');
+  U('prog.noWeight', 'No weight entered', 'Ei painomerkintää', 'Ingen vikt inlagd', 'Chưa ghi cân nặng');
+  U('prog.vsBefore', 'From the week before: {d} kg ({pct} %)', 'Edelliseen viikkoon verrattuna: {d} kg ({pct} %)',
+    'Jämfört med veckan före: {d} kg ({pct} %)', 'So với tuần trước: {d} kg ({pct} %)');
+  U('prog.noChange', 'No change shown: a weight is needed in both weeks.', 'Muutosta ei näytetä: molemmilta viikoilta tarvitaan paino.',
+    'Ingen förändring visas: en vikt behövs båda veckorna.', 'Chưa có mức thay đổi: cần có cân nặng ở cả hai tuần.');
+  U('prog.since', 'Since your first weight on {date}: {d} kg ({pct} %)', 'Ensimmäisestä painostasi {date} alkaen: {d} kg ({pct} %)',
+    'Sedan din första vikt den {date}: {d} kg ({pct} %)', 'Từ lần cân đầu tiên ngày {date}: {d} kg ({pct} %)');
+  U('prog.daysLogged', '{n} of 7 days logged', '{n}/7 päivää kirjattu', '{n} av 7 dagar loggade', 'Đã ghi {n}/7 ngày');
+  U('prog.kcalLine', 'Energy: {kcal} kcal a day ({pct} % of target)', 'Energia: {kcal} kcal päivässä ({pct} % tavoitteesta)',
+    'Energi: {kcal} kcal per dag ({pct} % av målet)', 'Năng lượng: {kcal} kcal mỗi ngày ({pct} % mục tiêu)');
+  U('prog.kcalOnly', 'Energy: {kcal} kcal a day', 'Energia: {kcal} kcal päivässä', 'Energi: {kcal} kcal per dag', 'Năng lượng: {kcal} kcal mỗi ngày');
+  U('prog.proteinLine', 'Protein: {g} g a day ({pct} % of target)', 'Proteiini: {g} g päivässä ({pct} % tavoitteesta)',
+    'Protein: {g} g per dag ({pct} % av målet)', 'Chất đạm: {g} g mỗi ngày ({pct} % mục tiêu)');
+  U('prog.proteinOnly', 'Protein: {g} g a day', 'Proteiini: {g} g päivässä', 'Protein: {g} g per dag', 'Chất đạm: {g} g mỗi ngày');
+  U('prog.noFood', 'Nothing logged', 'Ei kirjauksia', 'Inget loggat', 'Chưa ghi gì');
+  U('prog.avgNote', 'Energy and protein are averages over the days you logged, so a day without entries does not count as zero. The weight of a week is the average of its weigh-ins. This summarises your own entries and is not medical or dietetic advice.',
+    'Energia ja proteiini ovat kirjaamiesi päivien keskiarvoja, joten päivä ilman kirjauksia ei lasketa nollaksi. Viikon paino on sen punnitusten keskiarvo. Tämä tiivistää omat merkintäsi eikä ole lääketieteellistä eikä ravitsemusneuvontaa.',
+    'Energi och protein är medelvärden över de dagar du loggade, så en dag utan poster räknas inte som noll. Veckans vikt är medelvärdet av dess vägningar. Detta sammanfattar dina egna uppgifter och är inte medicinska råd eller kostråd.',
+    'Năng lượng và chất đạm là trung bình của những ngày bạn đã ghi, nên ngày không có mục nào không được tính là 0. Cân nặng của một tuần là trung bình các lần cân trong tuần đó. Đây chỉ là tóm tắt những gì bạn đã nhập, không phải lời khuyên y tế hay dinh dưỡng.');
+  U('prog.goal', 'Your goal', 'Tavoitteesi', 'Ditt mål', 'Mục tiêu của bạn');
+  U('prog.gainRef', 'For gaining weight or muscle, a weight gain of about 0.25–0.5 % of body weight per week is advised for novice and intermediate bodybuilders (Iraki et al. 2019). Use it as a reference, not as a promise.',
+    'Painon tai lihasmassan kasvattamiseen suositellaan aloittelijoille ja keskitason kehonrakentajille noin 0,25–0,5 % painonnousua kehonpainosta viikossa (Iraki ym. 2019). Käytä sitä viitearvona, älä lupauksena.',
+    'För att öka i vikt eller bygga muskler rekommenderas nybörjare och medelavancerade kroppsbyggare en viktökning på cirka 0,25–0,5 % av kroppsvikten per vecka (Iraki m.fl. 2019). Använd det som en referens, inte som ett löfte.',
+    'Để tăng cân hoặc tăng cơ, người tập thể hình mới và trung cấp được khuyến nghị tăng khoảng 0,25–0,5 % trọng lượng cơ thể mỗi tuần (Iraki và cs., 2019). Hãy xem đây là mức tham khảo, không phải lời hứa.');
+  U('prog.gainNeed', 'To compare with that range, both the last 7 days and the week before need a weight.',
+    'Vertailu tähän vaihteluväliin vaatii painon sekä viimeisiltä 7 päivältä että edelliseltä viikolta.',
+    'För att jämföra med intervallet behövs en vikt både för de senaste 7 dagarna och för veckan före.',
+    'Để so sánh với khoảng này, cần có cân nặng ở cả 7 ngày gần nhất và tuần trước.');
+  U('prog.gainBelow', 'Your average weight in the last 7 days changed by {pct} % from the week before, which is below that range.',
+    'Viimeisten 7 päivän keskipaino muuttui {pct} % edelliseen viikkoon verrattuna, mikä on alle tämän vaihteluvälin.',
+    'Din medelvikt de senaste 7 dagarna ändrades med {pct} % jämfört med veckan före, vilket är under det intervallet.',
+    'Cân nặng trung bình 7 ngày gần nhất thay đổi {pct} % so với tuần trước, thấp hơn khoảng này.');
+  U('prog.gainWithin', 'Your average weight in the last 7 days changed by {pct} % from the week before, which is within that range.',
+    'Viimeisten 7 päivän keskipaino muuttui {pct} % edelliseen viikkoon verrattuna, mikä on tämän vaihteluvälin sisällä.',
+    'Din medelvikt de senaste 7 dagarna ändrades med {pct} % jämfört med veckan före, vilket är inom det intervallet.',
+    'Cân nặng trung bình 7 ngày gần nhất thay đổi {pct} % so với tuần trước, nằm trong khoảng này.');
+  U('prog.gainAbove', 'Your average weight in the last 7 days changed by {pct} % from the week before, which is above that range.',
+    'Viimeisten 7 päivän keskipaino muuttui {pct} % edelliseen viikkoon verrattuna, mikä on yli tämän vaihteluvälin.',
+    'Din medelvikt de senaste 7 dagarna ändrades med {pct} % jämfört med veckan före, vilket är över det intervallet.',
+    'Cân nặng trung bình 7 ngày gần nhất thay đổi {pct} % so với tuần trước, cao hơn khoảng này.');
+  U('prog.loseRef', 'A guideline for managing overweight and obesity states that even a modest weight loss of 3–5 % of body weight can bring clinically meaningful benefits (Jensen et al. 2014). The app does not rate a weekly loss, because it has no sourced weekly range for it.',
+    'Ylipainon ja lihavuuden hoitosuosituksen mukaan jo vaatimaton painonlasku, 3–5 % kehonpainosta, voi tuoda kliinisesti merkittäviä hyötyjä (Jensen ym. 2014). Sovellus ei arvioi viikoittaista laihtumista, koska sillä ei ole siihen lähteistettyä viikkoväliä.',
+    'En riktlinje för behandling av övervikt och fetma anger att även en måttlig viktminskning på 3–5 % av kroppsvikten kan ge kliniskt meningsfulla fördelar (Jensen m.fl. 2014). Appen bedömer inte en veckovis viktminskning, eftersom den saknar ett belagt veckointervall för det.',
+    'Một hướng dẫn về xử trí thừa cân và béo phì nêu rằng ngay cả giảm cân khiêm tốn, 3–5 % trọng lượng cơ thể, cũng có thể mang lại lợi ích có ý nghĩa lâm sàng (Jensen và cs., 2014). Ứng dụng không đánh giá mức giảm cân theo tuần vì không có khoảng tham chiếu theo tuần nào có nguồn.');
+  U('prog.keepRef', 'The same guideline advises people who keep their weight off to monitor body weight at least weekly (Jensen et al. 2014). The app shows your weekly averages and changes but does not rate them.',
+    'Sama suositus neuvoo painonpudotuksen jälkeen painon pitäjiä seuraamaan painoaan vähintään viikoittain (Jensen ym. 2014). Sovellus näyttää viikkokeskiarvosi ja muutokset mutta ei arvioi niitä.',
+    'Samma riktlinje råder dem som behåller en viktminskning att följa sin kroppsvikt minst varje vecka (Jensen m.fl. 2014). Appen visar dina veckomedelvärden och förändringar men bedömer dem inte.',
+    'Cùng hướng dẫn đó khuyên những người duy trì mức cân đã giảm nên theo dõi cân nặng ít nhất mỗi tuần (Jensen và cs., 2014). Ứng dụng hiển thị trung bình và thay đổi theo tuần của bạn nhưng không đánh giá chúng.');
+  U('prog.logRef', 'Writing down what you eat has been linked with weight loss, although the review’s authors rated the evidence as weak (Burke et al. 2011).',
+    'Syömisen kirjaamisen on todettu liittyvän painonpudotukseen, vaikka katsauksen kirjoittajat pitivät näyttöä heikkona (Burke ym. 2011).',
+    'Att skriva ner vad man äter har kopplats till viktminskning, även om översiktens författare bedömde bevisen som svaga (Burke m.fl. 2011).',
+    'Việc ghi lại những gì ăn đã được liên hệ với giảm cân, dù các tác giả của tổng quan đánh giá bằng chứng là yếu (Burke và cs., 2011).');
+  U('prog.sources', 'Sources', 'Lähteet', 'Källor', 'Nguồn');
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -15,7 +15,7 @@ Ateria is inspired by apps like Mealbird, but the code, texts and ingredient dra
 open index.html                       # any browser; double-click works
 
 # 2. Run the tests (Node 18 or newer)
-node --test tests/*.test.js           # 127 tests
+node --test tests/*.test.js           # 153 tests
 
 # 3. Optional: build one self-contained page (for publishing as a single file)
 node tools/build_artifact.js          # writes dist/ateria-artifact.html
@@ -34,6 +34,7 @@ Ateria is a static site, so it needs no build tools. In Vercel, import this repo
 | **You** | Enter sex, age, height, weight, activity, goal (lose / maintain / gain weight / build muscle at the gym), diet, allergies, dislikes, meals per day, number of people. Add more people, log your weight, see your favourite recipes, back up or delete your data. |
 | **Plan** | See 7 days of meals scaled to your targets. Open a meal to see the amounts for 1–8 portions, the seasoning list and the method. Swap a meal, press **New plan** for another week, tap the heart on recipes you like. |
 | **Log** | Write down what you ate on any of the last 120 days. Add a meal from your own plan (whole, half, one and a half or two portions), a food from the ingredient list by weight, or a quick entry (a name, calories and optional protein) for something that is not on the list. The day shows the energy left or passed against your daily target and your protein, carbohydrate and fat against theirs, and the last seven days at a glance. Each entry keeps the values it had when it was added. It is a diary only: it does not change the plan. Quick entries count energy and protein only. For today, **Ideas for the rest of today** suggests two recipes for each meal that has no entry yet. The recipes are the ones in Ateria that fit your diet, allergies and dislikes, each sized to your share of the energy that is left (between half and two portions) and ranked by how little protein they lack for the protein still needed. "Other ideas" shows different recipes, and "Add" writes the idea into the log. |
+| **Progress** | The last four weeks (seven days each, the first ending today). For each week: the average of the weights you entered, how many weigh-ins it had, and the change from the week before; the number of days you logged, and your average energy and protein on those days against your targets. The weight line shows the whole weight history. For the gain and muscle goals the weekly change is compared with a reference range of about 0.25–0.5 % of body weight per week (Iraki et al. 2019); for the lose and maintain goals the numbers are shown with a sourced note (Jensen et al. 2014) and no verdict, because no weekly range was found. The sources are listed on the screen. Averages use only the days you logged. |
 | **Shop** | The amount of every ingredient the planned meals need, for everyone in the plan, grouped by shop aisle and written in grams and kitchen measures. Pick the days you shop for (all seven by default). Open **Where it is used** under an item to see which meal on which day needs how much of it. Tick items off as you buy them. A separate "check your cupboard" list shows the seasonings you need (not counted in grams). Amounts are exactly what the recipes need; they are not rounded up to pack sizes and the list does not know what you already have at home. |
 | **Help** (button, bottom right) | Ask "how do I...?" in any of the four languages. It answers offline, can read the answer aloud and has buttons that open the right screen. |
 
@@ -54,7 +55,7 @@ Ateria is a static site, so it needs no build tools. In Vercel, import this repo
 
 ### The helper and AI
 
-* The offline helper has 22 topics in four languages (`data/i18n_help.js`) and works without internet.
+* The offline helper has 23 topics in four languages (`data/i18n_help.js`) and works without internet.
 * Where the page runs on Claude, an optional **Ask Claude instead** button appears for questions the list cannot answer. It is never automatic, it sends only the question, the language and the screen name (never your details, plan or weight), and it is told to give no medical advice and no calorie or nutrient numbers. Its answers are labelled as AI and can be wrong.
 
 ## How the numbers work
@@ -92,7 +93,7 @@ js/store.js              saved details, consent, backup, cleaning of imported da
 js/cloud.js              optional private copy in the person's Claude account
 js/help.js               helper: matching, panel, read aloud, optional Ask Claude
 js/i18n.js               language: text lookup, plurals, number formats
-js/log.js                food log: portions, grams, totals, dates and ideas for the rest of the day (no screen, no storage)
+js/log.js                food log: portions, grams, totals, dates, ideas for the rest of the day and the weekly progress summary (no screen, no storage)
 js/app.js                interface
 fonts/                   Lora (headlines) and Inter (text), subset with Vietnamese, served from this site; see fonts/README.md
 img/                     img/food/ is for dish photos
@@ -108,11 +109,12 @@ tests/                   JavaScript tests
 
 ## Tests
 
-`node --test tests/*.test.js` runs 127 tests: the targets checked by hand, the planner on 600 random profiles and many diet and allergy combinations, all texts in four languages, amounts in every unit, the shopping list (totals, chosen days, the meals behind each amount, no price left anywhere), storage and consent, the food log (sums, dates, limits, cleaning of imported data), the ideas for the rest of the day and the helper.
+`node --test tests/*.test.js` runs 153 tests: the targets checked by hand, the planner on 600 random profiles and many diet and allergy combinations, all texts in four languages, amounts in every unit, the shopping list (totals, chosen days, the meals behind each amount, no price left anywhere), storage and consent, the food log (sums, dates, limits, cleaning of imported data), the ideas for the rest of the day, the weekly progress summary (week blocks, averages, change from the week before, the range check for gaining weight or muscle) and the helper.
 
 ## Known limits
 
 * Not a medical device. It does not handle diabetes, pregnancy, eating disorders or children. A thesis audience of teenagers and older adults would need different formulas that are not covered here.
+* The weekly progress screen compares the change in weight with a range only for the gain and muscle goals; the range comes from a review about bodybuilders (Iraki et al. 2019) and is a reference, not a promise. For losing or keeping weight no weekly range was found, so those goals get no verdict. Weights and food entries are the person's own and are only summarised.
 * The app shows amounts, not prices. No open and lawful source of store-level prices was found for this project, so there is no price comparison and no budget.
 * Details are kept per browser. To move to another device, use a backup file (or the account copy on Claude).
 * The offline helper answers are fixed text written for this app. Answers from Claude are not reviewed and can be wrong.
@@ -133,6 +135,6 @@ The code, tests, tools and the author's own texts and drawings are under the [MI
 | Fonts in `fonts/` (Lora, Inter) | SIL Open Font License 1.1, see `fonts/README.md`. |
 | Recipes in `data/recipes.js` | Adapted from recipes published by dietitians, universities and health agencies. The original publishers keep their rights in their own texts and photos; the MIT licence does not extend to them. |
 | Dish photos in `img/food/` (none yet) | Only photos you took yourself or whose licence allows this use, with a credit where the licence asks for one. |
-| Nutrition values | Placeholders, not taken from a licensed database. |
+| Nutrition values | Approximate reference values, not taken from a licensed database. |
 
 The software is provided "as is", without warranty. It gives general information, not medical or dietetic advice.

@@ -7,7 +7,7 @@ const A = globalThis.Ateria;
 const D = A.I18N;
 const H = A.help;
 const LANGS = A.LANGS.map((l) => l.id);
-const VIEWS = ['plan', 'log', 'shop', 'profile'];
+const VIEWS = ['plan', 'log', 'progress', 'shop', 'profile'];
 
 test('the list has the topics people get stuck on', () => {
   const ids = D.help.map((t) => t.id);

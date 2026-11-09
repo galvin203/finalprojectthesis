@@ -145,7 +145,7 @@ table, .gauge, .macros, .wlist, .stepper output { font-variant-numeric: tabular-
 .langsel select { min-height: 40px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--raise); color: var(--ink); font-weight: 600; }
 .nav {
   position: fixed; left: max(10px, env(safe-area-inset-left, 0px)); right: max(10px, env(safe-area-inset-right, 0px)); bottom: calc(10px + env(safe-area-inset-bottom, 0px)); z-index: 20;
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2px; padding: 6px;
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 2px; padding: 6px;
   background: color-mix(in srgb, var(--raise) 94%, transparent); border: 1px solid var(--line); border-radius: 24px;
   box-shadow: var(--shadow); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
 }
@@ -154,7 +154,8 @@ table, .gauge, .macros, .wlist, .stepper output { font-variant-numeric: tabular-
   color: var(--muted); text-decoration: none; font-size: 0.78rem; font-weight: 600; line-height: 1.2;
 }
 .nav a svg { width: 22px; height: 22px; }
-@media (max-width: 340px) { .nav { padding: 4px; gap: 0; } .nav a { font-size: 0.68rem; padding: 8px 1px 7px; } }
+@media (max-width: 400px) { .nav a { font-size: 0.72rem; } }
+@media (max-width: 340px) { .nav { padding: 4px; gap: 0; } .nav a { font-size: 0.66rem; padding: 8px 1px 7px; } }
 .nav a[aria-current='page'] { color: var(--spruce-ink); background: var(--spruce); }
 main { min-width: 0; display: grid; gap: 20px; align-content: start; }
 
@@ -383,6 +384,19 @@ details.more .chips { margin-top: 10px; }
 .wlist .x { margin-left: 0; }
 .favlist .x { color: var(--berry); }
 .x:hover { background: var(--berry-soft); }
+/* ---------- weekly progress ---------- */
+.proglist { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
+.proglist li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; align-items: baseline; padding: 10px 12px; border-radius: var(--radius-sm); background: var(--raise); border: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+.proglist li.now { border-color: var(--spruce); }
+.proglist .when { font-weight: 600; }
+.proglist .val { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; text-align: right; }
+.proglist .val.days { font-family: var(--font-body); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.proglist .sub { grid-column: 1 / -1; display: grid; gap: 2px; font-size: 0.85rem; color: var(--muted); }
+.panel > .small { margin-top: 10px; }
+.panel > .verdict + .note, .panel > p + .note { margin-top: 10px; }
+.panel > .note + .note, .panel > .note + details { margin-top: 10px; }
+.verdict { margin: 10px 0 0; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--spruce-soft); border-left: 4px solid var(--spruce); }
+.sources { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 8px; font-size: 0.85rem; overflow-wrap: anywhere; }
 .filebtn { position: relative; overflow: hidden; cursor: pointer; }
 .filebtn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
 .filebtn:focus-within { outline: 3px solid var(--spruce); outline-offset: 2px; }
