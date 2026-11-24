@@ -129,11 +129,33 @@
   }
 
   // ---------- views ----------
-  function gauge(label, val, target, unit, isProtein) {
+  function gauge(label, val, target, unit, isProtein, key) {
     const pct = Math.min(100, (val / target) * 100);
     const low = isProtein && val < target * 0.85;
-    return '<div class="gauge"><div class="label"><span>' + esc(label) + '</span><span><b>' + n0(val) + '</b> / ' + n0(target) + ' ' + esc(unit) + '</span></div>' +
+    return '<div class="gauge"' + (key ? ' data-m="' + key + '"' : '') + '><div class="label"><span>' + esc(label) + '</span><span><b>' + n0(val) + '</b> / ' + n0(target) + ' ' + esc(unit) + '</span></div>' +
       '<div class="bar" role="img" aria-label="' + esc(t('gauge.aria', { label: label, val: n0(val), target: n0(target), unit: unit })) + '"><i class="' + (low ? 'low' : '') + '" style="width:' + pct.toFixed(0) + '%"></i></div></div>';
+  }
+
+  // A donut of where the day's energy comes from (protein, fat, carbohydrate). It is decoration: the same shares are written
+  // as numbers in the macro cells beside it, so screen readers skip it. The caption reuses the word "Energy" of the bars.
+  function energyRing(tg) {
+    const sh = E.energyShares(tg), R = 46, C = 2 * Math.PI * R, GAP = 2.5;
+    let off = 0;
+    const arcs = ['protein', 'fat', 'carbs'].map(function (k) {
+      const len = Math.max(0, sh[k] * C - GAP);
+      const a = '<circle class="arc" data-m="' + k + '" cx="60" cy="60" r="' + R + '" style="--len:' + len.toFixed(2) + ';--off:' + (-off).toFixed(2) + '"/>';
+      off += sh[k] * C;
+      return a;
+    }).join('');
+    return '<div class="ring" aria-hidden="true"><svg viewBox="0 0 120 120" focusable="false"><circle class="track" cx="60" cy="60" r="' + R + '"/>' + arcs + '</svg><span>' + esc(t('gauge.energy')) + '</span></div>';
+  }
+
+  // a plate with a sprout, for screens that have nothing to show yet
+  function emptyArt() {
+    return '<svg class="empty-art" viewBox="0 0 120 96" aria-hidden="true" focusable="false"><ellipse cx="60" cy="82" rx="42" ry="8" fill="currentColor" opacity=".12"/>' +
+      '<circle cx="60" cy="52" r="32" fill="var(--raise)" stroke="currentColor" stroke-width="3"/><circle cx="60" cy="52" r="21" fill="none" stroke="currentColor" stroke-width="2" opacity=".28"/>' +
+      '<path d="M60 62V44" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M60 47c0-9 6-14 15-14 0 9-6 14-15 14z" fill="currentColor"/>' +
+      '<path d="M60 52c0-7-5-11-12-11 0 7 5 11 12 11z" fill="var(--cloud)"/></svg>';
   }
 
   function portionsOf(key) { return Math.min(8, Math.max(1, S.portions[key] || P().people || 1)); }
@@ -209,8 +231,10 @@
       (tg.planShare < 0.999 ? t('formula.share', { pct: I.pctAbs(tg.planShare * 100), kcal: n0(tg.planKcal) }) : '');
     h += '<section class="targets" aria-label="' + esc(t('targets.aria')) + '">' +
       '<div><div class="muted small" style="color:inherit;opacity:.85">' + esc(t('targets.daily')) + '</div><div class="big">' + n0(tg.kcal) + '<span>' + esc(kcal) + '</span></div></div>' +
+      energyRing(tg) +
       '<div class="macros">' + [['protein', tg.protein], ['fat', tg.fat], ['carbs', tg.carbs], ['fibre', tg.fibre]].map(function (m) {
-        return '<div><b>' + n0(m[1]) + ' g</b><small>' + esc(t('macro.' + m[0])) + '</small></div>';
+        const sh = E.energyShares(tg)[m[0]];
+        return '<div' + (sh !== undefined ? ' data-m="' + m[0] + '"' : '') + '><b>' + n0(m[1]) + ' g</b><small>' + esc(t('macro.' + m[0])) + (sh !== undefined ? ' <i class="pc">' + esc(I.pctAbs(sh * 100)) + '</i>' : '') + '</small></div>';
       }).join('') + '</div>' +
       '<p class="formula">' + esc(formula) + '</p></section>';
 
@@ -221,10 +245,10 @@
 
     const share = tg.planShare;
     h += '<div class="dayline panel">' +
-      gauge(t('gauge.energy'), day.totals.kcal, tg.planKcal, kcal) +
-      gauge(t('macro.protein'), day.totals.protein, tg.protein * share, 'g', true) +
-      gauge(t('macro.carbs'), day.totals.carbs, tg.carbs * share, 'g') +
-      gauge(t('macro.fat'), day.totals.fat, tg.fat * share, 'g') + '</div>';
+      gauge(t('gauge.energy'), day.totals.kcal, tg.planKcal, kcal, false, 'energy') +
+      gauge(t('macro.protein'), day.totals.protein, tg.protein * share, 'g', true, 'protein') +
+      gauge(t('macro.carbs'), day.totals.carbs, tg.carbs * share, 'g', false, 'carbs') +
+      gauge(t('macro.fat'), day.totals.fat, tg.fat * share, 'g', false, 'fat') + '</div>';
 
     plan.warnings.filter(function (w) { return !w.day || w.day === S.day + 1; }).forEach(function (w) {
       h += '<div class="banner"><div><strong>' + esc(t('warn.label')) + '</strong> ' + esc(warnText(w)) + '</div></div>';
@@ -445,8 +469,8 @@
     h += '<div class="panel logpanel"><h3>' + esc(fmtDate(S.logDate)) + '</h3>';
     h += '<p class="logbalance' + (left < 0 ? ' over' : '') + '" id="logbalance" tabindex="-1" role="status">' + esc(left >= 0 ? t('log.left', { n: n0(left) }) : t('log.over', { n: n0(-left) })) + '</p>';
     h += '<div class="dayline">' +
-      gauge(t('gauge.energy'), tot.kcal, tg.kcal, kcal) + gauge(t('macro.protein'), tot.protein, tg.protein, 'g') +
-      gauge(t('macro.carbs'), tot.carbs, tg.carbs, 'g') + gauge(t('macro.fat'), tot.fat, tg.fat, 'g') + '</div>';
+      gauge(t('gauge.energy'), tot.kcal, tg.kcal, kcal, false, 'energy') + gauge(t('macro.protein'), tot.protein, tg.protein, 'g', false, 'protein') +
+      gauge(t('macro.carbs'), tot.carbs, tg.carbs, 'g', false, 'carbs') + gauge(t('macro.fat'), tot.fat, tg.fat, 'g', false, 'fat') + '</div>';
     if (!entries.length) h += '<p class="muted">' + esc(t('log.none')) + '</p>';
     LOG.SLOTS.forEach(function (slot) {
       const list = entries.filter(function (e) { return e.m === slot; });
@@ -584,7 +608,7 @@
     h += '<div class="row between"><h2>' + esc(t('prog.title')) + '</h2></div>';
     h += '<p class="muted">' + esc(t('prog.intro')) + '</p>';
     if (d.empty) {
-      return h + '<section class="panel"><p>' + esc(t('prog.empty')) + '</p><div class="row"><a class="btn primary small" href="#log">' + esc(t('prog.toLog')) + '</a>' +
+      return h + '<section class="panel empty">' + emptyArt() + '<p>' + esc(t('prog.empty')) + '</p><div class="row"><a class="btn primary small" href="#log">' + esc(t('prog.toLog')) + '</a>' +
         '<a class="btn small" href="#profile">' + esc(t('prog.toWeight')) + '</a></div></section>';
     }
     h += '<section class="panel"><h3>' + A.icon('scale', 26) + esc(t('prog.weight')) + '</h3>' + weightChart(r.weights) + progWeightRows(d.weeks);

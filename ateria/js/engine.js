@@ -338,8 +338,16 @@
     return { rows: rows, meals: meals, days: days };
   }
 
+  // where the day's energy comes from: protein and carbohydrate give 4 kcal per gram, fat 9. Fractions that add up to 1.
+  // The welcome-to-plan target card draws them as a ring; the same numbers are also written out next to it.
+  function energyShares(t) {
+    const p = Math.max(0, +t.protein || 0) * 4, f = Math.max(0, +t.fat || 0) * 9, c = Math.max(0, +t.carbs || 0) * 4, sum = p + f + c;
+    if (!(sum > 0)) return { protein: 0, fat: 0, carbs: 0 };
+    return { protein: p / sum, fat: f / sum, carbs: c / sum };
+  }
+
   A.engine = {
-    CONFIG: CONFIG, mulberry32: mulberry32, hashSeed: hashSeed, validateProfile: validateProfile, computeTargets: computeTargets,
+    CONFIG: CONFIG, energyShares: energyShares, mulberry32: mulberry32, hashSeed: hashSeed, validateProfile: validateProfile, computeTargets: computeTargets,
     nutrientsOf: nutrientsOf, allowed: allowed, adaptRecipe: adaptRecipe, planWeek: planWeek,
     shoppingList: shoppingList, mealShares: mealShares,
     alternatives: alternatives, swapMeal: swapMeal,

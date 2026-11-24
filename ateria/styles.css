@@ -663,3 +663,104 @@ img.dish.fill { width: 100%; height: 100%; border-radius: 0; }
 }
 details.more + details.more { margin-top: 10px; }
 .panel details.more { background: var(--raise); }
+
+/* ---------- modern polish (macro colours, energy ring, glass tab bar, soft motion) ----------
+   Everything that moves is inside "prefers-reduced-motion: no-preference". Colours for protein, fat and carbs are the same
+   on the bars, the ring and the macro cells, so one colour always means one nutrient. */
+:root { --m-protein: #3a68b0; --m-fat: #c9871a; --m-carbs: #bf4d68; --m-energy: var(--spruce); } /* blueberry, cloudberry, lingonberry */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) { --m-protein: #8fb4f5; --m-fat: #f2bf55; --m-carbs: #f08297; }
+}
+:root[data-theme='dark'] { --m-protein: #8fb4f5; --m-fat: #f2bf55; --m-carbs: #f08297; }
+
+/* bars: one colour per nutrient, a dot in front of the label, a little sheen */
+.bar { height: 12px; }
+.bar i { background-image: linear-gradient(90deg, rgb(255 255 255 / 0), rgb(255 255 255 / 0.22)); }
+.gauge .label { flex-wrap: wrap; row-gap: 0; }
+.gauge .label > span:last-child { white-space: nowrap; }
+.gauge[data-m] .label > span:first-child::before { content: ''; display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 50%; background: var(--mc); }
+.gauge[data-m='energy'] { --mc: var(--m-energy); }
+.gauge[data-m='protein'] { --mc: var(--m-protein); }
+.gauge[data-m='carbs'] { --mc: var(--m-carbs); }
+.gauge[data-m='fat'] { --mc: var(--m-fat); }
+.gauge[data-m] .bar i { background-color: var(--mc); }
+.gauge[data-m] .bar i.low { background-color: var(--amber); }
+
+/* target card: the ring sits beside the big number; the macro cells carry the same colours */
+.targets { --m-protein: #8fb4f5; --m-fat: #f2bf55; --m-carbs: #f58aa0; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'big ring' 'macros macros' 'formula formula'; align-items: center; column-gap: 14px; }
+.targets > :first-child { grid-area: big; }
+.targets .ring { grid-area: ring; }
+.targets .macros { grid-area: macros; }
+.targets .formula { grid-area: formula; }
+.ring { position: relative; width: 104px; height: 104px; }
+.ring svg { display: block; width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring circle { fill: none; stroke-width: 12; }
+.ring .track { stroke: rgb(255 255 255 / 0.13); }
+.ring .arc { stroke-dasharray: var(--len) 999; stroke-dashoffset: var(--off); }
+.ring .arc[data-m='protein'] { stroke: var(--m-protein); }
+.ring .arc[data-m='fat'] { stroke: var(--m-fat); }
+.ring .arc[data-m='carbs'] { stroke: var(--m-carbs); }
+.ring span { position: absolute; inset: 0; display: grid; place-items: center; padding: 0 20px; text-align: center; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; opacity: 0.82; }
+.macros div[data-m] { border-top: 3px solid var(--mc); }
+.macros [data-m='protein'] { --mc: var(--m-protein); }
+.macros [data-m='fat'] { --mc: var(--m-fat); }
+.macros [data-m='carbs'] { --mc: var(--m-carbs); }
+.macros .pc { display: block; font-style: normal; font-weight: 600; opacity: 0.9; white-space: nowrap; }
+@media (min-width: 640px) { .macros .pc { display: inline; margin-left: 4px; } }
+@media (min-width: 960px) { .ring { width: 132px; height: 132px; } .ring span { font-size: 0.78rem; } }
+
+/* empty states */
+.panel.empty { display: grid; justify-items: center; gap: 12px; padding: 26px 18px 22px; text-align: center; }
+.panel.empty p { max-width: 44ch; }
+.panel.empty .row { justify-content: center; }
+.empty-art { width: 128px; height: auto; color: var(--spruce); }
+
+/* glass floating tab bar on phones, and a small lift for the active tab */
+@media (max-width: 959px) {
+  .nav { background: color-mix(in srgb, var(--raise) 80%, transparent); -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5); box-shadow: 0 1px 0 rgb(255 255 255 / 0.5) inset, var(--shadow); }
+}
+.nav a, .days button, .btn, .chip > span { transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease; }
+.nav a svg { transition: transform 0.2s ease; }
+.nav a[aria-current='page'] svg { transform: translateY(-1px) scale(1.08); }
+.nav a:active, .days button:active, .btn:active { transform: scale(0.97); }
+.btn.primary { box-shadow: 0 1px 0 rgb(255 255 255 / 0.16) inset, 0 6px 14px color-mix(in srgb, var(--spruce) 26%, transparent); }
+.hero .btn.primary { box-shadow: 0 8px 20px rgb(0 0 0 / 0.28); }
+.hero .btn.quiet { box-shadow: none; }
+.toast { box-shadow: var(--shadow); }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* the bars grow in, the ring draws itself */
+  .bar i { transform-origin: left center; animation: bar-in 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  @keyframes bar-in { from { transform: scaleX(0); } }
+  .ring .arc { animation: ring-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .ring .arc[data-m='fat'] { animation-delay: 0.12s; }
+  .ring .arc[data-m='carbs'] { animation-delay: 0.24s; }
+  @keyframes ring-in { from { stroke-dasharray: 0 999; } }
+
+  /* screen change: the new content slides up and fades in (class set by js/fx.js) */
+  main[data-enter] > * { animation: view-in 0.34s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  main[data-enter] > :nth-child(2) { animation-delay: 0.04s; }
+  main[data-enter] > :nth-child(3) { animation-delay: 0.08s; }
+  main[data-enter] > :nth-child(4) { animation-delay: 0.12s; }
+  main[data-enter] > :nth-child(n + 5) { animation-delay: 0.16s; }
+  @keyframes view-in { from { opacity: 0; transform: translateY(10px); } }
+
+  .toast:not([hidden]) { animation: toast-in 0.22s ease-out both; }
+  @keyframes toast-in { from { opacity: 0; transform: translate(-50%, 10px); } }
+
+  /* the hero: two slow, soft lights behind the food stickers */
+  .hero::before, .hero::after { content: ''; position: absolute; z-index: -1; border-radius: 50%; filter: blur(48px); pointer-events: none; }
+  .hero::before { width: 280px; height: 280px; right: -70px; top: -110px; background: rgb(242 182 64 / 0.14); animation: aurora-a 16s ease-in-out infinite alternate; }
+  .hero::after { width: 300px; height: 300px; left: -90px; bottom: -120px; background: rgb(124 203 178 / 0.24); animation: aurora-b 20s ease-in-out infinite alternate; }
+  @keyframes aurora-a { to { transform: translate(-60px, 50px) scale(1.15); } }
+  @keyframes aurora-b { to { transform: translate(70px, -40px) scale(1.1); } }
+}
+
+/* cards: lift and a soft light under the mouse (mouse and trackpad only) */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .meal, .item, .gcard { transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.15s ease; }
+  .meal:hover, .item:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .meal:hover, .item:hover, .gcard:hover, .panel:hover {
+    background-image: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--spruce) 9%, transparent), transparent 72%);
+  }
+}

@@ -15,7 +15,7 @@ Ateria is inspired by apps like Mealbird, but the code, texts and ingredient dra
 open index.html                       # any browser; double-click works
 
 # 2. Run the tests (Node 18 or newer)
-node --test tests/*.test.js           # 153 tests
+node --test tests/*.test.js           # 160 tests
 
 # 3. Optional: build one self-contained page (for publishing as a single file)
 node tools/build_artifact.js          # writes dist/ateria-artifact.html
@@ -95,6 +95,7 @@ js/help.js               helper: matching, panel, read aloud, optional Ask Claud
 js/i18n.js               language: text lookup, plurals, number formats
 js/log.js                food log: portions, grams, totals, dates, ideas for the rest of the day and the weekly progress summary (no screen, no storage)
 js/app.js                interface
+js/fx.js                 small visual touches: a soft light under the mouse on cards, a short fade when the screen changes (skipped for reduced motion; reads and sends nothing)
 fonts/                   Lora (headlines) and Inter (text), subset with Vietnamese, served from this site; see fonts/README.md
 img/                     img/food/ is for dish photos
 data/ingredients.js      65 ingredients (nutrition, allergens, swaps, measures)
@@ -109,7 +110,7 @@ tests/                   JavaScript tests
 
 ## Tests
 
-`node --test tests/*.test.js` runs 153 tests: the targets checked by hand, the planner on 600 random profiles and many diet and allergy combinations, all texts in four languages, amounts in every unit, the shopping list (totals, chosen days, the meals behind each amount, no price left anywhere), storage and consent, the food log (sums, dates, limits, cleaning of imported data), the ideas for the rest of the day, the weekly progress summary (week blocks, averages, change from the week before, the range check for gaining weight or muscle) and the helper.
+`node --test tests/*.test.js` runs 160 tests: the targets checked by hand, the planner on 600 random profiles and many diet and allergy combinations, all texts in four languages, amounts in every unit, the shopping list (totals, chosen days, the meals behind each amount, no price left anywhere), storage and consent, the food log (sums, dates, limits, cleaning of imported data), the ideas for the rest of the day, the weekly progress summary (week blocks, averages, change from the week before, the range check for gaining weight or muscle), the energy shares behind the ring on the target card, the check that all motion is inside `prefers-reduced-motion: no-preference` and the helper.
 
 ## Known limits
 
